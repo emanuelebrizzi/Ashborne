@@ -3,15 +3,16 @@ using UnityEngine.Tilemaps;
 
 public class CameraFollow : MonoBehaviour
 {
-    [SerializeField] private Transform target;
-    [SerializeField] private Vector3 offset = new Vector3(0f, 1f, 0f);
-    [SerializeField] private float smoothSpeed = 5f;
+    const float CameraDefaultZValue = -10f;
+    [SerializeField] Transform target;
+    [SerializeField] Vector3 offset = new(0f, 1f, 0f);
+    [SerializeField] float smoothSpeed = 5f;
 
-    [SerializeField] private Tilemap tilemap;
-    private float halfHeight;
-    private float halfWidth;
-    private Vector3 minBounds;
-    private Vector3 maxBounds;
+    [SerializeField] Tilemap tilemap;
+    float halfHeight;
+    float halfWidth;
+    Vector3 minBounds;
+    Vector3 maxBounds;
 
     void Start()
     {
@@ -23,7 +24,7 @@ public class CameraFollow : MonoBehaviour
         maxBounds = bounds.max;
     }
 
-    // LateUpdte is called after all Update() calls are finished
+
     void LateUpdate()
     {
         if (target == null) return;
@@ -34,6 +35,6 @@ public class CameraFollow : MonoBehaviour
         float clampedX = Mathf.Clamp(smoothedPosition.x, minBounds.x + halfWidth, maxBounds.x - halfWidth);
         float clampedY = Mathf.Clamp(smoothedPosition.y, minBounds.y + halfHeight, maxBounds.y - halfHeight);
 
-        transform.position = new Vector3(clampedX, clampedY, -10f);
+        transform.position = new(clampedX, clampedY, CameraDefaultZValue);
     }
 }
