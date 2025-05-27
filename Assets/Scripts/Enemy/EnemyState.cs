@@ -2,7 +2,7 @@ using UnityEngine;
 
 public abstract class EnemyState : MonoBehaviour
 {
-    public Enemy enemy;
+    [SerializeField] protected Enemy enemy;
     public EnemyState nextState;
 
     void Start()
@@ -14,7 +14,6 @@ public abstract class EnemyState : MonoBehaviour
     {
         enabled = true;
         CancelInvoke();
-        Invoke(nameof(Exit), 10f);
     }
 
     public virtual void Exit()
