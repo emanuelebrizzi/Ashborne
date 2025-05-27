@@ -5,21 +5,23 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    public const string LoggerTAG = "Enemy";
+    public Logger MyLogger { get; private set; }
+    public Rigidbody2D Body { get; private set; }
+    public float Speed => speed;
+    public Transform player;
+
     [SerializeField] int healthPoints;
     [SerializeField] float speed = 5.0f;
     [SerializeField] EnemyState initialState;
 
-    public Transform player;
-    public Logger MyLogger { get; private set; }
-    public float Speed => speed;
-
-    public const string LoggerTAG = "Enemy";
     PatrolState patrolling;
     ChasingState chasing;
 
     void Start()
     {
         MyLogger = new Logger(Debug.unityLogger.logHandler);
+        Body = GetComponent<Rigidbody2D>();
         patrolling = GetComponent<PatrolState>();
         chasing = GetComponent<ChasingState>();
 
