@@ -23,12 +23,22 @@ public class ChasingState : EnemyState
         }
 
         Vector2 directionToPlayer = (enemy.player.position - enemy.transform.position).normalized;
+
+        enemy.UpdateSpriteDirection(directionToPlayer.x);
+
         Vector2 newPosition = new(
             enemy.transform.position.x + enemy.Speed * Time.fixedDeltaTime * directionToPlayer.x,
             enemy.transform.position.y
         );
         enemy.Body.MovePosition(newPosition);
 
+        if (Vector2.Distance(enemy.transform.position, enemy.player.position) <= 2.0f)
+        {
+            enemy.Attack();
+        }
+
         enemy.MyLogger.Log(Enemy.LoggerTAG, "Chasing player at position: " + enemy.player.position);
     }
+
+
 }

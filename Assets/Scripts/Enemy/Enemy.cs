@@ -18,14 +18,13 @@ public class Enemy : MonoBehaviour
     PatrolState patrolling;
     ChasingState chasing;
 
-    SPUM_Prefabs spumPrefabs; // Reference to the Animator
+    SPUM_Prefabs spumPrefabs;
 
     void Start()
     {
         MyLogger = new Logger(Debug.unityLogger.logHandler);
         Body = GetComponent<Rigidbody2D>();
-        spumPrefabs = GetComponent<SPUM_Prefabs>(); // Get the Animator component
-
+        spumPrefabs = GetComponent<SPUM_Prefabs>();
         patrolling = GetComponent<PatrolState>();
         chasing = GetComponent<ChasingState>();
         spumPrefabs.OverrideControllerInit();
@@ -35,9 +34,31 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        bool isMoving = Body.linearVelocity.sqrMagnitude > 0.01f; // Check if the enemy is moving
         spumPrefabs.PlayAnimation(PlayerState.MOVE, 0);
     }
+
+    public void Attack()
+    {
+        MyLogger.Log(LoggerTAG, "Enemy is attacking the player!");
+        spumPrefabs.PlayAnimation(PlayerState.ATTACK, 0);
+    }
+
+    // The assumption is that the sprite is facing left when x is positive
+    public void UpdateSpriteDirection(float directionX)
+    {
+        if (directionX > 0)
+        {
+            // Moving right
+            transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+        }
+        else if (directionX < 0)
+        {
+            // Moving left
+            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+        }
+    }
+
+
 
     void ResetState()
     {

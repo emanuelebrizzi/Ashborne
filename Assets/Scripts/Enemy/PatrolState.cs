@@ -14,7 +14,6 @@ public class PatrolState : EnemyState
         enemy.MyLogger.Log(Enemy.LoggerTAG, "Entered in the PatrolState");
         target = pointB.position;
         goingToB = true;
-        UpdateSpriteDirection();
     }
 
     void FixedUpdate()
@@ -25,12 +24,15 @@ public class PatrolState : EnemyState
         Vector2 newPosition = new(newX, currentY);
         enemy.Body.MovePosition(newPosition);
 
+        float directionX = goingToB ? 1 : -1;
+        enemy.UpdateSpriteDirection(directionX);
+
         if (Mathf.Abs(enemy.Body.position.x - targetX) < 0.1f)
         {
             goingToB = !goingToB;
             target = goingToB ? pointB.position : pointA.position;
             enemy.MyLogger.Log(Enemy.LoggerTAG, "Changed direction towards " + target);
-            UpdateSpriteDirection();
+
         }
 
         Collider2D hit = Physics2D.OverlapCircle(enemy.transform.position, detectionRange);
@@ -43,10 +45,4 @@ public class PatrolState : EnemyState
     }
 
 
-    void UpdateSpriteDirection()
-    {
-        Vector3 localScale = enemy.transform.localScale;
-        localScale.x = goingToB ? -Mathf.Abs(localScale.x) : Mathf.Abs(localScale.x);
-        enemy.transform.localScale = localScale;
-    }
 }
