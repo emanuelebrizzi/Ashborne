@@ -22,15 +22,17 @@ public class Enemy : MonoBehaviour
 
     void FixedUpdate()
     {
-        Vector2 direction = (target - body.position).normalized;
-        body.linearVelocity = new Vector2(direction.x * speed, body.linearVelocity.y);
+        float targetX = target.x;
+        float currentY = body.position.y;
+        float newX = Mathf.MoveTowards(body.position.x, targetX, speed * Time.fixedDeltaTime);
+        Vector2 newPosition = new(newX, currentY);
+        body.MovePosition(newPosition);
 
-        if (Vector2.Distance(body.position, target) < 0.5f)
+        if (Mathf.Abs(body.position.x - targetX) < 0.1f)
         {
             goingToB = !goingToB;
             target = goingToB ? pointB.position : pointA.position;
             myLogger.Log(EnemyTAG, "Changed direction towards " + target);
-            myLogger.Log(EnemyTAG, "velocity is " + body.linearVelocity.ToString());
         }
 
     }
