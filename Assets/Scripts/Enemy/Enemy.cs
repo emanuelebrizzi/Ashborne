@@ -18,14 +18,25 @@ public class Enemy : MonoBehaviour
     PatrolState patrolling;
     ChasingState chasing;
 
+    SPUM_Prefabs spumPrefabs; // Reference to the Animator
+
     void Start()
     {
         MyLogger = new Logger(Debug.unityLogger.logHandler);
         Body = GetComponent<Rigidbody2D>();
+        spumPrefabs = GetComponent<SPUM_Prefabs>(); // Get the Animator component
+
         patrolling = GetComponent<PatrolState>();
         chasing = GetComponent<ChasingState>();
+        spumPrefabs.OverrideControllerInit();
 
         ResetState();
+    }
+
+    void Update()
+    {
+        bool isMoving = Body.linearVelocity.sqrMagnitude > 0.01f; // Check if the enemy is moving
+        spumPrefabs.PlayAnimation(PlayerState.MOVE, 0);
     }
 
     void ResetState()

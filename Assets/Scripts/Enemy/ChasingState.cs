@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ChasingState : EnemyState
 {
-    [SerializeField] float maxChaseDistance = 10f;
+    [SerializeField] float maxChaseDistance = 3f;
     Vector2 enemyStartingPoint;
 
     public override void Enter()

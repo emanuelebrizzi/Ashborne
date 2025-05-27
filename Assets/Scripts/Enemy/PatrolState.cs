@@ -5,7 +5,7 @@ public class PatrolState : EnemyState
     Vector2 target;
 
     [SerializeField] Transform pointA, pointB;
-    [SerializeField] float detectionRange = 5f;
+    [SerializeField] float detectionRange = 3f;
     bool goingToB = true;
 
     public override void Enter()
@@ -14,6 +14,7 @@ public class PatrolState : EnemyState
         enemy.MyLogger.Log(Enemy.LoggerTAG, "Entered in the PatrolState");
         target = pointB.position;
         goingToB = true;
+        UpdateSpriteDirection();
     }
 
     void FixedUpdate()
@@ -29,16 +30,23 @@ public class PatrolState : EnemyState
             goingToB = !goingToB;
             target = goingToB ? pointB.position : pointA.position;
             enemy.MyLogger.Log(Enemy.LoggerTAG, "Changed direction towards " + target);
+            UpdateSpriteDirection();
         }
 
-        Vector2 directionToPlayer = (enemy.player.position - enemy.transform.position).normalized;
+        Collider2D hit = Physics2D.OverlapCircle(enemy.transform.position, detectionRange);
 
-        RaycastHit2D hit = Physics2D.Raycast(enemy.transform.position, directionToPlayer, detectionRange);
-
-        if (hit.collider != null && hit.collider.transform == enemy.player)
+        if (hit != null && hit.transform == enemy.player)
         {
-            enemy.MyLogger.Log(Enemy.LoggerTAG, "Player spotted, switching to Chasingstate");
+            enemy.MyLogger.Log(Enemy.LoggerTAG, "Player detected, switching to Chasingstate");
             base.Exit();
         }
+    }
+
+
+    void UpdateSpriteDirection()
+    {
+        Vector3 localScale = enemy.transform.localScale;
+        localScale.x = goingToB ? -Mathf.Abs(localScale.x) : Mathf.Abs(localScale.x);
+        enemy.transform.localScale = localScale;
     }
 }
