@@ -4,7 +4,7 @@ public class PlayerMovement : MonoBehaviour
 {
     private Rigidbody2D body;
     private float speed = 5f;
-    private float jumpForce = 300f;
+    private float jumpForce = 500f;
     private SPUM_Prefabs spumPrefabs;
 
     private void Awake()
@@ -20,25 +20,26 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-
-        body.linearVelocity = new Vector2(Input.GetAxis("Horizontal") * speed, body.linearVelocity.y);
-        if (Input.GetButtonDown("Jump") && Mathf.Abs(body.linearVelocity.y) < 0.01f)
+        if (Input.GetKeyDown(KeyCode.W))
         {
-            body.AddForce(Vector2.up * jumpForce);
+            Jump();
         }
+
         if (Input.GetAxis("Horizontal") != 0)
         {
-            direction();
-            spumPrefabs.PlayAnimation(PlayerState.MOVE, 0);
+            Direction();
         }
         else
         {
             spumPrefabs.PlayAnimation(PlayerState.IDLE, 0);
         }
+
     }
-    
-    private void direction()
+
+    private void Direction()
     {
+        body.linearVelocity = new Vector2(Input.GetAxis("Horizontal") * speed, body.linearVelocity.y);
+        spumPrefabs.PlayAnimation(PlayerState.MOVE, 0);
         if (Input.GetAxis("Horizontal") > 0)
         {
             transform.localScale = new Vector3(-2, 2, 1);
@@ -47,6 +48,20 @@ public class PlayerMovement : MonoBehaviour
         {
             transform.localScale = new Vector3(2, 2, 1);
         }
+
+    }
+
+    private void Jump()
+    {
+        if (isGrounded())
+        {
+            body.AddForce(new Vector2(0, jumpForce));
+        }
+    }
+    private bool isGrounded()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 0.1f);
+        return hit.collider != null;
     }
 
 }
