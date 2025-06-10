@@ -36,5 +36,28 @@ public class GameManager : MonoBehaviour
 
         CurrentGameState = newState;
         OnGameStateChanged?.Invoke(newState);
+
+        // Setting timeScale to 0 will freeze updates
+        switch (newState)
+        {
+            case GameState.Playing:
+                Time.timeScale = 1f;
+                break;
+            case GameState.Paused:
+                Time.timeScale = 0f;
+                break;
+        }
+    }
+
+    public void StartGame()
+    {
+        ChangeGameState(GameState.Playing);
+        Debug.Log("Game Started");
+    }
+
+    public void PauseGame()
+    {
+        ChangeGameState(GameState.Paused);
+        Debug.Log("Game Paused");
     }
 }
