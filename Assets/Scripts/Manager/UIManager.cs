@@ -4,8 +4,8 @@ using TMPro;
 
 public class UIManager : MonoBehaviour
 {
-    Health health;
-    AshEchoes ashEchoes;
+    readonly Health health;
+    readonly AshEchoes ashEchoes;
 
     [Header("UI Panels")]
     public GameObject gameplayPanel;
@@ -14,8 +14,6 @@ public class UIManager : MonoBehaviour
     public Slider healthBar;
     public TextMeshProUGUI ashEchoesText;
 
-
-
     void Start()
     {
         if (GameManager.Instance != null)
@@ -23,8 +21,7 @@ public class UIManager : MonoBehaviour
             GameManager.Instance.OnGameStateChanged += HandleGameStateChanged;
         }
 
-        health = GameObject.FindGameObjectWithTag("Player").GetComponent<Health>();
-        if (health != null)
+        if (GameObject.FindGameObjectWithTag("Player").TryGetComponent<Health>(out var health))
         {
             health.OnHealthChanged += UpdateHealthBar;
             UpdateHealthBar(health.MaxHealth);
@@ -61,7 +58,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    private void HandleGameStateChanged(GameManager.GameState newState)
+    void HandleGameStateChanged(GameManager.GameState newState)
     {
         HideAllPanels();
 
@@ -74,7 +71,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void HideAllPanels()
+    void HideAllPanels()
     {
         if (gameplayPanel) gameplayPanel.SetActive(false);
     }
@@ -83,17 +80,6 @@ public class UIManager : MonoBehaviour
     {
         if (panel) panel.SetActive(true);
     }
-
-    public void UpdateHealthBar(int hp)
-    {
-        if (healthBar != null && health != null)
-        {
-            healthBar.value = (float)hp / health.MaxHealth;
-            Debug.Log($"Updating health bar: Current Health = {hp}, Max Health = {health.MaxHealth}");
-        }
-
-    }
-
 
     public void ShowPauseMenu()
     {
@@ -108,6 +94,15 @@ public class UIManager : MonoBehaviour
         if (GameManager.Instance != null)
         {
             GameManager.Instance.ChangeGameState(GameManager.GameState.Playing);
+        }
+    }
+
+    public void UpdateHealthBar(int hp)
+    {
+        if (healthBar != null && health != null)
+        {
+            healthBar.value = (float)hp / health.MaxHealth;
+            Debug.Log($"Updating health bar: Current Health = {hp}, Max Health = {health.MaxHealth}");
         }
     }
 

@@ -14,6 +14,7 @@ public class AshEchoes : MonoBehaviour
         currentEchoes = 0;
     }
 
+    // TODO: remove with a real update
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.UpArrow))

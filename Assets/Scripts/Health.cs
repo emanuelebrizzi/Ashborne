@@ -18,6 +18,7 @@ public class Health : MonoBehaviour
         currentHealth = maxHealth;
     }
 
+    // TODO: remove with the real update
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
