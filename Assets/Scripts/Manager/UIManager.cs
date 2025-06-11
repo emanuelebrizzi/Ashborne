@@ -1,25 +1,37 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class UIManager : MonoBehaviour
 {
     [Header("UI Panels")]
     public GameObject gameplayPanel;
-    public GameObject pausePanel;
 
     [Header("HUD Elements")]
     public Slider healthBar;
-    public TextMeshProUGUI ashSoulsText;
 
-    int currentAshSouls = 0;
+    HealthTest health;
+
     void Start()
     {
         if (GameManager.Instance != null)
         {
             GameManager.Instance.OnGameStateChanged += HandleGameStateChanged;
         }
+
+        health = GameObject.FindGameObjectWithTag("Player").GetComponent<HealthTest>();
+        if (health != null)
+        {
+            health.OnHealthChanged += UpdateHealthBar;
+            Debug.Log("Subscribed to OnHealthChanged event.");
+            UpdateHealthBar(100);
+        }
+        else
+        {
+            Debug.LogWarning("HealthTest component not found on Player.");
+        }
     }
+
 
     void OnDestroy()
     {
@@ -27,22 +39,13 @@ public class UIManager : MonoBehaviour
         {
             GameManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
         }
-    }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (health != null)
         {
-            if (GameManager.Instance.CurrentGameState == GameManager.GameState.Playing)
-            {
-                ShowPauseMenu();
-            }
-            else if (GameManager.Instance.CurrentGameState == GameManager.GameState.Paused)
-            {
-                ResumeGameplay();
-            }
+            health.OnHealthChanged -= UpdateHealthBar;
         }
     }
+
 
     private void HandleGameStateChanged(GameManager.GameState newState)
     {
@@ -53,9 +56,6 @@ public class UIManager : MonoBehaviour
             case GameManager.GameState.Playing:
                 ShowPanel(gameplayPanel);
                 break;
-            case GameManager.GameState.Paused:
-                ShowPanel(pausePanel);
-                break;
 
         }
     }
@@ -63,7 +63,6 @@ public class UIManager : MonoBehaviour
     private void HideAllPanels()
     {
         if (gameplayPanel) gameplayPanel.SetActive(false);
-        if (pausePanel) pausePanel.SetActive(false);
     }
 
     private void ShowPanel(GameObject panel)
@@ -71,27 +70,20 @@ public class UIManager : MonoBehaviour
         if (panel) panel.SetActive(true);
     }
 
-    public void UpdateHealthBar(float currentHealth, float maxHealth)
+    public void UpdateHealthBar(int hp)
     {
-        if (healthBar != null)
+        if (healthBar != null && health != null)
         {
-            healthBar.value = currentHealth / maxHealth;
+            // Normalize the health value before updating the slider
+            healthBar.value = (float)hp / health.maxHealth;
+            Debug.Log($"Updating health bar: Current Health = {hp}, Max Health = {health.maxHealth}");
+        }
+        else
+        {
+            Debug.LogWarning("HealthBar or Health reference is null!");
         }
     }
 
-    public void UpdateAshSouls(int ashSouls)
-    {
-        currentAshSouls = ashSouls;
-        UpdateAshSoulsDisplay();
-    }
-
-    void UpdateAshSoulsDisplay()
-    {
-        if (ashSoulsText != null)
-        {
-            ashSoulsText.text = "Ash Souls: " + currentAshSouls;
-        }
-    }
 
     public void ShowPauseMenu()
     {
