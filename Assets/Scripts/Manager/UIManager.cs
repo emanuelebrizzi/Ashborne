@@ -10,7 +10,7 @@ public class UIManager : MonoBehaviour
     [Header("HUD Elements")]
     public Slider healthBar;
 
-    HealthTest health;
+    Health health;
 
     void Start()
     {
@@ -19,16 +19,12 @@ public class UIManager : MonoBehaviour
             GameManager.Instance.OnGameStateChanged += HandleGameStateChanged;
         }
 
-        health = GameObject.FindGameObjectWithTag("Player").GetComponent<HealthTest>();
+        health = GameObject.FindGameObjectWithTag("Player").GetComponent<Health>();
         if (health != null)
         {
             health.OnHealthChanged += UpdateHealthBar;
+            UpdateHealthBar(health.MaxHealth);
             Debug.Log("Subscribed to OnHealthChanged event.");
-            UpdateHealthBar(100);
-        }
-        else
-        {
-            Debug.LogWarning("HealthTest component not found on Player.");
         }
     }
 
@@ -74,14 +70,10 @@ public class UIManager : MonoBehaviour
     {
         if (healthBar != null && health != null)
         {
-            // Normalize the health value before updating the slider
-            healthBar.value = (float)hp / health.maxHealth;
-            Debug.Log($"Updating health bar: Current Health = {hp}, Max Health = {health.maxHealth}");
+            healthBar.value = (float)hp / health.MaxHealth;
+            Debug.Log($"Updating health bar: Current Health = {hp}, Max Health = {health.MaxHealth}");
         }
-        else
-        {
-            Debug.LogWarning("HealthBar or Health reference is null!");
-        }
+
     }
 
 
