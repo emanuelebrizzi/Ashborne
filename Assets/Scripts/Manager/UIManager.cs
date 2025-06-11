@@ -1,16 +1,20 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class UIManager : MonoBehaviour
 {
+    Health health;
+    AshEchoes ashEchoes;
+
     [Header("UI Panels")]
     public GameObject gameplayPanel;
 
     [Header("HUD Elements")]
     public Slider healthBar;
+    public TextMeshProUGUI ashEchoesText;
 
-    Health health;
+
 
     void Start()
     {
@@ -26,6 +30,15 @@ public class UIManager : MonoBehaviour
             UpdateHealthBar(health.MaxHealth);
             Debug.Log("Subscribed to OnHealthChanged event.");
         }
+
+        if (GameObject.FindGameObjectWithTag("Player").TryGetComponent<AshEchoes>(out var ashEchoes))
+        {
+            ashEchoes.OnEchoesChanged += UpdateAshEchoes;
+            UpdateAshEchoes(ashEchoes.CurrentAshEchoes);
+            Debug.Log("Subscribed to OnEchoesChanged event.");
+        }
+
+        UpdateAshEchoes(0);
     }
 
 
@@ -39,6 +52,11 @@ public class UIManager : MonoBehaviour
         if (health != null)
         {
             health.OnHealthChanged -= UpdateHealthBar;
+        }
+
+        if (ashEchoes != null)
+        {
+            ashEchoes.OnEchoesChanged -= UpdateAshEchoes;
         }
     }
 
@@ -90,6 +108,14 @@ public class UIManager : MonoBehaviour
         if (GameManager.Instance != null)
         {
             GameManager.Instance.ChangeGameState(GameManager.GameState.Playing);
+        }
+    }
+
+    public void UpdateAshEchoes(int amount)
+    {
+        if (ashEchoesText != null)
+        {
+            ashEchoesText.text = amount.ToString();
         }
     }
 }
