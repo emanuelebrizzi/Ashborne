@@ -25,7 +25,7 @@ public class PlayerAttack : MonoBehaviour
     private void Attack()
     {
         cooldownTimer = 0f;
-        spumPrefabs.PlayAnimation(PlayerState.ATTACK, 0);
+        spumPrefabs.PlayAnimation(PlayerState.ATTACK, 1);
 
     }
 

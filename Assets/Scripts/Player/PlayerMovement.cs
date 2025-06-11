@@ -6,11 +6,13 @@ public class PlayerMovement : MonoBehaviour
     private float speed = 5f;
     private float jumpForce = 500f;
     private SPUM_Prefabs spumPrefabs;
+    private Collider2D groundCheck;
 
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
         spumPrefabs = FindObjectOfType<SPUM_Prefabs>();
+        groundCheck = GetComponent<Collider2D>();
     }
 
     private void Start()
@@ -58,10 +60,10 @@ public class PlayerMovement : MonoBehaviour
             body.AddForce(new Vector2(0, jumpForce));
         }
     }
+
     private bool isGrounded()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 0.1f);
-        return hit.collider != null;
+        return groundCheck.IsTouchingLayers(LayerMask.GetMask("Ground"));
     }
 
 }
