@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
-        spumPrefabs = FindObjectOfType<SPUM_Prefabs>();
+        spumPrefabs = GetComponent<SPUM_Prefabs>();
         groundCheck = GetComponent<Collider2D>();
     }
 
