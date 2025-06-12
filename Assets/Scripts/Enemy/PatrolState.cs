@@ -2,12 +2,11 @@ using UnityEngine;
 
 public class PatrolState : EnemyState
 {
-    Vector2 target;
-
     [SerializeField] Transform pointA, pointB;
     [SerializeField] float detectionRange = 3f;
     [SerializeField] LayerMask playerLayerMask;
     bool goingToB = true;
+    Vector2 target;
 
     public override void Enter()
     {

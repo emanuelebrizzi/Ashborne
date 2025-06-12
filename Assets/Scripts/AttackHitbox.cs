@@ -18,18 +18,17 @@ public class AttackHitbox : MonoBehaviour
         canDealDamage = false;
     }
 
-    private void OnTriggerStay2D(Collider2D other)
+    void OnTriggerStay2D(Collider2D other)
     {
         CheckCollision(other);
     }
 
-    // Check for player entering the hitbox
-    private void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter2D(Collider2D other)
     {
         CheckCollision(other);
     }
 
-    private void CheckCollision(Collider2D other)
+    void CheckCollision(Collider2D other)
     {
         if (!canDealDamage)
         {

@@ -6,25 +6,23 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    [SerializeField] int healthPoints;
+    [SerializeField] float speed = 5.0f;
+    [SerializeField] EnemyState initialState;
+    [SerializeField] AttackHitbox hitbox;
+
+    readonly float attackCooldown = 1.0f;
+    float lastAttackTime = -100f;
+    PatrolState patrolling;
+    ChasingState chasing;
+    SPUM_Prefabs spumPrefabs;
+
     public const string LoggerTAG = "Enemy";
     public Logger MyLogger { get; private set; }
     public Rigidbody2D Body { get; private set; }
     public float Speed => speed;
     public Transform player;
 
-    [SerializeField] int healthPoints;
-    [SerializeField] float speed = 5.0f;
-    [SerializeField] EnemyState initialState;
-
-    [SerializeField] private AttackHitbox hitbox;
-
-    private float attackCooldown = 1.0f;
-    private float lastAttackTime = -100f;
-
-    PatrolState patrolling;
-    ChasingState chasing;
-
-    SPUM_Prefabs spumPrefabs;
 
     void Start()
     {
