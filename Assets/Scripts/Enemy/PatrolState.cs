@@ -31,8 +31,6 @@ public class PatrolState : EnemyState
         {
             goingToB = !goingToB;
             target = goingToB ? pointB.position : pointA.position;
-            enemy.MyLogger.Log(Enemy.LoggerTAG, "Changed direction towards " + target);
-
         }
 
         Collider2D hit = Physics2D.OverlapCircle(enemy.transform.position, detectionRange);

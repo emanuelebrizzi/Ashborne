@@ -4,8 +4,8 @@ using TMPro;
 
 public class UIManager : MonoBehaviour
 {
-    readonly Health health;
-    readonly AshEchoes ashEchoes;
+    Health health;
+    AshEchoes ashEchoes;
 
     [Header("UI Panels")]
     public GameObject gameplayPanel;
@@ -21,21 +21,21 @@ public class UIManager : MonoBehaviour
             GameManager.Instance.OnGameStateChanged += HandleGameStateChanged;
         }
 
-        if (GameObject.FindGameObjectWithTag("Player").TryGetComponent<Health>(out var health))
+        if (GameObject.FindGameObjectWithTag("Player").TryGetComponent<Health>(out var healthComponent))
         {
+            health = healthComponent;
             health.OnHealthChanged += UpdateHealthBar;
             UpdateHealthBar(health.MaxHealth);
             Debug.Log("Subscribed to OnHealthChanged event.");
         }
 
-        if (GameObject.FindGameObjectWithTag("Player").TryGetComponent<AshEchoes>(out var ashEchoes))
+        if (GameObject.FindGameObjectWithTag("Player").TryGetComponent<AshEchoes>(out var ashEchoesComponent))
         {
+            ashEchoes = ashEchoesComponent;
             ashEchoes.OnEchoesChanged += UpdateAshEchoes;
             UpdateAshEchoes(ashEchoes.CurrentAshEchoes);
             Debug.Log("Subscribed to OnEchoesChanged event.");
         }
-
-        UpdateAshEchoes(0);
     }
 
 
@@ -99,7 +99,7 @@ public class UIManager : MonoBehaviour
 
     public void UpdateHealthBar(int hp)
     {
-        if (healthBar != null && health != null)
+        if (health != null)
         {
             healthBar.value = (float)hp / health.MaxHealth;
             Debug.Log($"Updating health bar: Current Health = {hp}, Max Health = {health.MaxHealth}");
