@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Ash-Echoes_0: -7183046390882054915
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
