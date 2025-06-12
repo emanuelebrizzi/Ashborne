@@ -2,12 +2,11 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private Rigidbody2D body;
-    private float speed = 5f;
-    private float jumpForce = 500f;
-    private Collider2D groundCheck;
-
-    public Player player;
+    [SerializeField] Player player;
+    Rigidbody2D body;
+    readonly float speed = 5f;
+    readonly float jumpForce = 500f;
+    Collider2D groundCheck;
 
     void Start()
     {
@@ -56,13 +55,13 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump()
     {
-        if (isGrounded())
+        if (IsGrounded())
         {
             body.AddForce(new Vector2(0, jumpForce));
         }
     }
 
-    private bool isGrounded()
+    private bool IsGrounded()
     {
         return groundCheck.IsTouchingLayers(LayerMask.GetMask("Ground"));
     }

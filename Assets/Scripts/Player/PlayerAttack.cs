@@ -2,18 +2,18 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
-    [SerializeField] static float COOLDOWN_TIME = 0.5f; // Cooldown time in seconds
-
+    static readonly float AttackCooldown = 0.5f;
+    [SerializeField] Player player;
     [SerializeField] LayerMask enemyLayer; // Layer mask to identify enemies
+
+    [SerializeField] float attackRange = 1f;
+    [SerializeField] int attackDamage = 1;
     Transform attackPoint; // Point from where the attack is initiated
-    float attackCooldown = COOLDOWN_TIME;
-    float lastAttackTime = 0f;
-    [SerializeField] float attackRange = 1f; // Range of the attack
-    [SerializeField] int attackDamage = 1; // Damage dealt by the attack
-    public Player player;
+    float waitingTime;
 
     void Start()
     {
+        waitingTime = AttackCooldown;
         attackPoint = transform.Find("AttackPoint");
 
         if (player == null)
@@ -25,15 +25,14 @@ public class PlayerAttack : MonoBehaviour
 
     void Update()
     {
-        if (attackCooldown <= 0f && Input.GetKeyDown(KeyCode.Q))
+        if (waitingTime <= 0f && Input.GetKeyDown(KeyCode.Q))
         {
             Attack();
-            lastAttackTime = Time.time;
-            attackCooldown = COOLDOWN_TIME; // Reset cooldown
+            waitingTime = AttackCooldown;
         }
         else
         {
-            attackCooldown -= Time.deltaTime; // Decrease cooldown over time
+            waitingTime -= Time.deltaTime;
         }
     }
 
@@ -43,8 +42,7 @@ public class PlayerAttack : MonoBehaviour
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
         foreach (Collider2D enemyCollider in hitEnemies)
         {
-            Enemy enemy = enemyCollider.GetComponent<Enemy>();
-            if (enemy != null)
+            if (enemyCollider.TryGetComponent<Enemy>(out var enemy))
             {
                 enemy.TakeDamage(attackDamage);
             }

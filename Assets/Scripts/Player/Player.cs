@@ -2,23 +2,11 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public SPUM_Prefabs spumPrefabs;
-
-    private void Awake()
-    {
-        if (spumPrefabs == null)
-        {
-            spumPrefabs = GetComponentInChildren<SPUM_Prefabs>();
-        }
-
-        if (spumPrefabs == null)
-        {
-            Debug.LogError("SPUM_Prefabs component not found on Hero or its children!");
-        }
-    }
+    [SerializeField] SPUM_Prefabs spumPrefabs;
 
     private void Start()
     {
+        spumPrefabs = GetComponent<SPUM_Prefabs>();
         if (spumPrefabs != null)
         {
             if (!spumPrefabs.allListsHaveItemsExist())

@@ -72,6 +72,7 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int damage)
     {
         healthPoints -= damage;
+        MyLogger.Log(LoggerTAG, $"Enemy took {damage} damage. Remaining HP: {healthPoints}");
 
         if (healthPoints <= 0)
         {
