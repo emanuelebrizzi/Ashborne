@@ -58,8 +58,6 @@ public class Enemy : MonoBehaviour
         }
     }
 
-
-
     void ResetState()
     {
         patrolling.Exit();
@@ -71,5 +69,22 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    public void TakeDamage(int damage)
+    {
+        healthPoints -= damage;
+        MyLogger.Log(LoggerTAG, $"Enemy took {damage} damage. Remaining HP: {healthPoints}");
 
+        if (healthPoints <= 0)
+        {
+            Die();
+            MyLogger.Log(LoggerTAG, "Enemy has died.");
+        }
+    }
+
+    void Die()
+    {
+        spumPrefabs.PlayAnimation(PlayerState.DEATH, 0);
+        // Additional logic for enemy death can be added here, such as dropping loot or playing a death sound.
+        Destroy(gameObject, 1f); // Destroy the enemy after 1 second to allow the death animation to play.
+    }
 }
