@@ -10,6 +10,11 @@ public class ChasingState : EnemyState
         base.Enter();
         enemyStartingPoint = enemy.transform.position;
         enemy.MyLogger.Log(Enemy.LoggerTAG, "Entered ChasingState");
+
+        if (nextState == null)
+        {
+            nextState = GetComponent<PatrolState>();
+        }
     }
 
     void FixedUpdate()
@@ -20,6 +25,7 @@ public class ChasingState : EnemyState
         {
             enemy.MyLogger.Log(Enemy.LoggerTAG, "Player is too far, returning to PatrolState");
             base.Exit();
+            return;
         }
 
         Vector2 directionToPlayer = (enemy.player.position - enemy.transform.position).normalized;
@@ -36,8 +42,6 @@ public class ChasingState : EnemyState
         {
             enemy.Attack();
         }
-
-        enemy.MyLogger.Log(Enemy.LoggerTAG, "Chasing player at position: " + enemy.player.position);
     }
 
 

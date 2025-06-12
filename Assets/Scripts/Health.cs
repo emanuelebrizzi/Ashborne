@@ -18,17 +18,10 @@ public class Health : MonoBehaviour
         currentHealth = maxHealth;
     }
 
-    // TODO: remove with the real update
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            DamagePlayer(10);
-        }
-    }
-    public void DamagePlayer(int damage)
+    public void TakeDamage(int damage)
     {
         currentHealth -= damage;
+        Debug.Log($"Player took {damage} damage. Remaining HP: {currentHealth}");
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
         OnHealthChanged?.Invoke(currentHealth);
     }

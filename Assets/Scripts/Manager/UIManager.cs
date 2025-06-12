@@ -4,15 +4,15 @@ using TMPro;
 
 public class UIManager : MonoBehaviour
 {
-    Health health;
-    AshEchoes ashEchoes;
-
     [Header("UI Panels")]
-    public GameObject gameplayPanel;
+    [SerializeField] GameObject gameplayPanel;
 
     [Header("HUD Elements")]
-    public Slider healthBar;
-    public TextMeshProUGUI ashEchoesText;
+    [SerializeField] Slider healthBar;
+    [SerializeField] TextMeshProUGUI ashEchoesText;
+
+    Health health;
+    AshEchoes ashEchoes;
 
     void Start()
     {
@@ -99,7 +99,7 @@ public class UIManager : MonoBehaviour
 
     public void UpdateHealthBar(int hp)
     {
-        if (health != null)
+        if (healthBar != null && health != null)
         {
             healthBar.value = (float)hp / health.MaxHealth;
             Debug.Log($"Updating health bar: Current Health = {hp}, Max Health = {health.MaxHealth}");

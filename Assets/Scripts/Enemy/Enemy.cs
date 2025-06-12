@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(PatrolState))]
@@ -14,6 +15,11 @@ public class Enemy : MonoBehaviour
     [SerializeField] int healthPoints;
     [SerializeField] float speed = 5.0f;
     [SerializeField] EnemyState initialState;
+
+    [SerializeField] private AttackHitbox hitbox;
+
+    private float attackCooldown = 1.0f;
+    private float lastAttackTime = -100f;
 
     PatrolState patrolling;
     ChasingState chasing;
@@ -39,8 +45,22 @@ public class Enemy : MonoBehaviour
 
     public void Attack()
     {
-        MyLogger.Log(LoggerTAG, "Enemy is attacking the player!");
+        if (Time.time < lastAttackTime + attackCooldown) return;
+
         spumPrefabs.PlayAnimation(PlayerState.ATTACK, 0);
+        StartCoroutine(PerformAttack());
+
+        lastAttackTime = Time.time;
+    }
+
+    IEnumerator PerformAttack()
+    {
+        yield return new WaitForSeconds(0.3f);
+
+        if (hitbox != null)
+        {
+            hitbox.Activate();
+        }
     }
 
     // The assumption is that the sprite is facing left when x is positive
