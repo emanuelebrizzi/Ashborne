@@ -730,7 +730,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilemap: {fileID: 2143861019}
-  target: {fileID: 998869670}
+  target: {fileID: 652503539}
   offset: {x: 0, y: 2, z: -10}
   smoothTime: 0.25
 --- !u!1 &619394800
