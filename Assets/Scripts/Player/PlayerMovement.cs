@@ -5,22 +5,23 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D body;
     private float speed = 5f;
     private float jumpForce = 500f;
-    private SPUM_Prefabs spumPrefabs;
     private Collider2D groundCheck;
 
-    private void Awake()
+    public Player player;
+
+    void Start()
     {
         body = GetComponent<Rigidbody2D>();
-        spumPrefabs = GetComponent<SPUM_Prefabs>();
         groundCheck = GetComponent<Collider2D>();
+
+        if (player == null)
+        {
+            player = GetComponent<Player>();
+        }
     }
 
-    private void Start()
-    {
-        spumPrefabs.OverrideControllerInit();
-    }
 
-    private void Update()
+    void Update()
     {
         if (Input.GetKeyDown(KeyCode.W))
         {
@@ -33,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            spumPrefabs.PlayAnimation(PlayerState.IDLE, 0);
+            player.PlayAnimation(PlayerState.IDLE, 0);
         }
 
     }
@@ -41,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
     private void Direction()
     {
         body.linearVelocity = new Vector2(Input.GetAxis("Horizontal") * speed, body.linearVelocity.y);
-        spumPrefabs.PlayAnimation(PlayerState.MOVE, 0);
+        player.PlayAnimation(PlayerState.MOVE, 0);
         if (Input.GetAxis("Horizontal") > 0)
         {
             transform.localScale = new Vector3(-2, 2, 1);

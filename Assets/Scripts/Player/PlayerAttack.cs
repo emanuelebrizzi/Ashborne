@@ -3,7 +3,6 @@ using UnityEngine;
 public class PlayerAttack : MonoBehaviour
 {
     [SerializeField] static float COOLDOWN_TIME = 0.5f; // Cooldown time in seconds
-    SPUM_Prefabs spumPrefabs;
 
     [SerializeField] LayerMask enemyLayer; // Layer mask to identify enemies
     Transform attackPoint; // Point from where the attack is initiated
@@ -11,17 +10,18 @@ public class PlayerAttack : MonoBehaviour
     float lastAttackTime = 0f;
     [SerializeField] float attackRange = 1f; // Range of the attack
     [SerializeField] int attackDamage = 1; // Damage dealt by the attack
+    public Player player;
 
     void Start()
     {
-        spumPrefabs.OverrideControllerInit();
         attackPoint = transform.Find("AttackPoint");
+
+        if (player == null)
+        {
+            player = GetComponent<Player>();
+        }
     }
 
-    void Awake()
-    {
-        spumPrefabs = GetComponent<SPUM_Prefabs>();
-    }
 
     void Update()
     {
@@ -39,7 +39,7 @@ public class PlayerAttack : MonoBehaviour
 
     void Attack()
     {
-        spumPrefabs.PlayAnimation(PlayerState.ATTACK, 1);
+        player.PlayAnimation(PlayerState.ATTACK, 1);
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
         foreach (Collider2D enemyCollider in hitEnemies)
         {
@@ -49,7 +49,7 @@ public class PlayerAttack : MonoBehaviour
                 enemy.TakeDamage(attackDamage);
             }
         }
- 
+
     }
 
-}   
+}
