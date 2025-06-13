@@ -10,6 +10,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] float speed = 5.0f;
     [SerializeField] EnemyState initialState;
     [SerializeField] AttackHitbox hitbox;
+    [SerializeField] int ashEchoesReward = 100;
 
     readonly float attackCooldown = 1.0f;
     float lastAttackTime = -100f;
@@ -94,12 +95,14 @@ public class Enemy : MonoBehaviour
         healthPoints -= damage;
         MyLogger.Log(LoggerTAG, $"Enemy took {damage} damage. Remaining HP: {healthPoints}");
 
-        spumPrefabs.PlayAnimation(PlayerState.DAMAGED, 0);
+
         if (healthPoints <= 0)
         {
             Die();
             MyLogger.Log(LoggerTAG, "Enemy has died.");
+            return;
         }
+        spumPrefabs.PlayAnimation(PlayerState.DAMAGED, 0);
     }
 
     void Die()
@@ -109,6 +112,8 @@ public class Enemy : MonoBehaviour
         if (chasing != null) chasing.enabled = false;
 
         spumPrefabs.PlayAnimation(PlayerState.DEATH, 0);
+
+        AwardAshEchoes();
         StartCoroutine(DestroyAfterDelay());
     }
 
@@ -117,5 +122,14 @@ public class Enemy : MonoBehaviour
         yield return new WaitForSeconds(2.0f);
 
         Destroy(gameObject);
+    }
+
+    void AwardAshEchoes()
+    {
+        var playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null && playerObj.TryGetComponent<AshEchoes>(out var ashEchoes))
+        {
+            ashEchoes.AddEchoes(ashEchoesReward);
+        }
     }
 }

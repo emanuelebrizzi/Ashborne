@@ -338,7 +338,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.387, y: 0.256}
+  m_AnchoredPosition: {x: -0.509, y: 0.381}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &456573863
@@ -581,7 +581,7 @@ PrefabInstance:
       objectReference: {fileID: 1833780510}
     - target: {fileID: 3384726575364062093, guid: 13ebc04275ee7c54d945b229126a7714, type: 3}
       propertyPath: detectionRange
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3384726575364062093, guid: 13ebc04275ee7c54d945b229126a7714, type: 3}
       propertyPath: playerLayerMask.m_Bits
@@ -619,6 +619,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 652503539}
+    - target: {fileID: 3928660947242009042, guid: 13ebc04275ee7c54d945b229126a7714, type: 3}
+      propertyPath: healthPoints
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4017274318664464590, guid: 13ebc04275ee7c54d945b229126a7714, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -2174,6 +2178,7 @@ MonoBehaviour:
     m_Bits: 256
   attackRange: 1
   attackDamage: 1
+  attackDelay: 0.25
 --- !u!114 &998869673
 MonoBehaviour:
   m_ObjectHideFlags: 0
