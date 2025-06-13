@@ -16,6 +16,7 @@ public class Enemy : MonoBehaviour
     PatrolState patrolling;
     ChasingState chasing;
     SPUM_Prefabs spumPrefabs;
+    bool isDead = false;
 
     public const string LoggerTAG = "Enemy";
     public Logger MyLogger { get; private set; }
@@ -38,7 +39,8 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        spumPrefabs.PlayAnimation(PlayerState.MOVE, 0);
+        if (!isDead)
+            spumPrefabs.PlayAnimation(PlayerState.MOVE, 0);
     }
 
     public void Attack()
@@ -92,6 +94,7 @@ public class Enemy : MonoBehaviour
         healthPoints -= damage;
         MyLogger.Log(LoggerTAG, $"Enemy took {damage} damage. Remaining HP: {healthPoints}");
 
+        spumPrefabs.PlayAnimation(PlayerState.DAMAGED, 0);
         if (healthPoints <= 0)
         {
             Die();
@@ -101,8 +104,18 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
+        isDead = true;
+        if (patrolling != null) patrolling.enabled = false;
+        if (chasing != null) chasing.enabled = false;
+
         spumPrefabs.PlayAnimation(PlayerState.DEATH, 0);
-        // Additional logic for enemy death can be added here, such as dropping loot or playing a death sound.
-        Destroy(gameObject, 1f); // Destroy the enemy after 1 second to allow the death animation to play.
+        StartCoroutine(DestroyAfterDelay());
+    }
+
+    IEnumerator DestroyAfterDelay()
+    {
+        yield return new WaitForSeconds(2.0f);
+
+        Destroy(gameObject);
     }
 }
