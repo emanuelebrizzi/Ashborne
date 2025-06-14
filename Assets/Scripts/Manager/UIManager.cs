@@ -1,10 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.Rendering;
 
 public class UIManager : MonoBehaviour
 {
+    const int InitialHealthBarValue = 1;
+    const int InitialEchoesValue = 0;
+
     [Header("UI Panels")]
     [SerializeField] GameObject gameplayPanel;
 
@@ -23,10 +25,10 @@ public class UIManager : MonoBehaviour
         if (Player.Instance != null)
         {
             Player.Instance.OnHealthChanged += UpdateHealthBar;
-            UpdateHealthBar(1);
+            UpdateHealthBar(InitialHealthBarValue);
 
             Player.Instance.OnEchoesChanged += UpdateAshEchoes;
-            UpdateAshEchoes(0);
+            UpdateAshEchoes(InitialEchoesValue);
         }
     }
 
