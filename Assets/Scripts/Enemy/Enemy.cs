@@ -3,70 +3,54 @@ using UnityEngine;
 
 [RequireComponent(typeof(PatrolState))]
 [RequireComponent(typeof(ChasingState))]
-
+[RequireComponent(typeof(DeathState))]
 public class Enemy : MonoBehaviour
 {
-    const float DeathTime = 2.0f;
     [SerializeField] float speed = 5.0f;
     [SerializeField] EnemyState initialState;
-    [SerializeField] AttackHitbox hitbox;
     [SerializeField] int ashEchoesReward = 100;
 
-    readonly float attackCooldown = 1.0f;
-    float lastAttackTime = -100f;
-    PatrolState patrolling;
-    ChasingState chasing;
+    PatrolState patrolState;
+    ChasingState chasingState;
+    DeathState deathState;
     SPUM_Prefabs spumPrefabs;
-    bool isDead = false;
     Health health;
 
     public const string LoggerTAG = "Enemy";
-
-
     public Logger MyLogger { get; private set; }
     public Rigidbody2D Body { get; private set; }
     public float Speed => speed;
-
+    public int Reward => ashEchoesReward;
 
     void Start()
     {
         MyLogger = new Logger(Debug.unityLogger.logHandler);
         Body = GetComponent<Rigidbody2D>();
         spumPrefabs = GetComponent<SPUM_Prefabs>();
-        patrolling = GetComponent<PatrolState>();
-        chasing = GetComponent<ChasingState>();
+        patrolState = GetComponent<PatrolState>();
+        chasingState = GetComponent<ChasingState>();
+        deathState = GetComponent<DeathState>();
         health = GetComponent<Health>();
         spumPrefabs.OverrideControllerInit();
 
         ResetState();
     }
 
-
-    void Update()
+    void ResetState()
     {
-        if (!isDead)
-            spumPrefabs.PlayAnimation(PlayerState.MOVE, 0);
-    }
+        if (patrolState != null) patrolState.Exit();
+        if (chasingState != null) chasingState.Exit();
 
-    public void Attack()
-    {
-        if (Time.time < lastAttackTime + attackCooldown) return;
-
-        spumPrefabs.PlayAnimation(PlayerState.ATTACK, 0);
-        StartCoroutine(PerformAttack());
-
-        lastAttackTime = Time.time;
-    }
-
-    IEnumerator PerformAttack()
-    {
-        yield return new WaitForSeconds(0.3f);
-
-        if (hitbox != null)
+        if (initialState != null)
         {
-            hitbox.Activate();
+            initialState.Enter();
+        }
+        else if (patrolState != null)
+        {
+            patrolState.Enter();
         }
     }
+
 
     public void TakeDamage(int damage)
     {
@@ -76,7 +60,6 @@ public class Enemy : MonoBehaviour
         if (health.CurrentHealth <= 0)
         {
             Die();
-            MyLogger.Log(LoggerTAG, "Dying...");
             return;
         }
 
@@ -85,36 +68,17 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
-        isDead = true;
+        EnemyState currentState = null;
 
-        Collider2D[] colliders = GetComponentsInChildren<Collider2D>();
-        foreach (Collider2D col in colliders)
-        {
-            col.enabled = false;
-        }
+        if (patrolState.enabled)
+            currentState = patrolState;
+        else if (chasingState.enabled)
+            currentState = chasingState;
 
-        if (patrolling != null) patrolling.enabled = false;
-        if (chasing != null) chasing.enabled = false;
-
-        spumPrefabs.PlayAnimation(PlayerState.DEATH, 0);
-
-        AwardAshEchoes();
-        Destroy(gameObject, DeathTime);
+        currentState.nextState = deathState;
+        currentState.Exit();
     }
 
-    void AwardAshEchoes()
-    {
-        if (Player.Instance != null)
-        {
-            Player.Instance.AddAshEchoes(ashEchoesReward);
-            MyLogger.Log(LoggerTAG, $"Awarded {ashEchoesReward} Ash Echoes to player");
-        }
-        else
-        {
-            MyLogger.LogWarning(LoggerTAG, "Player singleton not available. Cannot award Ash Echoes.");
-
-        }
-    }
 
     // The assumption is that the sprite is facing left when x is positive
     public void UpdateSpriteDirection(float directionX)
@@ -131,14 +95,11 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void ResetState()
+    public void PlayAnimation(PlayerState state, int index = 0)
     {
-        if (patrolling != null) patrolling.Exit();
-        if (chasing != null) chasing.Exit();
-
-        if (initialState != null)
+        if (spumPrefabs != null)
         {
-            initialState.Enter();
+            spumPrefabs.PlayAnimation(state, index);
         }
     }
 }
