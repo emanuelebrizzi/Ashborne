@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PatrolState : EnemyState
 {
+    const float MinimumDistance = 0.1f;
     [SerializeField] Transform pointA, pointB;
     [SerializeField] float detectionRange = 3f;
     LayerMask playerLayerMask;
@@ -41,7 +42,7 @@ public class PatrolState : EnemyState
         float directionX = goingToB ? 1 : -1;
         enemy.UpdateSpriteDirection(directionX);
 
-        if (Mathf.Abs(enemy.Body.position.x - targetX) < 0.1f)
+        if (Mathf.Abs(enemy.Body.position.x - targetX) < MinimumDistance)
         {
             goingToB = !goingToB;
             target = goingToB ? pointB.position : pointA.position;
@@ -66,7 +67,7 @@ public class PatrolState : EnemyState
 
         if (hit.collider != null)
         {
-            Debug.Log($"Raycast hit: {hit.collider.name}, looking for player: {Player.Instance.name}");
+            enemy.MyLogger.Log(Enemy.LoggerTAG, $"Raycast hit: {hit.collider.name}, looking for player: {Player.Instance.name}");
             return hit.transform == Player.Instance.transform;
         }
 

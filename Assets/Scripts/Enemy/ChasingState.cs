@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class ChasingState : EnemyState
 {
-    [SerializeField] float maxChaseDistance = 3f;
+    [SerializeField] float maxChaseDistance = 3.0f;
+    [SerializeField] float attackRange = 2.0f;
     Vector2 enemyStartingPoint;
 
     public override void Enter()
@@ -38,7 +39,7 @@ public class ChasingState : EnemyState
         );
         enemy.Body.MovePosition(newPosition);
 
-        if (Vector2.Distance(enemy.transform.position, Player.Instance.transform.position) <= 2.0f)
+        if (Vector2.Distance(enemy.transform.position, Player.Instance.transform.position) <= attackRange)
         {
             enemy.Attack();
         }
