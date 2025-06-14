@@ -6,10 +6,8 @@ public class Health : MonoBehaviour
     /* 
         The current flow updates the health and notifies the changes to the subscribers.
     */
-    [Header("Health Settings")]
-    [SerializeField] int currentHealth = 0;
     [SerializeField] int maxHealth = 100;
-
+    int currentHealth = 0;
 
     public int MaxHealth => maxHealth;
     public int CurrentHealth => currentHealth;

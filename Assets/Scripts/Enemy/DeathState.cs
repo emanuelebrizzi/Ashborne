@@ -5,8 +5,6 @@ public class DeathState : EnemyState
 {
     const float corpseRemaingTime = 2.0f;
 
-    bool hasProcessedDeath = false;
-
     public override void Enter()
     {
         base.Enter();

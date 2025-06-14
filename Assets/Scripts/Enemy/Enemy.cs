@@ -7,8 +7,8 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] float speed = 5.0f;
-    [SerializeField] EnemyState initialState;
     [SerializeField] int ashEchoesReward = 100;
+    [SerializeField] EnemyState initialState;
 
     PatrolState patrolState;
     ChasingState chasingState;
@@ -50,7 +50,6 @@ public class Enemy : MonoBehaviour
             patrolState.Enter();
         }
     }
-
 
     public void TakeDamage(int damage)
     {
