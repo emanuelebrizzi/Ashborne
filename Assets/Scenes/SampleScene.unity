@@ -2172,13 +2172,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2669f91a9a93454393aa5f60afd7614, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 998869675}
+  attackRange: 1
+  attackDamage: 1
+  attackCooldown: 0.1
+  attackDelay: 0.1
   enemyLayer:
     serializedVersion: 2
     m_Bits: 256
-  attackRange: 1
-  attackDamage: 1
-  attackDelay: 0.25
 --- !u!114 &998869673
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -3,62 +3,53 @@ using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
 {
-    static readonly float AttackCooldown = 0.5f;
-    [SerializeField] Player player;
-    [SerializeField] LayerMask enemyLayer; // Layer mask to identify enemies
 
-    [Header("Attack Properties")]
+    [Header("Attack Settings")]
     [SerializeField] float attackRange = 1f;
     [SerializeField] int attackDamage = 1;
-    [SerializeField] float attackDelay = 0.25f;
+    [SerializeField] float attackCooldown = 0.3f;
+    [SerializeField] float attackDelay = 0.4f;
+    [SerializeField] LayerMask enemyLayer; // Layer mask to identify enemies
     Transform attackPoint; // Point from where the attack is initiated
-    float waitingTime;
+    float nextAttackTime = 0f;
     bool isAttacking = false;
-
 
     void Start()
     {
-        waitingTime = AttackCooldown;
         attackPoint = transform.Find("AttackPoint");
-
-        if (player == null)
-        {
-            player = GetComponent<Player>();
-        }
     }
 
 
     void Update()
     {
-        if (isAttacking)
+        if (isAttacking || Time.time < nextAttackTime)
             return;
 
-        if (waitingTime <= 0f && Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
-            StartCoroutine(PerformAttack());
-            waitingTime = AttackCooldown;
-        }
-        else
-        {
-            waitingTime -= Time.deltaTime;
+            StartAttack();
         }
     }
 
-    IEnumerator PerformAttack()
+    private void StartAttack()
     {
         isAttacking = true;
+        nextAttackTime = Time.time + attackCooldown;
 
-        player.PlayAnimation(PlayerState.ATTACK, 1);
-        yield return new WaitForSeconds(attackDelay);
-        ApplyDamage();
-        yield return new WaitForSeconds(AttackCooldown - attackDelay);
-
-        isAttacking = false;
+        Player.Instance.PlayAnimation(PlayerState.ATTACK, 0);
+        StartCoroutine(PerformAttackAfterDelay());
     }
 
-    void ApplyDamage()
+    private IEnumerator PerformAttackAfterDelay()
     {
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
+        yield return new WaitForSeconds(attackDelay);
+
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(
+            attackPoint.position,
+            attackRange,
+            enemyLayer
+        );
+
         foreach (Collider2D enemyCollider in hitEnemies)
         {
             if (enemyCollider.TryGetComponent<Enemy>(out var enemy))
@@ -67,6 +58,8 @@ public class PlayerAttack : MonoBehaviour
             }
         }
 
+        yield return new WaitForSeconds(0.2f);
+        isAttacking = false;
     }
 
 }

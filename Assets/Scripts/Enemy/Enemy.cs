@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] int healthPoints;
+    const float DeathTime = 2.0f;
     [SerializeField] float speed = 5.0f;
     [SerializeField] EnemyState initialState;
     [SerializeField] AttackHitbox hitbox;
@@ -18,8 +18,11 @@ public class Enemy : MonoBehaviour
     ChasingState chasing;
     SPUM_Prefabs spumPrefabs;
     bool isDead = false;
+    Health health;
 
     public const string LoggerTAG = "Enemy";
+
+
     public Logger MyLogger { get; private set; }
     public Rigidbody2D Body { get; private set; }
     public float Speed => speed;
@@ -32,10 +35,12 @@ public class Enemy : MonoBehaviour
         spumPrefabs = GetComponent<SPUM_Prefabs>();
         patrolling = GetComponent<PatrolState>();
         chasing = GetComponent<ChasingState>();
+        health = GetComponent<Health>();
         spumPrefabs.OverrideControllerInit();
 
         ResetState();
     }
+
 
     void Update()
     {
@@ -63,6 +68,54 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    public void TakeDamage(int damage)
+    {
+        health.TakeDamage(damage);
+        MyLogger.Log(LoggerTAG, $"Got {damage} damage, remaining {health.CurrentHealth} HP.");
+
+        if (health.CurrentHealth <= 0)
+        {
+            Die();
+            MyLogger.Log(LoggerTAG, "Dying...");
+            return;
+        }
+
+        spumPrefabs.PlayAnimation(PlayerState.DAMAGED, 0);
+    }
+
+    void Die()
+    {
+        isDead = true;
+
+        Collider2D[] colliders = GetComponentsInChildren<Collider2D>();
+        foreach (Collider2D col in colliders)
+        {
+            col.enabled = false;
+        }
+
+        if (patrolling != null) patrolling.enabled = false;
+        if (chasing != null) chasing.enabled = false;
+
+        spumPrefabs.PlayAnimation(PlayerState.DEATH, 0);
+
+        AwardAshEchoes();
+        Destroy(gameObject, DeathTime);
+    }
+
+    void AwardAshEchoes()
+    {
+        if (Player.Instance != null)
+        {
+            Player.Instance.AddAshEchoes(ashEchoesReward);
+            MyLogger.Log(LoggerTAG, $"Awarded {ashEchoesReward} Ash Echoes to player");
+        }
+        else
+        {
+            MyLogger.LogWarning(LoggerTAG, "Player singleton not available. Cannot award Ash Echoes.");
+
+        }
+    }
+
     // The assumption is that the sprite is facing left when x is positive
     public void UpdateSpriteDirection(float directionX)
     {
@@ -80,60 +133,12 @@ public class Enemy : MonoBehaviour
 
     void ResetState()
     {
-        patrolling.Exit();
-        chasing.Exit();
+        if (patrolling != null) patrolling.Exit();
+        if (chasing != null) chasing.Exit();
 
         if (initialState != null)
         {
             initialState.Enter();
-        }
-    }
-
-    public void TakeDamage(int damage)
-    {
-        healthPoints -= damage;
-        MyLogger.Log(LoggerTAG, $"Enemy took {damage} damage. Remaining HP: {healthPoints}");
-
-
-        if (healthPoints <= 0)
-        {
-            Die();
-            MyLogger.Log(LoggerTAG, "Enemy has died.");
-            return;
-        }
-        spumPrefabs.PlayAnimation(PlayerState.DAMAGED, 0);
-    }
-
-    void Die()
-    {
-        isDead = true;
-        if (patrolling != null) patrolling.enabled = false;
-        if (chasing != null) chasing.enabled = false;
-
-        spumPrefabs.PlayAnimation(PlayerState.DEATH, 0);
-
-        AwardAshEchoes();
-        StartCoroutine(DestroyAfterDelay());
-    }
-
-    IEnumerator DestroyAfterDelay()
-    {
-        yield return new WaitForSeconds(2.0f);
-
-        Destroy(gameObject);
-    }
-
-    void AwardAshEchoes()
-    {
-        if (Player.Instance != null)
-        {
-            Player.Instance.AddAshEchoes(ashEchoesReward);
-            MyLogger.Log(LoggerTAG, $"Awarded {ashEchoesReward} Ash Echoes to player");
-        }
-        else
-        {
-            MyLogger.LogWarning(LoggerTAG, "Player singleton not available. Cannot award Ash Echoes.");
-
         }
     }
 }

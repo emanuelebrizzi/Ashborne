@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -8,6 +9,9 @@ public class Player : MonoBehaviour
     AshEchoes ashEchoes;
 
     public static Player Instance { get; private set; }
+    public event Action<int> OnHealthChanged;
+    public Health Health => health;
+
 
     void Awake()
     {
@@ -22,6 +26,7 @@ public class Player : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
         }
 
         health = GetComponent<Health>();
@@ -39,6 +44,7 @@ public class Player : MonoBehaviour
 
             spumPrefabs.OverrideControllerInit();
         }
+
     }
 
     public void PlayAnimation(PlayerState state, int index = 0)
@@ -49,12 +55,11 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(int damage)
     {
-        if (health != null)
-        {
-            health.ApplyDamage(amount);
-        }
+        PlayAnimation(PlayerState.DAMAGED, 0);
+        health.TakeDamage(damage);
+        OnHealthChanged?.Invoke(health.CurrentHealth);
     }
 
     public void AddAshEchoes(int amount)
