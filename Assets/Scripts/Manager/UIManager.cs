@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Rendering;
 
 public class UIManager : MonoBehaviour
 {
@@ -11,7 +12,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] Slider healthBar;
     [SerializeField] TextMeshProUGUI ashEchoesText;
 
-    AshEchoes ashEchoes;
 
     void Start()
     {
@@ -23,16 +23,10 @@ public class UIManager : MonoBehaviour
         if (Player.Instance != null)
         {
             Player.Instance.OnHealthChanged += UpdateHealthBar;
-            UpdateHealthBar(Player.Instance.Health.MaxHealth);
+            UpdateHealthBar(1);
 
-        }
-
-        if (GameObject.FindGameObjectWithTag("Player").TryGetComponent<AshEchoes>(out var ashEchoesComponent))
-        {
-            ashEchoes = ashEchoesComponent;
-            ashEchoes.OnEchoesChanged += UpdateAshEchoes;
-            UpdateAshEchoes(ashEchoes.CurrentAshEchoes);
-            Debug.Log("Subscribed to OnEchoesChanged event.");
+            Player.Instance.OnEchoesChanged += UpdateAshEchoes;
+            UpdateAshEchoes(0);
         }
     }
 
@@ -47,11 +41,7 @@ public class UIManager : MonoBehaviour
         if (Player.Instance != null)
         {
             Player.Instance.OnHealthChanged -= UpdateHealthBar;
-        }
-
-        if (ashEchoes != null)
-        {
-            ashEchoes.OnEchoesChanged -= UpdateAshEchoes;
+            Player.Instance.OnEchoesChanged -= UpdateAshEchoes;
         }
     }
 
@@ -95,12 +85,11 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void UpdateHealthBar(int hp)
+    public void UpdateHealthBar(float currentHealth)
     {
-        if (healthBar != null && Player.Instance.Health != null)
+        if (healthBar != null)
         {
-            healthBar.value = (float)hp / Player.Instance.Health.MaxHealth;
-            Debug.Log($"Updating health bar: Current Health = {hp}, Max Health = {Player.Instance.Health.MaxHealth}");
+            healthBar.value = currentHealth;
         }
     }
 

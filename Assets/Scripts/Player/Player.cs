@@ -9,8 +9,8 @@ public class Player : MonoBehaviour
     AshEchoes ashEchoes;
 
     public static Player Instance { get; private set; }
-    public event Action<int> OnHealthChanged;
-    public Health Health => health;
+    public event Action<float> OnHealthChanged;
+    public event Action<int> OnEchoesChanged;
 
 
     void Awake()
@@ -59,7 +59,8 @@ public class Player : MonoBehaviour
     {
         PlayAnimation(PlayerState.DAMAGED, 0);
         health.TakeDamage(damage);
-        OnHealthChanged?.Invoke(health.CurrentHealth);
+        var newValue = (float)health.CurrentHealth / health.MaxHealth;
+        OnHealthChanged?.Invoke(newValue);
     }
 
     public void AddAshEchoes(int amount)
@@ -68,23 +69,6 @@ public class Player : MonoBehaviour
         {
             ashEchoes.AddEchoes(amount);
         }
-    }
-
-    public bool SpendAshEchoes(int amount)
-    {
-        if (ashEchoes != null)
-        {
-            return ashEchoes.SpendEchoes(amount);
-        }
-        return false;
-    }
-
-    public int GetCurrentAshEchoes()
-    {
-        if (ashEchoes != null)
-        {
-            return ashEchoes.CurrentAshEchoes;
-        }
-        return 0;
+        OnEchoesChanged?.Invoke(ashEchoes.Current);
     }
 }
