@@ -2,9 +2,32 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    // This class follow the Singleton Pattern
     [SerializeField] SPUM_Prefabs spumPrefabs;
+    Health health;
+    AshEchoes ashEchoes;
 
-    private void Start()
+    public static Player Instance { get; private set; }
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+
+            // Optional: uncomment if you want the player to persist between scenes
+            // Maybe it's usefull later 
+            // DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+        health = GetComponent<Health>();
+        ashEchoes = GetComponent<AshEchoes>();
+    }
+    void Start()
     {
         spumPrefabs = GetComponent<SPUM_Prefabs>();
         if (spumPrefabs != null)
@@ -24,5 +47,39 @@ public class Player : MonoBehaviour
         {
             spumPrefabs.PlayAnimation(state, index);
         }
+    }
+
+    public void TakeDamage(int amount)
+    {
+        if (health != null)
+        {
+            health.ApplyDamage(amount);
+        }
+    }
+
+    public void AddAshEchoes(int amount)
+    {
+        if (ashEchoes != null)
+        {
+            ashEchoes.AddEchoes(amount);
+        }
+    }
+
+    public bool SpendAshEchoes(int amount)
+    {
+        if (ashEchoes != null)
+        {
+            return ashEchoes.SpendEchoes(amount);
+        }
+        return false;
+    }
+
+    public int GetCurrentAshEchoes()
+    {
+        if (ashEchoes != null)
+        {
+            return ashEchoes.CurrentAshEchoes;
+        }
+        return 0;
     }
 }

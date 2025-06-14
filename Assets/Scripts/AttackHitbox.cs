@@ -37,13 +37,12 @@ public class AttackHitbox : MonoBehaviour
 
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            Debug.Log($"Hitbox detected Player: {other.name}");
 
-            if (other.TryGetComponent<Health>(out var playerHealth))
+            if (Player.Instance != null)
             {
                 Debug.Log($"Applying {damageAmount} damage to player");
-                playerHealth.TakeDamage(damageAmount);
-                canDealDamage = false; // Prevent multiple hits
+                Player.Instance.TakeDamage(damageAmount);
+                canDealDamage = false;
             }
             else
             {

@@ -23,7 +23,6 @@ public class Enemy : MonoBehaviour
     public Logger MyLogger { get; private set; }
     public Rigidbody2D Body { get; private set; }
     public float Speed => speed;
-    public Transform player;
 
 
     void Start()
@@ -126,10 +125,15 @@ public class Enemy : MonoBehaviour
 
     void AwardAshEchoes()
     {
-        var playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null && playerObj.TryGetComponent<AshEchoes>(out var ashEchoes))
+        if (Player.Instance != null)
         {
-            ashEchoes.AddEchoes(ashEchoesReward);
+            Player.Instance.AddAshEchoes(ashEchoesReward);
+            MyLogger.Log(LoggerTAG, $"Awarded {ashEchoesReward} Ash Echoes to player");
+        }
+        else
+        {
+            MyLogger.LogWarning(LoggerTAG, "Player singleton not available. Cannot award Ash Echoes.");
+
         }
     }
 }

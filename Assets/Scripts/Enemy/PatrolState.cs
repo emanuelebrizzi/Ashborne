@@ -4,7 +4,7 @@ public class PatrolState : EnemyState
 {
     [SerializeField] Transform pointA, pointB;
     [SerializeField] float detectionRange = 3f;
-    [SerializeField] LayerMask playerLayerMask;
+    LayerMask playerLayerMask;
     bool goingToB = true;
     Vector2 target;
 
@@ -20,11 +20,7 @@ public class PatrolState : EnemyState
             nextState = GetComponent<ChasingState>();
         }
 
-        if (playerLayerMask == 0)
-        {
-            playerLayerMask = LayerMask.GetMask("Player");
-            Debug.Log($"Player layer mask initialized to: {playerLayerMask}");
-        }
+        playerLayerMask = LayerMask.GetMask("Player");
     }
 
     void FixedUpdate()
@@ -54,13 +50,13 @@ public class PatrolState : EnemyState
 
     bool DetectPlayer()
     {
-        if (enemy.player == null) return false;
+        if (Player.Instance == null) return false;
 
 
-        float distanceToPlayer = Vector2.Distance(transform.position, enemy.player.position);
+        float distanceToPlayer = Vector2.Distance(transform.position, Player.Instance.transform.position);
         if (distanceToPlayer > detectionRange) return false;
 
-        Vector2 directionToPlayer = (enemy.player.position - transform.position).normalized;
+        Vector2 directionToPlayer = (Player.Instance.transform.position - transform.position).normalized;
         RaycastHit2D hit = Physics2D.Raycast(
         transform.position,
         directionToPlayer,
@@ -70,8 +66,8 @@ public class PatrolState : EnemyState
 
         if (hit.collider != null)
         {
-            Debug.Log($"Raycast hit: {hit.collider.name}, looking for player: {enemy.player.name}");
-            return hit.transform == enemy.player;
+            Debug.Log($"Raycast hit: {hit.collider.name}, looking for player: {Player.Instance.name}");
+            return hit.transform == Player.Instance.transform;
         }
 
         return false;

@@ -18,7 +18,7 @@ public class Health : MonoBehaviour
         currentHealth = maxHealth;
     }
 
-    public void TakeDamage(int damage)
+    public void ApplyDamage(int damage)
     {
         currentHealth -= damage;
         Debug.Log($"Player took {damage} damage. Remaining HP: {currentHealth}");

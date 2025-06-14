@@ -28,7 +28,7 @@ public class ChasingState : EnemyState
             return;
         }
 
-        Vector2 directionToPlayer = (enemy.player.position - enemy.transform.position).normalized;
+        Vector2 directionToPlayer = (Player.Instance.transform.position - enemy.transform.position).normalized;
 
         enemy.UpdateSpriteDirection(directionToPlayer.x);
 
@@ -38,7 +38,7 @@ public class ChasingState : EnemyState
         );
         enemy.Body.MovePosition(newPosition);
 
-        if (Vector2.Distance(enemy.transform.position, enemy.player.position) <= 2.0f)
+        if (Vector2.Distance(enemy.transform.position, Player.Instance.transform.position) <= 2.0f)
         {
             enemy.Attack();
         }
