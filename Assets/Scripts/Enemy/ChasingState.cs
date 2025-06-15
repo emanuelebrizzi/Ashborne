@@ -1,15 +1,26 @@
+using System.Collections;
 using UnityEngine;
 
 public class ChasingState : EnemyState
 {
-    [SerializeField] float maxChaseDistance = 3f;
+    [SerializeField] float maxChaseDistance = 3.0f;
+    [SerializeField] float attackRange = 2.0f;
     Vector2 enemyStartingPoint;
+    AttackHitbox hitbox;
+    float lastAttackTime = -100f;
+    readonly float attackCooldown = 1.0f;
 
     public override void Enter()
     {
         base.Enter();
         enemyStartingPoint = enemy.transform.position;
+        hitbox = GetComponentInChildren<AttackHitbox>();
         enemy.MyLogger.Log(Enemy.LoggerTAG, "Entered ChasingState");
+
+        if (nextState == null)
+        {
+            nextState = GetComponent<PatrolState>();
+        }
     }
 
     void FixedUpdate()
@@ -20,9 +31,12 @@ public class ChasingState : EnemyState
         {
             enemy.MyLogger.Log(Enemy.LoggerTAG, "Player is too far, returning to PatrolState");
             base.Exit();
+            return;
         }
 
-        Vector2 directionToPlayer = (enemy.player.position - enemy.transform.position).normalized;
+        enemy.PlayAnimation(PlayerState.MOVE, 0);
+
+        Vector2 directionToPlayer = (Player.Instance.transform.position - enemy.transform.position).normalized;
 
         enemy.UpdateSpriteDirection(directionToPlayer.x);
 
@@ -32,13 +46,29 @@ public class ChasingState : EnemyState
         );
         enemy.Body.MovePosition(newPosition);
 
-        if (Vector2.Distance(enemy.transform.position, enemy.player.position) <= 2.0f)
+        if (Vector2.Distance(enemy.transform.position, Player.Instance.transform.position) <= attackRange)
         {
-            enemy.Attack();
+            Attack();
         }
-
-        enemy.MyLogger.Log(Enemy.LoggerTAG, "Chasing player at position: " + enemy.player.position);
     }
 
+    void Attack()
+    {
+        if (Time.time < lastAttackTime + attackCooldown) return;
 
+        enemy.PlayAnimation(PlayerState.ATTACK, 0);
+        StartCoroutine(PerformAttack());
+
+        lastAttackTime = Time.time;
+    }
+
+    IEnumerator PerformAttack()
+    {
+        yield return new WaitForSeconds(0.3f);
+
+        if (hitbox != null)
+        {
+            hitbox.Activate();
+        }
+    }
 }

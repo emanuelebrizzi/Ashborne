@@ -1,47 +1,83 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(PatrolState))]
 [RequireComponent(typeof(ChasingState))]
-
+[RequireComponent(typeof(DeathState))]
 public class Enemy : MonoBehaviour
 {
+    [SerializeField] float speed = 5.0f;
+    [SerializeField] int ashEchoesReward = 100;
+    [SerializeField] EnemyState initialState;
+
+    PatrolState patrolState;
+    ChasingState chasingState;
+    DeathState deathState;
+    SPUM_Prefabs spumPrefabs;
+    Health health;
+
     public const string LoggerTAG = "Enemy";
     public Logger MyLogger { get; private set; }
     public Rigidbody2D Body { get; private set; }
     public float Speed => speed;
-    public Transform player;
-
-    [SerializeField] int healthPoints;
-    [SerializeField] float speed = 5.0f;
-    [SerializeField] EnemyState initialState;
-
-    PatrolState patrolling;
-    ChasingState chasing;
-
-    SPUM_Prefabs spumPrefabs;
+    public int Reward => ashEchoesReward;
 
     void Start()
     {
         MyLogger = new Logger(Debug.unityLogger.logHandler);
         Body = GetComponent<Rigidbody2D>();
         spumPrefabs = GetComponent<SPUM_Prefabs>();
-        patrolling = GetComponent<PatrolState>();
-        chasing = GetComponent<ChasingState>();
+        patrolState = GetComponent<PatrolState>();
+        chasingState = GetComponent<ChasingState>();
+        deathState = GetComponent<DeathState>();
+        health = GetComponent<Health>();
         spumPrefabs.OverrideControllerInit();
 
         ResetState();
     }
 
-    void Update()
+    void ResetState()
     {
-        spumPrefabs.PlayAnimation(PlayerState.MOVE, 0);
+        if (patrolState != null) patrolState.Exit();
+        if (chasingState != null) chasingState.Exit();
+
+        if (initialState != null)
+        {
+            initialState.Enter();
+        }
+        else if (patrolState != null)
+        {
+            patrolState.Enter();
+        }
     }
 
-    public void Attack()
+    public void TakeDamage(int damage)
     {
-        MyLogger.Log(LoggerTAG, "Enemy is attacking the player!");
-        spumPrefabs.PlayAnimation(PlayerState.ATTACK, 0);
+        health.TakeDamage(damage);
+        MyLogger.Log(LoggerTAG, $"Got {damage} damage, remaining {health.CurrentHealth} HP.");
+
+        if (health.CurrentHealth <= 0)
+        {
+            Die();
+            return;
+        }
+
+        spumPrefabs.PlayAnimation(PlayerState.DAMAGED, 0);
     }
+
+    void Die()
+    {
+        EnemyState currentState = null;
+
+        if (patrolState.enabled)
+            currentState = patrolState;
+        else if (chasingState.enabled)
+            currentState = chasingState;
+
+        currentState.nextState = deathState;
+        currentState.Exit();
+    }
+
 
     // The assumption is that the sprite is facing left when x is positive
     public void UpdateSpriteDirection(float directionX)
@@ -58,33 +94,11 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void ResetState()
+    public void PlayAnimation(PlayerState state, int index = 0)
     {
-        patrolling.Exit();
-        chasing.Exit();
-
-        if (initialState != null)
+        if (spumPrefabs != null)
         {
-            initialState.Enter();
+            spumPrefabs.PlayAnimation(state, index);
         }
-    }
-
-    public void TakeDamage(int damage)
-    {
-        healthPoints -= damage;
-        MyLogger.Log(LoggerTAG, $"Enemy took {damage} damage. Remaining HP: {healthPoints}");
-
-        if (healthPoints <= 0)
-        {
-            Die();
-            MyLogger.Log(LoggerTAG, "Enemy has died.");
-        }
-    }
-
-    void Die()
-    {
-        spumPrefabs.PlayAnimation(PlayerState.DEATH, 0);
-        // Additional logic for enemy death can be added here, such as dropping loot or playing a death sound.
-        Destroy(gameObject, 1f); // Destroy the enemy after 1 second to allow the death animation to play.
     }
 }
