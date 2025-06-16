@@ -25,6 +25,11 @@ public class ChasingState : EnemyState
 
     void FixedUpdate()
     {
+        if (enemy == null || enemy.Body == null || Player.Instance == null)
+        {
+            return;
+        }
+
         float distanceFromStart = Vector2.Distance(enemyStartingPoint, enemy.transform.position);
 
         if (distanceFromStart > maxChaseDistance)

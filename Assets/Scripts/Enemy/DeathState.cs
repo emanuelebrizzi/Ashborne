@@ -1,9 +1,9 @@
-using System.Collections;
+using System;
 using UnityEngine;
 
 public class DeathState : EnemyState
 {
-    const float corpseRemaingTime = 2.0f;
+    public event Action OnEnemyDeath;
 
     public override void Enter()
     {
@@ -20,9 +20,15 @@ public class DeathState : EnemyState
             col.enabled = false;
         }
 
+        // Disable Rigidbody physics
+        if (enemy.Body != null)
+        {
+            enemy.Body.simulated = false;
+        }
+
         enemy.PlayAnimation(PlayerState.DEATH, 0);
         AwardAshEchoes();
-        StartCoroutine(RemoveCorpseAfterDelay());
+        OnEnemyDeath?.Invoke();
     }
 
     void AwardAshEchoes()
@@ -37,25 +43,5 @@ public class DeathState : EnemyState
             enemy.MyLogger.LogWarning(Enemy.LoggerTAG, "Player singleton not available. Cannot award Ash Echoes.");
 
         }
-    }
-
-    private IEnumerator RemoveCorpseAfterDelay()
-    {
-        yield return new WaitForSeconds(corpseRemaingTime);
-
-        // Either disable or destroy based on respawn settings
-        // if (GameManager.Instance != null && GameManager.Instance.ShouldRespawnEnemies)
-        // {
-        //     gameObject.SetActive(false);
-        //     enemy.MyLogger.Log(Enemy.LoggerTAG, "Enemy disabled for future respawn");
-        // }
-        // else
-        // {
-        //     Destroy(gameObject);
-        //     enemy.MyLogger.Log(Enemy.LoggerTAG, "Enemy destroyed");
-        // }
-
-        Destroy(gameObject);
-        enemy.MyLogger.Log(Enemy.LoggerTAG, "Died");
     }
 }

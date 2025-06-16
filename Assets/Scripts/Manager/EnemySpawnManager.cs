@@ -1,26 +1,27 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemySpawnManager : MonoBehaviour
 {
     public static EnemySpawnManager Instance { get; private set; }
 
-    [SerializeField] GameObject enemyPrefab;
-
     [Serializable]
     public class SpawnPoint
     {
-        public string pointId;
+        public string pointId; // Maybe make it private because we want it auto generated
         public Transform position;
+        public GameObject enemyPrefab;
         public float respawnDelay = 5f;
-        [HideInInspector] public bool isOccupied = false;
-
         public Transform patrolPointA;
         public Transform patrolPointB;
+        [HideInInspector] public bool isOccupied = false;
+        [HideInInspector] public Enemy activeEnemy = null;
     }
 
     [SerializeField] SpawnPoint[] spawnPoints;
+    private Dictionary<string, SpawnPoint> spawnPointLookup = new();
 
     void Awake()
     {
@@ -33,19 +34,29 @@ public class EnemySpawnManager : MonoBehaviour
         Instance = this;
     }
 
-    private void Start()
+    void Start()
     {
-        // Register for game state changes
+        foreach (var point in spawnPoints)
+        {
+            if (string.IsNullOrEmpty(point.pointId))
+            {
+                point.pointId = Guid.NewGuid().ToString();
+                Debug.LogWarning($"SpawnPoint had no ID. Generated ID: {point.pointId}");
+            }
+
+            spawnPointLookup[point.pointId] = point;
+        }
+
         GameManager.Instance.OnGameStateChanged += OnGameStateChanged;
-        SpawnAllEnemies();
+        InitialSpawn();
     }
 
-    private void OnGameStateChanged(GameManager.GameState newState)
+    void OnGameStateChanged(GameManager.GameState newState)
     {
         // You could handle pausing enemy behavior here if needed
     }
 
-    public void SpawnAllEnemies()
+    void InitialSpawn()
     {
         foreach (var spawnPoint in spawnPoints)
         {
@@ -56,49 +67,38 @@ public class EnemySpawnManager : MonoBehaviour
         }
     }
 
-    public void SpawnEnemyAt(SpawnPoint spawnPoint)
+    void SpawnEnemyAt(SpawnPoint spawnPoint)
     {
-        if (enemyPrefab == null)
-        {
-            Debug.LogError("Enemy prefab is not assigned in EnemySpawnManager!");
-            return;
-        }
+        GameObject enemyObj = Instantiate(spawnPoint.enemyPrefab, spawnPoint.position.position, spawnPoint.position.rotation);
+        Enemy enemy = enemyObj.GetComponent<Enemy>();
+        PatrolState patrolState = enemy.GetComponent<PatrolState>();
+        patrolState.SetPatrolPoints(spawnPoint.patrolPointA, spawnPoint.patrolPointB);
 
-        GameObject enemyObj = Instantiate(enemyPrefab, spawnPoint.position.position, spawnPoint.position.rotation);
-
-        var enemy = enemyObj.GetComponent<Enemy>();
-        if (enemyObj.TryGetComponent<PatrolState>(out var patrolState))
-        {
-            patrolState.SetPatrolPoints(spawnPoint.patrolPointA, spawnPoint.patrolPointB);
-        }
-        string spawnId = spawnPoint.pointId;
-        enemy.OnEnemyDeath += () => HandleEnemyDeath(spawnId);
         spawnPoint.isOccupied = true;
+        spawnPoint.activeEnemy = enemy;
+        spawnPoint.activeEnemy.GetComponent<DeathState>().OnEnemyDeath += () => HandleEnemyDeath(spawnPoint.pointId);
 
         Debug.Log($"Enemy spawned at fixed position: {spawnPoint.pointId}");
     }
 
     public void HandleEnemyDeath(string spawnPointId)
     {
-        SpawnPoint spawnPoint = null;
-        foreach (var point in spawnPoints)
+        if (!spawnPointLookup.TryGetValue(spawnPointId, out SpawnPoint spawnPoint))
         {
-            if (point.pointId == spawnPointId)
-            {
-                spawnPoint = point;
-                break;
-            }
+            Debug.LogError($"Unknown spawn point ID: {spawnPointId}");
+            return;
         }
 
-        if (spawnPoint != null)
-        {
-            spawnPoint.isOccupied = false;
-            StartCoroutine(RespawnAfterDelay(spawnPoint));
-        }
+        StartCoroutine(DestroyAndRespawn(spawnPoint));
     }
 
-    private IEnumerator RespawnAfterDelay(SpawnPoint spawnPoint)
+    private IEnumerator DestroyAndRespawn(SpawnPoint spawnPoint)
     {
+        yield return new WaitForSeconds(3.0f); // Time corpse remains visible
+
+        DestroyEnemyAt(spawnPoint);
+        spawnPoint.isOccupied = false;
+
         yield return new WaitForSeconds(spawnPoint.respawnDelay);
 
         if (GameManager.Instance.CurrentGameState == GameManager.GameState.Playing)
@@ -107,4 +107,13 @@ public class EnemySpawnManager : MonoBehaviour
         }
     }
 
+    void DestroyEnemyAt(SpawnPoint spawnPoint)
+    {
+        if (spawnPoint.activeEnemy != null)
+        {
+            Destroy(spawnPoint.activeEnemy.gameObject);
+            spawnPoint.activeEnemy = null;
+            Debug.Log($"Enemy corpse removed from {spawnPoint.pointId}");
+        }
+    }
 }

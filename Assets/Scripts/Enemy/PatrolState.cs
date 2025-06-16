@@ -25,6 +25,11 @@ public class PatrolState : EnemyState
 
     void FixedUpdate()
     {
+        if (enemy == null || enemy.Body == null)
+        {
+            return;
+        }
+
         if (DetectPlayer())
         {
             enemy.MyLogger.Log(Enemy.LoggerTAG, "Player detected, switching to Chasingstate");
@@ -52,6 +57,7 @@ public class PatrolState : EnemyState
     {
         if (Player.Instance == null) return false;
 
+        enemy.MyLogger.Log(Enemy.LoggerTAG, $"Checking for player. Distance: {Vector2.Distance(transform.position, Player.Instance.transform.position)}, Detection range: {detectionRange}");
 
         float distanceToPlayer = Vector2.Distance(transform.position, Player.Instance.transform.position);
         if (distanceToPlayer > detectionRange) return false;

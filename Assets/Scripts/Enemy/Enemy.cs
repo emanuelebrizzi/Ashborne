@@ -23,8 +23,6 @@ public class Enemy : MonoBehaviour
     public float Speed => speed;
     public int Reward => ashEchoesReward;
 
-    public event Action OnEnemyDeath;
-
     void Start()
     {
         MyLogger = new Logger(Debug.unityLogger.logHandler);
@@ -43,14 +41,11 @@ public class Enemy : MonoBehaviour
     {
         if (patrolState != null) patrolState.Exit();
         if (chasingState != null) chasingState.Exit();
+        if (deathState != null) deathState.Exit();
 
         if (initialState != null)
         {
             initialState.Enter();
-        }
-        else if (patrolState != null)
-        {
-            patrolState.Enter();
         }
     }
 
@@ -79,10 +74,7 @@ public class Enemy : MonoBehaviour
 
         currentState.nextState = deathState;
         currentState.Exit();
-
-        OnEnemyDeath?.Invoke();
     }
-
 
     // The assumption is that the sprite is facing left when x is positive
     public void UpdateSpriteDirection(float directionX)
