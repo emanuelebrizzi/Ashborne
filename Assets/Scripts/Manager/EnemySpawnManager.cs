@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class EnemySpawnManager : MonoBehaviour
 {
-    public static EnemySpawnManager Instance { get; private set; }
+    const float CorpseRemainingTime = 3.0f;
 
     [Serializable]
     public class SpawnPoint
@@ -21,7 +21,9 @@ public class EnemySpawnManager : MonoBehaviour
     }
 
     [SerializeField] SpawnPoint[] spawnPoints;
-    private Dictionary<string, SpawnPoint> spawnPointLookup = new();
+    Dictionary<string, SpawnPoint> spawnPointLookup = new();
+
+    public static EnemySpawnManager Instance { get; private set; }
 
     void Awake()
     {
@@ -94,7 +96,7 @@ public class EnemySpawnManager : MonoBehaviour
 
     private IEnumerator DestroyAndRespawn(SpawnPoint spawnPoint)
     {
-        yield return new WaitForSeconds(3.0f); // Time corpse remains visible
+        yield return new WaitForSeconds(CorpseRemainingTime);
 
         DestroyEnemyAt(spawnPoint);
         spawnPoint.isOccupied = false;

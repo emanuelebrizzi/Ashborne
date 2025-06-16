@@ -69,7 +69,7 @@ public class ChasingState : EnemyState
     {
         if (Time.time < lastAttackTime + attackCooldown) return;
 
-        enemy.PlayAnimation(PlayerState.ATTACK, 0);
+
         StartCoroutine(PerformAttack());
 
         lastAttackTime = Time.time;
@@ -77,7 +77,21 @@ public class ChasingState : EnemyState
 
     IEnumerator PerformAttack()
     {
-        yield return new WaitForSeconds(0.3f);
+        // Maybe we can factor out a general method to syncronize actions with the animations' length
+        enemy.PlayAnimation(PlayerState.ATTACK, 0);
+        Animator animator = enemy.GetComponentInChildren<Animator>();
+        if (animator != null)
+        {
+            yield return null;
+
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            if (stateInfo.IsName("ATTACK"))
+            {
+                float animationLength = stateInfo.length;
+
+                yield return new WaitForSeconds(animationLength);
+            }
+        }
 
         if (hitbox != null)
         {

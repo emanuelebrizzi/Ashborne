@@ -28,7 +28,6 @@ public class DeathState : EnemyState
         }
 
         enemy.PlayAnimation(PlayerState.DEATH, 0);
-        // StartCoroutine(FreezeAnimationAfterPlay());
         AwardAshEchoes();
         OnEnemyDeath?.Invoke();
     }

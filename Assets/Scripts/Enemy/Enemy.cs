@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(PatrolState))]
@@ -14,7 +12,6 @@ public class Enemy : MonoBehaviour
     PatrolState patrolState;
     ChasingState chasingState;
     DeathState deathState;
-    // SPUM_Prefabs spumPrefabs;
     Animator animator;
     Health health;
 
@@ -28,13 +25,11 @@ public class Enemy : MonoBehaviour
     {
         MyLogger = new Logger(Debug.unityLogger.logHandler);
         Body = GetComponent<Rigidbody2D>();
-        // spumPrefabs = GetComponent<SPUM_Prefabs>();
         patrolState = GetComponent<PatrolState>();
         chasingState = GetComponent<ChasingState>();
         deathState = GetComponent<DeathState>();
         health = GetComponent<Health>();
         animator = GetComponentInChildren<Animator>();
-        // spumPrefabs.OverrideControllerInit();
 
         ResetState();
     }
@@ -67,18 +62,15 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
-
-        // Cancel ALL pending state transitions
         EnemyState[] allStates = GetComponents<EnemyState>();
         foreach (var state in allStates)
         {
             if (state != deathState)
             {
-                state.enabled = false;  // Disable all non-death states
+                state.enabled = false;
             }
         }
 
-        // Force enter death state directly
         deathState.Enter();
     }
 
