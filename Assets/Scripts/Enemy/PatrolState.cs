@@ -57,22 +57,21 @@ public class PatrolState : EnemyState
     {
         if (Player.Instance == null) return false;
 
-        enemy.MyLogger.Log(Enemy.LoggerTAG, $"Checking for player. Distance: {Vector2.Distance(transform.position, Player.Instance.transform.position)}, Detection range: {detectionRange}");
 
         float distanceToPlayer = Vector2.Distance(transform.position, Player.Instance.transform.position);
         if (distanceToPlayer > detectionRange) return false;
 
+        Vector2 raycastOrigin = (Vector2)transform.position + Vector2.up * 0.5f;
         Vector2 directionToPlayer = (Player.Instance.transform.position - transform.position).normalized;
         RaycastHit2D hit = Physics2D.Raycast(
-        transform.position,
-        directionToPlayer,
-        detectionRange,
-        playerLayerMask
-    );
+            raycastOrigin,
+            directionToPlayer,
+            detectionRange,
+            playerLayerMask
+        );
 
         if (hit.collider != null)
         {
-            enemy.MyLogger.Log(Enemy.LoggerTAG, $"Raycast hit: {hit.collider.name}, looking for player: {Player.Instance.name}");
             return hit.transform == Player.Instance.transform;
         }
 

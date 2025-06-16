@@ -39,9 +39,9 @@ public class Enemy : MonoBehaviour
 
     void ResetState()
     {
-        if (patrolState != null) patrolState.Exit();
-        if (chasingState != null) chasingState.Exit();
-        if (deathState != null) deathState.Exit();
+        patrolState.Exit();
+        chasingState.Exit();
+        deathState.Exit();
 
         if (initialState != null)
         {
