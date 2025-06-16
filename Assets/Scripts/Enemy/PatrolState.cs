@@ -3,18 +3,17 @@ using UnityEngine;
 public class PatrolState : EnemyState
 {
     const float MinimumDistance = 0.1f;
-    [SerializeField] Transform pointA, pointB;
     [SerializeField] float detectionRange = 3f;
     LayerMask playerLayerMask;
     bool goingToB = true;
+    Transform pointA, pointB;
     Vector2 target;
 
     public override void Enter()
     {
         base.Enter();
         enemy.MyLogger.Log(Enemy.LoggerTAG, "Entered in the PatrolState");
-        target = pointB.position;
-        goingToB = true;
+        enemy.PlayAnimation(PlayerState.MOVE, 0);
 
         if (nextState == null)
         {
@@ -72,5 +71,14 @@ public class PatrolState : EnemyState
         }
 
         return false;
+    }
+
+    public void SetPatrolPoints(Transform pointA, Transform pointB)
+    {
+        this.pointA = pointA;
+        this.pointB = pointB;
+
+        target = pointB.position;
+        goingToB = true;
     }
 }

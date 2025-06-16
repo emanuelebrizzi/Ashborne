@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -21,6 +22,8 @@ public class Enemy : MonoBehaviour
     public Rigidbody2D Body { get; private set; }
     public float Speed => speed;
     public int Reward => ashEchoesReward;
+
+    public event Action OnEnemyDeath;
 
     void Start()
     {
@@ -76,6 +79,8 @@ public class Enemy : MonoBehaviour
 
         currentState.nextState = deathState;
         currentState.Exit();
+
+        OnEnemyDeath?.Invoke();
     }
 
 
