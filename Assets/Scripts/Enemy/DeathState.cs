@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class DeathState : EnemyState
@@ -12,6 +13,7 @@ public class DeathState : EnemyState
         ProcessDeath();
     }
 
+
     void ProcessDeath()
     {
         Collider2D[] colliders = GetComponentsInChildren<Collider2D>();
@@ -20,13 +22,13 @@ public class DeathState : EnemyState
             col.enabled = false;
         }
 
-        // Disable Rigidbody physics
         if (enemy.Body != null)
         {
             enemy.Body.simulated = false;
         }
 
         enemy.PlayAnimation(PlayerState.DEATH, 0);
+        // StartCoroutine(FreezeAnimationAfterPlay());
         AwardAshEchoes();
         OnEnemyDeath?.Invoke();
     }

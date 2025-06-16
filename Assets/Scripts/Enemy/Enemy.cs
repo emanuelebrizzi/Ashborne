@@ -14,7 +14,8 @@ public class Enemy : MonoBehaviour
     PatrolState patrolState;
     ChasingState chasingState;
     DeathState deathState;
-    SPUM_Prefabs spumPrefabs;
+    // SPUM_Prefabs spumPrefabs;
+    Animator animator;
     Health health;
 
     public const string LoggerTAG = "Enemy";
@@ -27,12 +28,13 @@ public class Enemy : MonoBehaviour
     {
         MyLogger = new Logger(Debug.unityLogger.logHandler);
         Body = GetComponent<Rigidbody2D>();
-        spumPrefabs = GetComponent<SPUM_Prefabs>();
+        // spumPrefabs = GetComponent<SPUM_Prefabs>();
         patrolState = GetComponent<PatrolState>();
         chasingState = GetComponent<ChasingState>();
         deathState = GetComponent<DeathState>();
         health = GetComponent<Health>();
-        spumPrefabs.OverrideControllerInit();
+        animator = GetComponentInChildren<Animator>();
+        // spumPrefabs.OverrideControllerInit();
 
         ResetState();
     }
@@ -60,20 +62,24 @@ public class Enemy : MonoBehaviour
             return;
         }
 
-        spumPrefabs.PlayAnimation(PlayerState.DAMAGED, 0);
+        PlayAnimation(PlayerState.DAMAGED, 0);
     }
 
     void Die()
     {
-        EnemyState currentState = null;
 
-        if (patrolState.enabled)
-            currentState = patrolState;
-        else if (chasingState.enabled)
-            currentState = chasingState;
+        // Cancel ALL pending state transitions
+        EnemyState[] allStates = GetComponents<EnemyState>();
+        foreach (var state in allStates)
+        {
+            if (state != deathState)
+            {
+                state.enabled = false;  // Disable all non-death states
+            }
+        }
 
-        currentState.nextState = deathState;
-        currentState.Exit();
+        // Force enter death state directly
+        deathState.Enter();
     }
 
     // The assumption is that the sprite is facing left when x is positive
@@ -93,9 +99,33 @@ public class Enemy : MonoBehaviour
 
     public void PlayAnimation(PlayerState state, int index = 0)
     {
-        if (spumPrefabs != null)
+        if (animator == null) return;
+
+        MyLogger.Log(LoggerTAG, $"Playing animation: {state}");
+
+        switch (state)
         {
-            spumPrefabs.PlayAnimation(state, index);
+            case PlayerState.IDLE:
+                animator.SetBool("isMoving", false);
+                animator.ResetTrigger("isAttacking");
+                animator.ResetTrigger("isDamaged");
+                break;
+
+            case PlayerState.MOVE:
+                animator.SetBool("isMoving", true);
+                break;
+
+            case PlayerState.ATTACK:
+                animator.SetTrigger("isAttacking");
+                break;
+
+            case PlayerState.DAMAGED:
+                animator.SetTrigger("isDamaged");
+                break;
+
+            case PlayerState.DEATH:
+                animator.SetBool("isDead", true);
+                break;
         }
     }
 }

@@ -23,6 +23,14 @@ public class ChasingState : EnemyState
         }
     }
 
+    public override void Exit()
+    {
+
+        StopAllCoroutines();
+
+        base.Exit();
+    }
+
     void FixedUpdate()
     {
         if (enemy == null || enemy.Body == null || Player.Instance == null)
