@@ -1,12 +1,13 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private string loadingSceneName = "LoadingScene";
-    [SerializeField] private float minimumLoadingTime = 0.5f;
+    [Header("Scene settings")]
+    [SerializeField] string mainSceneName = "SampleScene";
+    [SerializeField] string loadingSceneName = "LoadingScene";
+    [SerializeField] float minimumLoadingTime = 0.5f;
 
     public static GameManager Instance { get; private set; }
 
@@ -44,14 +45,13 @@ public class GameManager : MonoBehaviour
         CurrentGameState = newState;
         OnGameStateChanged?.Invoke(newState);
 
-        // Setting timeScale to 0 will freeze updates
         switch (newState)
         {
             case GameState.Playing:
                 Time.timeScale = 1f;
                 break;
             case GameState.Paused:
-                Time.timeScale = 0f;
+                Time.timeScale = 0f; // Setting timeScale to 0 will freeze updates
                 break;
         }
     }
@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
     public void StartNewGame()
     {
         ChangeGameState(GameState.Playing);
-        LoadGameScene("SampleScene");
+        LoadGameScene(mainSceneName);
         Debug.Log("Game Started");
     }
 
