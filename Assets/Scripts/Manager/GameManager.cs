@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -21,8 +22,7 @@ public class GameManager : MonoBehaviour
 
     public GameState CurrentGameState { get; private set; } = GameState.Playing;
 
-    public delegate void GameStateChangedHandler(GameState newState);
-    public event GameStateChangedHandler OnGameStateChanged;
+    public event Action<GameState> OnGameStateChanged;
 
     void Awake()
     {

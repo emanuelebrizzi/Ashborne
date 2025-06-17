@@ -3,18 +3,17 @@ using UnityEngine;
 public class PatrolState : EnemyState
 {
     const float MinimumDistance = 0.1f;
-    [SerializeField] Transform pointA, pointB;
     [SerializeField] float detectionRange = 3f;
     LayerMask playerLayerMask;
     bool goingToB = true;
+    Transform pointA, pointB;
     Vector2 target;
 
     public override void Enter()
     {
         base.Enter();
         enemy.MyLogger.Log(Enemy.LoggerTAG, "Entered in the PatrolState");
-        target = pointB.position;
-        goingToB = true;
+        enemy.PlayAnimation(PlayerState.MOVE, 0);
 
         if (nextState == null)
         {
@@ -26,6 +25,11 @@ public class PatrolState : EnemyState
 
     void FixedUpdate()
     {
+        if (enemy == null || enemy.Body == null)
+        {
+            return;
+        }
+
         if (DetectPlayer())
         {
             enemy.MyLogger.Log(Enemy.LoggerTAG, "Player detected, switching to Chasingstate");
@@ -57,20 +61,29 @@ public class PatrolState : EnemyState
         float distanceToPlayer = Vector2.Distance(transform.position, Player.Instance.transform.position);
         if (distanceToPlayer > detectionRange) return false;
 
+        Vector2 raycastOrigin = (Vector2)transform.position + Vector2.up * 0.5f;
         Vector2 directionToPlayer = (Player.Instance.transform.position - transform.position).normalized;
         RaycastHit2D hit = Physics2D.Raycast(
-        transform.position,
-        directionToPlayer,
-        detectionRange,
-        playerLayerMask
-    );
+            raycastOrigin,
+            directionToPlayer,
+            detectionRange,
+            playerLayerMask
+        );
 
         if (hit.collider != null)
         {
-            enemy.MyLogger.Log(Enemy.LoggerTAG, $"Raycast hit: {hit.collider.name}, looking for player: {Player.Instance.name}");
             return hit.transform == Player.Instance.transform;
         }
 
         return false;
+    }
+
+    public void SetPatrolPoints(Transform pointA, Transform pointB)
+    {
+        this.pointA = pointA;
+        this.pointB = pointB;
+
+        target = pointB.position;
+        goingToB = true;
     }
 }

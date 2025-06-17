@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(PatrolState))]
@@ -13,7 +12,7 @@ public class Enemy : MonoBehaviour
     PatrolState patrolState;
     ChasingState chasingState;
     DeathState deathState;
-    SPUM_Prefabs spumPrefabs;
+    Animator animator;
     Health health;
 
     public const string LoggerTAG = "Enemy";
@@ -26,28 +25,24 @@ public class Enemy : MonoBehaviour
     {
         MyLogger = new Logger(Debug.unityLogger.logHandler);
         Body = GetComponent<Rigidbody2D>();
-        spumPrefabs = GetComponent<SPUM_Prefabs>();
         patrolState = GetComponent<PatrolState>();
         chasingState = GetComponent<ChasingState>();
         deathState = GetComponent<DeathState>();
         health = GetComponent<Health>();
-        spumPrefabs.OverrideControllerInit();
+        animator = GetComponentInChildren<Animator>();
 
         ResetState();
     }
 
     void ResetState()
     {
-        if (patrolState != null) patrolState.Exit();
-        if (chasingState != null) chasingState.Exit();
+        patrolState.Exit();
+        chasingState.Exit();
+        deathState.Exit();
 
         if (initialState != null)
         {
             initialState.Enter();
-        }
-        else if (patrolState != null)
-        {
-            patrolState.Enter();
         }
     }
 
@@ -62,22 +57,22 @@ public class Enemy : MonoBehaviour
             return;
         }
 
-        spumPrefabs.PlayAnimation(PlayerState.DAMAGED, 0);
+        PlayAnimation(PlayerState.DAMAGED, 0);
     }
 
     void Die()
     {
-        EnemyState currentState = null;
+        EnemyState[] allStates = GetComponents<EnemyState>();
+        foreach (var state in allStates)
+        {
+            if (state != deathState)
+            {
+                state.enabled = false;
+            }
+        }
 
-        if (patrolState.enabled)
-            currentState = patrolState;
-        else if (chasingState.enabled)
-            currentState = chasingState;
-
-        currentState.nextState = deathState;
-        currentState.Exit();
+        deathState.Enter();
     }
-
 
     // The assumption is that the sprite is facing left when x is positive
     public void UpdateSpriteDirection(float directionX)
@@ -96,9 +91,33 @@ public class Enemy : MonoBehaviour
 
     public void PlayAnimation(PlayerState state, int index = 0)
     {
-        if (spumPrefabs != null)
+        if (animator == null) return;
+
+        MyLogger.Log(LoggerTAG, $"Playing animation: {state}");
+
+        switch (state)
         {
-            spumPrefabs.PlayAnimation(state, index);
+            case PlayerState.IDLE:
+                animator.SetBool("isMoving", false);
+                animator.ResetTrigger("isAttacking");
+                animator.ResetTrigger("isDamaged");
+                break;
+
+            case PlayerState.MOVE:
+                animator.SetBool("isMoving", true);
+                break;
+
+            case PlayerState.ATTACK:
+                animator.SetTrigger("isAttacking");
+                break;
+
+            case PlayerState.DAMAGED:
+                animator.SetTrigger("isDamaged");
+                break;
+
+            case PlayerState.DEATH:
+                animator.SetBool("isDead", true);
+                break;
         }
     }
 }
