@@ -2,45 +2,76 @@ using UnityEngine;
 
 [RequireComponent(typeof(PatrolState))]
 [RequireComponent(typeof(ChasingState))]
-
+[RequireComponent(typeof(DeathState))]
 public class Enemy : MonoBehaviour
 {
+    [SerializeField] float speed = 5.0f;
+    [SerializeField] int ashEchoesReward = 100;
+    [SerializeField] EnemyState initialState;
+
+    PatrolState patrolState;
+    ChasingState chasingState;
+    DeathState deathState;
+    Animator animator;
+    Health health;
+
     public const string LoggerTAG = "Enemy";
     public Logger MyLogger { get; private set; }
     public Rigidbody2D Body { get; private set; }
     public float Speed => speed;
-    public Transform player;
-
-    [SerializeField] int healthPoints;
-    [SerializeField] float speed = 5.0f;
-    [SerializeField] EnemyState initialState;
-
-    PatrolState patrolling;
-    ChasingState chasing;
-
-    SPUM_Prefabs spumPrefabs;
+    public int Reward => ashEchoesReward;
 
     void Start()
     {
         MyLogger = new Logger(Debug.unityLogger.logHandler);
         Body = GetComponent<Rigidbody2D>();
-        spumPrefabs = GetComponent<SPUM_Prefabs>();
-        patrolling = GetComponent<PatrolState>();
-        chasing = GetComponent<ChasingState>();
-        spumPrefabs.OverrideControllerInit();
+        patrolState = GetComponent<PatrolState>();
+        chasingState = GetComponent<ChasingState>();
+        deathState = GetComponent<DeathState>();
+        health = GetComponent<Health>();
+        animator = GetComponentInChildren<Animator>();
 
         ResetState();
     }
 
-    void Update()
+    void ResetState()
     {
-        spumPrefabs.PlayAnimation(PlayerState.MOVE, 0);
+        patrolState.Exit();
+        chasingState.Exit();
+        deathState.Exit();
+
+        if (initialState != null)
+        {
+            initialState.Enter();
+        }
     }
 
-    public void Attack()
+    public void TakeDamage(int damage)
     {
-        MyLogger.Log(LoggerTAG, "Enemy is attacking the player!");
-        spumPrefabs.PlayAnimation(PlayerState.ATTACK, 0);
+        health.TakeDamage(damage);
+        MyLogger.Log(LoggerTAG, $"Got {damage} damage, remaining {health.CurrentHealth} HP.");
+
+        if (health.CurrentHealth <= 0)
+        {
+            Die();
+            return;
+        }
+
+        PlayAnimation(PlayerState.DAMAGED, 0);
+    }
+
+    void Die()
+    {
+        EnemyState[] allStates = GetComponents<EnemyState>();
+        foreach (var state in allStates)
+        {
+            if (state != deathState)
+            {
+                state.enabled = false;
+            }
+        }
+
+        deathState.Enter();
     }
 
     // The assumption is that the sprite is facing left when x is positive
@@ -58,33 +89,35 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void ResetState()
+    public void PlayAnimation(PlayerState state, int index = 0)
     {
-        patrolling.Exit();
-        chasing.Exit();
+        if (animator == null) return;
 
-        if (initialState != null)
+        MyLogger.Log(LoggerTAG, $"Playing animation: {state}");
+
+        switch (state)
         {
-            initialState.Enter();
+            case PlayerState.IDLE:
+                animator.SetBool("isMoving", false);
+                animator.ResetTrigger("isAttacking");
+                animator.ResetTrigger("isDamaged");
+                break;
+
+            case PlayerState.MOVE:
+                animator.SetBool("isMoving", true);
+                break;
+
+            case PlayerState.ATTACK:
+                animator.SetTrigger("isAttacking");
+                break;
+
+            case PlayerState.DAMAGED:
+                animator.SetTrigger("isDamaged");
+                break;
+
+            case PlayerState.DEATH:
+                animator.SetBool("isDead", true);
+                break;
         }
-    }
-
-    public void TakeDamage(int damage)
-    {
-        healthPoints -= damage;
-        MyLogger.Log(LoggerTAG, $"Enemy took {damage} damage. Remaining HP: {healthPoints}");
-
-        if (healthPoints <= 0)
-        {
-            Die();
-            MyLogger.Log(LoggerTAG, "Enemy has died.");
-        }
-    }
-
-    void Die()
-    {
-        spumPrefabs.PlayAnimation(PlayerState.DEATH, 0);
-        // Additional logic for enemy death can be added here, such as dropping loot or playing a death sound.
-        Destroy(gameObject, 1f); // Destroy the enemy after 1 second to allow the death animation to play.
     }
 }

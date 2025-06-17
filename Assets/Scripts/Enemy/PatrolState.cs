@@ -2,22 +2,41 @@ using UnityEngine;
 
 public class PatrolState : EnemyState
 {
-    Vector2 target;
-
-    [SerializeField] Transform pointA, pointB;
+    const float MinimumDistance = 0.1f;
     [SerializeField] float detectionRange = 3f;
+    LayerMask playerLayerMask;
     bool goingToB = true;
+    Transform pointA, pointB;
+    Vector2 target;
 
     public override void Enter()
     {
         base.Enter();
         enemy.MyLogger.Log(Enemy.LoggerTAG, "Entered in the PatrolState");
-        target = pointB.position;
-        goingToB = true;
+        enemy.PlayAnimation(PlayerState.MOVE, 0);
+
+        if (nextState == null)
+        {
+            nextState = GetComponent<ChasingState>();
+        }
+
+        playerLayerMask = LayerMask.GetMask("Player");
     }
 
     void FixedUpdate()
     {
+        if (enemy == null || enemy.Body == null)
+        {
+            return;
+        }
+
+        if (DetectPlayer())
+        {
+            enemy.MyLogger.Log(Enemy.LoggerTAG, "Player detected, switching to Chasingstate");
+            base.Exit();
+            return;
+        }
+
         float targetX = target.x;
         float currentY = enemy.Body.position.y;
         float newX = Mathf.MoveTowards(enemy.Body.position.x, targetX, enemy.Speed * Time.fixedDeltaTime);
@@ -27,22 +46,44 @@ public class PatrolState : EnemyState
         float directionX = goingToB ? 1 : -1;
         enemy.UpdateSpriteDirection(directionX);
 
-        if (Mathf.Abs(enemy.Body.position.x - targetX) < 0.1f)
+        if (Mathf.Abs(enemy.Body.position.x - targetX) < MinimumDistance)
         {
             goingToB = !goingToB;
             target = goingToB ? pointB.position : pointA.position;
-            enemy.MyLogger.Log(Enemy.LoggerTAG, "Changed direction towards " + target);
-
-        }
-
-        Collider2D hit = Physics2D.OverlapCircle(enemy.transform.position, detectionRange);
-
-        if (hit != null && hit.transform == enemy.player)
-        {
-            enemy.MyLogger.Log(Enemy.LoggerTAG, "Player detected, switching to Chasingstate");
-            base.Exit();
         }
     }
 
+    bool DetectPlayer()
+    {
+        if (Player.Instance == null) return false;
 
+
+        float distanceToPlayer = Vector2.Distance(transform.position, Player.Instance.transform.position);
+        if (distanceToPlayer > detectionRange) return false;
+
+        Vector2 raycastOrigin = (Vector2)transform.position + Vector2.up * 0.5f;
+        Vector2 directionToPlayer = (Player.Instance.transform.position - transform.position).normalized;
+        RaycastHit2D hit = Physics2D.Raycast(
+            raycastOrigin,
+            directionToPlayer,
+            detectionRange,
+            playerLayerMask
+        );
+
+        if (hit.collider != null)
+        {
+            return hit.transform == Player.Instance.transform;
+        }
+
+        return false;
+    }
+
+    public void SetPatrolPoints(Transform pointA, Transform pointB)
+    {
+        this.pointA = pointA;
+        this.pointB = pointB;
+
+        target = pointB.position;
+        goingToB = true;
+    }
 }
