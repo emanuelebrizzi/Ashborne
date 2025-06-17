@@ -1,8 +1,13 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] private string loadingSceneName = "LoadingScene";
+    [SerializeField] private float minimumLoadingTime = 0.5f;
+
     public static GameManager Instance { get; private set; }
 
     public UIManager UIManager { get; private set; }
@@ -51,10 +56,30 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void StartGame()
+    public void StartNewGame()
     {
         ChangeGameState(GameState.Playing);
+        LoadGameScene("SampleScene");
         Debug.Log("Game Started");
+    }
+
+
+    public void LoadGameScene(string targetSceneName)
+    {
+        StartCoroutine(LoadSceneWithTransition(targetSceneName));
+    }
+
+    IEnumerator LoadSceneWithTransition(string targetSceneName)
+    {
+        AsyncOperation loadingOperation = SceneManager.LoadSceneAsync(loadingSceneName);
+        while (!loadingOperation.isDone)
+        {
+            yield return null;
+        }
+
+        yield return new WaitForSecondsRealtime(minimumLoadingTime);
+
+        SceneManager.LoadScene(targetSceneName);
     }
 
     public void PauseGame()
