@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -28,6 +29,7 @@ public class GameManager : MonoBehaviour
         Instance = this;
 
         UIManager = GetComponentInChildren<UIManager>();
+        DontDestroyOnLoad(gameObject);
     }
 
     public void ChangeGameState(GameState newState)
@@ -59,5 +61,16 @@ public class GameManager : MonoBehaviour
     {
         ChangeGameState(GameState.Paused);
         Debug.Log("Game Paused");
+    }
+
+    public void QuitGame()
+    {
+        Debug.Log("Exiting game...");
+
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
     }
 }
