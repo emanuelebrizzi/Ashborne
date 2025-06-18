@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [Header("Scene settings")]
+    [SerializeField] string mainMenuSceneName = "MainMenu";
     [SerializeField] string mainSceneName = "LevelOneMap";
     [SerializeField] string loadingSceneName = "LoadingScene";
     [SerializeField] float minimumLoadingTime = 0.5f;
@@ -16,11 +17,12 @@ public class GameManager : MonoBehaviour
 
     public enum GameState
     {
+        MainMenu,
         Playing,
         Paused
     }
 
-    public GameState CurrentGameState { get; private set; } = GameState.Playing;
+    public GameState CurrentGameState { get; private set; }
 
     public event Action<GameState> OnGameStateChanged;
 
@@ -36,23 +38,29 @@ public class GameManager : MonoBehaviour
 
         UIManager = GetComponentInChildren<UIManager>();
         DontDestroyOnLoad(gameObject);
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == mainMenuSceneName)
+        {
+            ChangeGameState(GameState.MainMenu);
+        }
+        else if (scene.name == mainSceneName)
+        {
+            ChangeGameState(GameState.Playing);
+        }
     }
 
     void Update()
     {
-        if (SceneManager.GetActiveScene().name == mainSceneName && Input.GetKeyDown(KeyCode.Escape))
-        {
-            TogglePauseState();
-        }
-    }
-
-    public void TogglePauseState()
-    {
-        if (CurrentGameState == GameState.Playing)
+        // TODO: Maybe refactor for something better handler
+        if (CurrentGameState == GameState.Playing && Input.GetKeyDown(KeyCode.Escape))
         {
             ChangeGameState(GameState.Paused);
         }
-        else if (CurrentGameState == GameState.Paused)
+        else if (CurrentGameState == GameState.Paused && Input.GetKeyDown(KeyCode.Escape))
         {
             ChangeGameState(GameState.Playing);
         }
@@ -62,18 +70,17 @@ public class GameManager : MonoBehaviour
     {
         if (CurrentGameState == newState) return;
 
+        if (newState == GameState.Paused)
+        {
+            Time.timeScale = 0f;
+        }
+        else
+        {
+            Time.timeScale = 1f;
+        }
+
         CurrentGameState = newState;
         OnGameStateChanged?.Invoke(newState);
-
-        switch (newState)
-        {
-            case GameState.Playing:
-                Time.timeScale = 1f;
-                break;
-            case GameState.Paused:
-                Time.timeScale = 0f; // Setting timeScale to 0 will freeze updates
-                break;
-        }
     }
 
     public void StartNewGame()
@@ -83,6 +90,11 @@ public class GameManager : MonoBehaviour
         Debug.Log("Game Started");
     }
 
+    public void ReturnToMainMenu()
+    {
+        ChangeGameState(GameState.MainMenu);
+        LoadGameScene(mainMenuSceneName);
+    }
 
     public void LoadGameScene(string targetSceneName)
     {
@@ -117,5 +129,10 @@ public class GameManager : MonoBehaviour
 #else
             Application.Quit();
 #endif
+    }
+
+    void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }
