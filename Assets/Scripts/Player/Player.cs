@@ -59,8 +59,29 @@ public class Player : MonoBehaviour
     {
         PlayAnimation(PlayerState.DAMAGED, 0);
         health.TakeDamage(damage);
-        var newValue = (float)health.CurrentHealth / health.MaxHealth;
-        OnHealthChanged?.Invoke(newValue);
+        if (health.CurrentHealth <= 0)
+        {
+            Die();
+        }
+        else
+        {
+            var newValue = (float)health.CurrentHealth / health.MaxHealth;
+            OnHealthChanged?.Invoke(newValue);
+        }
+    }
+
+    private void Die()
+    {
+        PlayAnimation(PlayerState.DEATH, 0);
+        PlayerDeathHandler deathHandler = GetComponent<PlayerDeathHandler>();
+        if (deathHandler != null)
+        {
+            deathHandler.Die();
+        }
+        else
+        {
+            Debug.LogError("PlayerDeathHandler is not assigned to the player.");
+        }
     }
 
     public void AddAshEchoes(int amount)
@@ -71,4 +92,8 @@ public class Player : MonoBehaviour
         }
         OnEchoesChanged?.Invoke(ashEchoes.Current);
     }
+
+    public AshEchoes AshEchoes { get { return ashEchoes; } }
+    public Health Health { get { return health; } }
+
 }

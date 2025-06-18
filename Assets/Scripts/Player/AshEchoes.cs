@@ -9,9 +9,13 @@ public class AshEchoes : MonoBehaviour
 
     void Start()
     {
-        current = 0;
+        ResetEchoes();
     }
 
+    public void ResetEchoes()
+    {
+        current = 0;
+    }
 
     public void AddEchoes(int amount)
     {
@@ -19,6 +23,22 @@ public class AshEchoes : MonoBehaviour
         {
             current += amount;
         }
+    }
+
+    public void RemoveEchoes(int amount)
+    {
+        if (amount > 0)
+        {
+            current = Mathf.Max(0, current - amount);
+        }
+    }
+    
+
+    public void DropEchoes(Transform dropPoint)
+    {
+        // Logic to drop echoes, e.g., instantiate a visual effect or sound
+        Debug.Log($"Dropped {current} Ash Echoes.");
+        ResetEchoes();
     }
 
 }

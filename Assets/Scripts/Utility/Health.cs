@@ -23,4 +23,9 @@ public class Health : MonoBehaviour
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
     }
 
+    public void ResetHealth()
+    {
+        currentHealth = maxHealth;
+    }
+
 }
