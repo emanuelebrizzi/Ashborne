@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [Header("Scene settings")]
-    [SerializeField] string mainSceneName = "SampleScene";
+    [SerializeField] string mainSceneName = "LevelOneMap";
     [SerializeField] string loadingSceneName = "LoadingScene";
     [SerializeField] float minimumLoadingTime = 0.5f;
 
