@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 
 public class DeathState : EnemyState
@@ -27,7 +26,7 @@ public class DeathState : EnemyState
             enemy.Body.simulated = false;
         }
 
-        enemy.PlayAnimation(PlayerState.DEATH, 0);
+        enemy.PlayAnimation(Enemy.AnimationState.DEATH);
         AwardAshEchoes();
         OnEnemyDeath?.Invoke();
     }
@@ -37,11 +36,11 @@ public class DeathState : EnemyState
         if (Player.Instance != null)
         {
             Player.Instance.AddAshEchoes(enemy.Reward);
-            enemy.MyLogger.Log(Enemy.LoggerTAG, $"Awarded {enemy.Reward} Ash Echoes to player");
+            Debug.Log($"Awarded {enemy.Reward} Ash Echoes to player");
         }
         else
         {
-            enemy.MyLogger.LogWarning(Enemy.LoggerTAG, "Player singleton not available. Cannot award Ash Echoes.");
+            Debug.LogWarning("Player singleton not available. Cannot award Ash Echoes.");
 
         }
     }
