@@ -13,8 +13,6 @@ public class GameManager : MonoBehaviour
 
     public static GameManager Instance { get; private set; }
 
-    public UIManager UIManager { get; private set; }
-
     public enum GameState
     {
         MainMenu,
@@ -36,9 +34,8 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
 
-        UIManager = GetComponentInChildren<UIManager>();
-        DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
+        DontDestroyOnLoad(gameObject);
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
