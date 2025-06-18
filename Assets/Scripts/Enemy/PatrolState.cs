@@ -4,7 +4,7 @@ public class PatrolState : EnemyState
 {
     const float MinimumDistance = 0.1f;
     [SerializeField] float detectionRange = 3f;
-    LayerMask playerLayerMask;
+
     bool goingToB = true;
     Transform pointA, pointB;
     Vector2 target;
@@ -12,51 +12,37 @@ public class PatrolState : EnemyState
     public override void Enter()
     {
         base.Enter();
-        enemy.MyLogger.Log(Enemy.LoggerTAG, "Entered in the PatrolState");
-        enemy.PlayAnimation(PlayerState.MOVE, 0);
+        Debug.Log("Enemy entered in the PatrolState");
+        enemy.PlayAnimation(Enemy.AnimationState.MOVE);
 
         if (nextState == null)
         {
             nextState = GetComponent<ChasingState>();
         }
-
-        playerLayerMask = LayerMask.GetMask("Player");
     }
 
     void FixedUpdate()
     {
-        if (enemy == null || enemy.Body == null)
-        {
-            return;
-        }
-
         if (DetectPlayer())
         {
-            enemy.MyLogger.Log(Enemy.LoggerTAG, "Player detected, switching to Chasingstate");
+            Debug.Log("Player detected, exiting patrol state");
             base.Exit();
             return;
         }
 
-        float targetX = target.x;
-        float currentY = enemy.Body.position.y;
-        float newX = Mathf.MoveTowards(enemy.Body.position.x, targetX, enemy.Speed * Time.fixedDeltaTime);
-        Vector2 newPosition = new(newX, currentY);
-        enemy.Body.MovePosition(newPosition);
+        Vector2 direction = (target - (Vector2)transform.position).normalized;
+        enemy.MoveInDirection(direction.x);
 
-        float directionX = goingToB ? 1 : -1;
-        enemy.UpdateSpriteDirection(directionX);
-
-        if (Mathf.Abs(enemy.Body.position.x - targetX) < MinimumDistance)
+        float distanceToTarget = Vector2.Distance(new Vector2(transform.position.x, 0), new Vector2(target.x, 0));
+        if (distanceToTarget < MinimumDistance)
         {
-            goingToB = !goingToB;
-            target = goingToB ? pointB.position : pointA.position;
+            SwitchPatrolDirection();
         }
     }
 
     bool DetectPlayer()
     {
         if (Player.Instance == null) return false;
-
 
         float distanceToPlayer = Vector2.Distance(transform.position, Player.Instance.transform.position);
         if (distanceToPlayer > detectionRange) return false;
@@ -67,7 +53,7 @@ public class PatrolState : EnemyState
             raycastOrigin,
             directionToPlayer,
             detectionRange,
-            playerLayerMask
+            enemy.PlayerMask
         );
 
         if (hit.collider != null)
@@ -76,6 +62,12 @@ public class PatrolState : EnemyState
         }
 
         return false;
+    }
+
+    void SwitchPatrolDirection()
+    {
+        goingToB = !goingToB;
+        target = goingToB ? pointB.position : pointA.position;
     }
 
     public void SetPatrolPoints(Transform pointA, Transform pointB)
