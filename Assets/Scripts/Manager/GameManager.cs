@@ -38,6 +38,26 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    void Update()
+    {
+        if (SceneManager.GetActiveScene().name == mainSceneName && Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePauseState();
+        }
+    }
+
+    public void TogglePauseState()
+    {
+        if (CurrentGameState == GameState.Playing)
+        {
+            ChangeGameState(GameState.Paused);
+        }
+        else if (CurrentGameState == GameState.Paused)
+        {
+            ChangeGameState(GameState.Playing);
+        }
+    }
+
     public void ChangeGameState(GameState newState)
     {
         if (CurrentGameState == newState) return;
@@ -82,10 +102,10 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(targetSceneName);
     }
 
-    public void PauseGame()
+    public void ResumeGame()
     {
-        ChangeGameState(GameState.Paused);
-        Debug.Log("Game Paused");
+        ChangeGameState(GameState.Playing);
+        Debug.Log("Game Resumed");
     }
 
     public void QuitGame()

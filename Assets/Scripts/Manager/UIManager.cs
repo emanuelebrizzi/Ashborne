@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
 
     [Header("UI Panels")]
     [SerializeField] GameObject gameplayPanel;
+    [SerializeField] GameObject pauseMenuPanel;
 
     [Header("HUD Elements")]
     [SerializeField] Slider healthBar;
@@ -17,73 +18,42 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
+        RegisterToEventHandlers();
+        InitializeUIElements();
+    }
+
+    void RegisterToEventHandlers()
+    {
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.OnGameStateChanged += HandleGameStateChanged;
+            GameManager.Instance.OnGameStateChanged += UpdateUIPanels;
         }
 
         if (Player.Instance != null)
         {
             Player.Instance.OnHealthChanged += UpdateHealthBar;
-            UpdateHealthBar(InitialHealthBarValue);
-
             Player.Instance.OnEchoesChanged += UpdateAshEchoes;
-            UpdateAshEchoes(InitialEchoesValue);
         }
     }
 
-
-    void OnDestroy()
+    void InitializeUIElements()
     {
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
-        }
-
-        if (Player.Instance != null)
-        {
-            Player.Instance.OnHealthChanged -= UpdateHealthBar;
-            Player.Instance.OnEchoesChanged -= UpdateAshEchoes;
-        }
+        UpdateHealthBar(InitialHealthBarValue);
+        UpdateAshEchoes(InitialEchoesValue);
+        UpdateUIPanels(GameManager.GameState.Playing);
     }
 
-
-    void HandleGameStateChanged(GameManager.GameState newState)
+    void UpdateUIPanels(GameManager.GameState newState)
     {
-        HideAllPanels();
-
         switch (newState)
         {
             case GameManager.GameState.Playing:
-                ShowPanel(gameplayPanel);
+                if (gameplayPanel) gameplayPanel.SetActive(true);
+                if (pauseMenuPanel) pauseMenuPanel.SetActive(false);
                 break;
-
-        }
-    }
-
-    void HideAllPanels()
-    {
-        if (gameplayPanel) gameplayPanel.SetActive(false);
-    }
-
-    private void ShowPanel(GameObject panel)
-    {
-        if (panel) panel.SetActive(true);
-    }
-
-    public void ShowPauseMenu()
-    {
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.ChangeGameState(GameManager.GameState.Paused);
-        }
-    }
-
-    public void ResumeGameplay()
-    {
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.ChangeGameState(GameManager.GameState.Playing);
+            case GameManager.GameState.Paused:
+                if (pauseMenuPanel) pauseMenuPanel.SetActive(true);
+                break;
         }
     }
 
@@ -100,6 +70,20 @@ public class UIManager : MonoBehaviour
         if (ashEchoesText != null)
         {
             ashEchoesText.text = amount.ToString();
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnGameStateChanged -= UpdateUIPanels;
+        }
+
+        if (Player.Instance != null)
+        {
+            Player.Instance.OnHealthChanged -= UpdateHealthBar;
+            Player.Instance.OnEchoesChanged -= UpdateAshEchoes;
         }
     }
 }
