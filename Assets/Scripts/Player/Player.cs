@@ -63,26 +63,29 @@ public class Player : MonoBehaviour
         health.TakeDamage(damage);
         if (health.CurrentHealth <= 0)
         {
+            OnHealthChanged?.Invoke(0);
             Die();
         }
-        else
-        {
-            var newValue = (float)health.CurrentHealth / health.MaxHealth;
-            OnHealthChanged?.Invoke(newValue);
-        }
+        var newValue = (float)health.CurrentHealth / health.MaxHealth;
+        OnHealthChanged?.Invoke(newValue);
+
     }
 
-    private void Die()
+    void Die()
     {
         PlayAnimation(PlayerState.DEATH, 0);
+
         if (playerDeathHandler != null)
         {
+
             playerDeathHandler.Die();
+            PlayAnimation(PlayerState.MOVE, 0); // Reset to move state after death animation
         }
         else
         {
             Debug.LogError("PlayerDeathHandler is not assigned to the player.");
         }
+
     }
 
     public void AddAshEchoes(int amount)

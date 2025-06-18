@@ -7,6 +7,7 @@ public class PlayerDeathHandler : MonoBehaviour
     [SerializeField] Transform defaultRespawnPoint;
     Transform lastCheckpoint = null;
 
+
     private void Start()
     {
         if (playerObject == null)
@@ -27,9 +28,6 @@ public class PlayerDeathHandler : MonoBehaviour
             Debug.LogError("Player GameObject is not assigned.");
             return;
         }
-
-        // Play death animation
-        Player.Instance.PlayAnimation(PlayerState.DEATH);
 
         DropAshEchoes();
         Respawn();
