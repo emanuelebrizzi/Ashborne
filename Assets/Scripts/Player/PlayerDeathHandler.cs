@@ -39,11 +39,11 @@ public class PlayerDeathHandler : MonoBehaviour
     {
         if (lastCheckpoint != null)
         {
-            playerObject.transform.position = lastCheckpoint.position;
+            playerObject.transform.position = new Vector3(lastCheckpoint.position.x, lastCheckpoint.position.y, 1);
         }
         else if (defaultRespawnPoint != null)
         {
-            playerObject.transform.position = defaultRespawnPoint.position;
+            playerObject.transform.position = new Vector3(defaultRespawnPoint.position.x, defaultRespawnPoint.position.y, 1);
         }
         else
         {
@@ -58,7 +58,7 @@ public class PlayerDeathHandler : MonoBehaviour
 
         if (ashEchoes != null)
         {
-            ashEchoes.DropEchoes(player.transform);
+            ashEchoes.DropEchoes(playerObject.transform);
         }
         else
         {

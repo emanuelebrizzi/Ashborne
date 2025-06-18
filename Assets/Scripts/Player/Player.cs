@@ -7,8 +7,10 @@ public class Player : MonoBehaviour
     [SerializeField] SPUM_Prefabs spumPrefabs;
     Health health;
     AshEchoes ashEchoes;
+    [SerializeField] PlayerDeathHandler playerDeathHandler;
 
     public static Player Instance { get; private set; }
+
     public event Action<float> OnHealthChanged;
     public event Action<int> OnEchoesChanged;
 
@@ -73,10 +75,9 @@ public class Player : MonoBehaviour
     private void Die()
     {
         PlayAnimation(PlayerState.DEATH, 0);
-        PlayerDeathHandler deathHandler = GetComponent<PlayerDeathHandler>();
-        if (deathHandler != null)
+        if (playerDeathHandler != null)
         {
-            deathHandler.Die();
+            playerDeathHandler.Die();
         }
         else
         {
