@@ -2,25 +2,25 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class EnemySpawnManager : MonoBehaviour
 {
-    const float CorpseRemainingTime = 3.0f;
+
+    // TODO: transform in an array
+    public GameObject enemyPrefab;
 
     [Serializable]
     public class SpawnPoint
     {
-        public GameObject enemyPrefab;
         public Transform position;
         public Transform patrolPointA;
         public Transform patrolPointB;
         public float respawnDelay = 5f;
-        [HideInInspector] public bool isOccupied = false;
-        [HideInInspector] public Enemy activeEnemy = null;
     }
 
+    ObjectPool<GameObject> enemyPool;
     [SerializeField] SpawnPoint[] spawnPoints;
-    Dictionary<string, SpawnPoint> spawnPointLookup = new();
 
     public static EnemySpawnManager Instance { get; private set; }
 
@@ -33,6 +33,41 @@ public class EnemySpawnManager : MonoBehaviour
         }
 
         Instance = this;
+
+        enemyPool = new ObjectPool<GameObject>(
+            OnEnemyCreate,
+            OnTake,
+            OnRelease,
+            OnObjectDestroy,
+            maxSize: spawnPoints.Length
+        );
+    }
+
+    GameObject OnEnemyCreate()
+    {
+        GameObject enemy = Instantiate(enemyPrefab);
+        return enemy;
+    }
+
+    void OnTake(GameObject enemyObj)
+    {
+        enemyObj.SetActive(true);
+
+        if (enemyObj.TryGetComponent<Enemy>(out var enemy))
+        {
+            enemy.ResetFroomPool();
+            enemy.GetComponent<DeathState>().OnEnemyDeath += () => HandleRespawnOf(enemy);
+        }
+    }
+
+    void OnRelease(GameObject enemyObj)
+    {
+        enemyObj.SetActive(false);
+    }
+
+    void OnObjectDestroy(GameObject enemyObj)
+    {
+        Destroy(enemyObj);
     }
 
     void Start()
@@ -45,62 +80,37 @@ public class EnemySpawnManager : MonoBehaviour
     {
         foreach (var spawnPoint in spawnPoints)
         {
-            if (!spawnPoint.isOccupied)
-            {
-                SpawnEnemyAt(spawnPoint);
-            }
+            SpawnEnemyAt(spawnPoint);
         }
     }
 
     void SpawnEnemyAt(SpawnPoint spawnPoint)
     {
-        GameObject enemyObj = Instantiate(spawnPoint.enemyPrefab, spawnPoint.position.position, spawnPoint.position.rotation);
-        Enemy enemy = enemyObj.GetComponent<Enemy>();
+        GameObject enemyObj = enemyPool.Get();
+        enemyObj.transform.SetPositionAndRotation(spawnPoint.position.position, spawnPoint.position.rotation);
 
-        spawnPointLookup[enemy.Id] = spawnPoint;
+        Enemy enemy = enemyObj.GetComponent<Enemy>();
+        enemy.MySpawnPoint = spawnPoint;
         PatrolState patrolState = enemy.GetComponent<PatrolState>();
         patrolState.SetPatrolPoints(spawnPoint.patrolPointA, spawnPoint.patrolPointB);
-
-        spawnPoint.isOccupied = true;
-        spawnPoint.activeEnemy = enemy;
-        spawnPoint.activeEnemy.GetComponent<DeathState>().OnEnemyDeath += () => HandleEnemyDeath(enemy.Id);
 
         Debug.Log($"Enemy {enemy.Id} spawned!");
     }
 
-    public void HandleEnemyDeath(string spawnPointId)
+    public void HandleRespawnOf(Enemy enemy)
     {
-        if (!spawnPointLookup.TryGetValue(spawnPointId, out SpawnPoint spawnPoint))
-        {
-            Debug.LogError($"Unknown spawn point ID: {spawnPointId}");
-            return;
-        }
-
-        StartCoroutine(DestroyAndRespawn(spawnPoint));
+        StartCoroutine(RespawnAfterDeleay(enemy));
     }
 
-    private IEnumerator DestroyAndRespawn(SpawnPoint spawnPoint)
+    IEnumerator RespawnAfterDeleay(Enemy enemy)
     {
-        yield return new WaitForSeconds(CorpseRemainingTime);
+        enemyPool.Release(enemy.gameObject);
 
-        DestroyEnemyAt(spawnPoint);
-        spawnPoint.isOccupied = false;
-
-        yield return new WaitForSeconds(spawnPoint.respawnDelay);
+        yield return new WaitForSeconds(enemy.MySpawnPoint.respawnDelay);
 
         if (GameManager.Instance.CurrentGameState == GameManager.GameState.Playing)
         {
-            SpawnEnemyAt(spawnPoint);
-        }
-    }
-
-    void DestroyEnemyAt(SpawnPoint spawnPoint)
-    {
-        if (spawnPoint.activeEnemy != null)
-        {
-            Destroy(spawnPoint.activeEnemy.gameObject);
-            Debug.Log($"Enemy  {spawnPoint.activeEnemy.Id} corpse removed from ");
-            spawnPoint.activeEnemy = null;
+            SpawnEnemyAt(enemy.MySpawnPoint);
         }
     }
 }

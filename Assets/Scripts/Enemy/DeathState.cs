@@ -1,8 +1,10 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class DeathState : EnemyState
 {
+    const float CorpseRemainingTime = 3.0f;
     public event Action OnEnemyDeath;
 
     public override void Enter()
@@ -15,20 +17,10 @@ public class DeathState : EnemyState
 
     void ProcessDeath()
     {
-        Collider2D[] colliders = GetComponentsInChildren<Collider2D>();
-        foreach (Collider2D col in colliders)
-        {
-            col.enabled = false;
-        }
-
-        if (enemy.Body != null)
-        {
-            enemy.Body.simulated = false;
-        }
-
+        enemy.SetPhysicElementsTo(false);
         enemy.PlayAnimation(Enemy.AnimationState.DEATH);
         AwardAshEchoes();
-        OnEnemyDeath?.Invoke();
+        StartCoroutine(WaitForCorpseDisappears());
     }
 
     void AwardAshEchoes()
@@ -43,5 +35,12 @@ public class DeathState : EnemyState
             Debug.LogWarning("Player singleton not available. Cannot award Ash Echoes.");
 
         }
+    }
+
+    IEnumerator WaitForCorpseDisappears()
+    {
+        yield return new WaitForSeconds(CorpseRemainingTime);
+
+        OnEnemyDeath?.Invoke();
     }
 }

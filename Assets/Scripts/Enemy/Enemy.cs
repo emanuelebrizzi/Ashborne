@@ -30,19 +30,20 @@ public class Enemy : MonoBehaviour
         DEATH,
     }
 
+    public EnemySpawnManager.SpawnPoint MySpawnPoint;
+
 
     void Awake()
     {
         Body = GetComponent<Rigidbody2D>();
         Id = Guid.NewGuid().ToString();
+        patrolState = GetComponent<PatrolState>();
+        chasingState = GetComponent<ChasingState>();
+        deathState = GetComponent<DeathState>();
     }
     void Start()
     {
 
-
-        patrolState = GetComponent<PatrolState>();
-        chasingState = GetComponent<ChasingState>();
-        deathState = GetComponent<DeathState>();
         health = GetComponent<Health>();
         animator = GetComponentInChildren<Animator>();
         PlayerMask = LayerMask.GetMask("Player");
@@ -140,6 +141,30 @@ public class Enemy : MonoBehaviour
             case AnimationState.DEATH:
                 animator.SetBool("isDead", true);
                 break;
+        }
+    }
+
+
+    public void ResetFroomPool()
+    {
+        if (health != null)
+            health.ResetHealth();
+
+        ResetState();
+        SetPhysicElementsTo(true);
+    }
+
+    public void SetPhysicElementsTo(bool value)
+    {
+        Collider2D[] colliders = GetComponentsInChildren<Collider2D>();
+        foreach (Collider2D col in colliders)
+        {
+            col.enabled = value;
+        }
+
+        if (Body != null)
+        {
+            Body.simulated = value;
         }
     }
 }
