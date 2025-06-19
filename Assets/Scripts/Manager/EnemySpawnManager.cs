@@ -17,7 +17,6 @@ public class EnemySpawnManager : MonoBehaviour
         public float respawnDelay = 5f;
         [HideInInspector] public bool isOccupied = false;
         [HideInInspector] public Enemy activeEnemy = null;
-        [HideInInspector] public string pointId;
     }
 
     [SerializeField] SpawnPoint[] spawnPoints;
@@ -38,12 +37,6 @@ public class EnemySpawnManager : MonoBehaviour
 
     void Start()
     {
-        foreach (var point in spawnPoints)
-        {
-            point.pointId = Guid.NewGuid().ToString();
-            spawnPointLookup[point.pointId] = point;
-        }
-
         InitialSpawn();
     }
 
@@ -63,14 +56,16 @@ public class EnemySpawnManager : MonoBehaviour
     {
         GameObject enemyObj = Instantiate(spawnPoint.enemyPrefab, spawnPoint.position.position, spawnPoint.position.rotation);
         Enemy enemy = enemyObj.GetComponent<Enemy>();
+
+        spawnPointLookup[enemy.Id] = spawnPoint;
         PatrolState patrolState = enemy.GetComponent<PatrolState>();
         patrolState.SetPatrolPoints(spawnPoint.patrolPointA, spawnPoint.patrolPointB);
 
         spawnPoint.isOccupied = true;
         spawnPoint.activeEnemy = enemy;
-        spawnPoint.activeEnemy.GetComponent<DeathState>().OnEnemyDeath += () => HandleEnemyDeath(spawnPoint.pointId);
+        spawnPoint.activeEnemy.GetComponent<DeathState>().OnEnemyDeath += () => HandleEnemyDeath(enemy.Id);
 
-        Debug.Log($"Enemy spawned at fixed position: {spawnPoint.pointId}");
+        Debug.Log($"Enemy {enemy.Id} spawned!");
     }
 
     public void HandleEnemyDeath(string spawnPointId)
@@ -104,8 +99,8 @@ public class EnemySpawnManager : MonoBehaviour
         if (spawnPoint.activeEnemy != null)
         {
             Destroy(spawnPoint.activeEnemy.gameObject);
+            Debug.Log($"Enemy  {spawnPoint.activeEnemy.Id} corpse removed from ");
             spawnPoint.activeEnemy = null;
-            Debug.Log($"Enemy corpse removed from {spawnPoint.pointId}");
         }
     }
 }

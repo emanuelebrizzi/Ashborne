@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(PatrolState))]
@@ -16,6 +17,7 @@ public class Enemy : MonoBehaviour
     Animator animator;
     Health health;
 
+    public string Id { get; private set; }
     public LayerMask PlayerMask { get; private set; }
     public Rigidbody2D Body { get; private set; }
     public int Reward => ashEchoesReward;
@@ -32,9 +34,11 @@ public class Enemy : MonoBehaviour
     void Awake()
     {
         Body = GetComponent<Rigidbody2D>();
+        Id = Guid.NewGuid().ToString();
     }
     void Start()
     {
+
 
         patrolState = GetComponent<PatrolState>();
         chasingState = GetComponent<ChasingState>();
