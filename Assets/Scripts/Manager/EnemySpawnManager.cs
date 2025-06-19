@@ -59,7 +59,6 @@ public class EnemySpawnManager : MonoBehaviour
 
         if (enemyObj.TryGetComponent<Enemy>(out var enemy))
         {
-
             enemy.GetComponent<DeathState>().OnEnemyDeath += () => HandleRespawnOf(enemy);
         }
     }
