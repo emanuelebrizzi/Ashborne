@@ -405,7 +405,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7a2c0c666b5a744ab086bd615f67808, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3
+  speed: 2
   ashEchoesReward: 100
   initialState: {fileID: 1133741725043832346}
 --- !u!114 &1133741725043832346
@@ -465,7 +465,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4033ce3ed0d58b1429380ea32ab9d5f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 3
+  maxHealth: 5
 --- !u!1 &840790854255351083
 GameObject:
   m_ObjectHideFlags: 0

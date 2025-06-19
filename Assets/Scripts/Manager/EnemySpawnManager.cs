@@ -10,14 +10,14 @@ public class EnemySpawnManager : MonoBehaviour
     [Serializable]
     public class SpawnPoint
     {
-        public string pointId; // Maybe make it private because we want it auto generated
-        public Transform position;
         public GameObject enemyPrefab;
-        public float respawnDelay = 5f;
+        public Transform position;
         public Transform patrolPointA;
         public Transform patrolPointB;
+        public float respawnDelay = 5f;
         [HideInInspector] public bool isOccupied = false;
         [HideInInspector] public Enemy activeEnemy = null;
+        [HideInInspector] public string pointId;
     }
 
     [SerializeField] SpawnPoint[] spawnPoints;
@@ -40,23 +40,13 @@ public class EnemySpawnManager : MonoBehaviour
     {
         foreach (var point in spawnPoints)
         {
-            if (string.IsNullOrEmpty(point.pointId))
-            {
-                point.pointId = Guid.NewGuid().ToString();
-                Debug.LogWarning($"SpawnPoint had no ID. Generated ID: {point.pointId}");
-            }
-
+            point.pointId = Guid.NewGuid().ToString();
             spawnPointLookup[point.pointId] = point;
         }
 
-        GameManager.Instance.OnGameStateChanged += OnGameStateChanged;
         InitialSpawn();
     }
 
-    void OnGameStateChanged(GameManager.GameState newState)
-    {
-        // You could handle pausing enemy behavior here if needed
-    }
 
     void InitialSpawn()
     {

@@ -28,9 +28,14 @@ public class Enemy : MonoBehaviour
         DEATH,
     }
 
-    void Start()
+
+    void Awake()
     {
         Body = GetComponent<Rigidbody2D>();
+    }
+    void Start()
+    {
+
         patrolState = GetComponent<PatrolState>();
         chasingState = GetComponent<ChasingState>();
         deathState = GetComponent<DeathState>();
@@ -55,6 +60,7 @@ public class Enemy : MonoBehaviour
 
     public void MoveInDirection(float direction)
     {
+
         Body.linearVelocityX = direction * speed;
         UpdateSpriteDirection(direction);
         PlayAnimation(AnimationState.MOVE);
