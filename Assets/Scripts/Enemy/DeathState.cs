@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DeathState : EnemyState
 {
-    const float CorpseRemainingTime = 3.0f;
+    const float CorpseRemainingTime = 2.0f;
     public event Action OnEnemyDeath;
 
     public override void Enter()
