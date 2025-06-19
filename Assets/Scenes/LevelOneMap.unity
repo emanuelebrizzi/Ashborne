@@ -2378,9 +2378,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3958152790211907768, guid: 04123dcb7299b8945ad35ef76feba63b, type: 3}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 1878812274}
+    - target: {fileID: 3958152790211907768, guid: 04123dcb7299b8945ad35ef76feba63b, type: 3}
       propertyPath: interactionIcon
       value: 
       objectReference: {fileID: 230565289}
+    - target: {fileID: 3958152790211907768, guid: 04123dcb7299b8945ad35ef76feba63b, type: 3}
+      propertyPath: heroSpawnManager
+      value: 
+      objectReference: {fileID: 1764139176}
     - target: {fileID: 4516500240206473764, guid: 04123dcb7299b8945ad35ef76feba63b, type: 3}
       propertyPath: m_Layer
       value: 9
@@ -6152,7 +6160,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3377274926165294370, guid: 0c6584498635a554d98de25a94f20f79, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.68
+      value: -1.5
       objectReference: {fileID: 0}
     - target: {fileID: 3377274926165294370, guid: 0c6584498635a554d98de25a94f20f79, type: 3}
       propertyPath: m_LocalRotation.w
@@ -6172,7 +6180,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3377274926165294370, guid: 0c6584498635a554d98de25a94f20f79, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 87.29
+      value: 87.12
       objectReference: {fileID: 0}
     - target: {fileID: 3377274926165294370, guid: 0c6584498635a554d98de25a94f20f79, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -9888,7 +9896,7 @@ Transform:
   m_GameObject: {fileID: 1686325141}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.5, y: 0, z: 1}
+  m_LocalPosition: {x: -2, y: 0.2, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10316,6 +10324,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1764139174}
   - component: {fileID: 1764139175}
+  - component: {fileID: 1764139176}
   m_Layer: 0
   m_Name: HeroSpawnManager
   m_TagString: Untagged
@@ -10350,6 +10359,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ee444c64a46fe3428c05a7df04d96be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1764139176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1764139173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cfca463c0df0cb439ad183d377cdaa7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  heroSpawnPoint: {fileID: 1686325142}
+  heroPrefab: {fileID: 1982723263}
 --- !u!1001 &1764358583
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10762,7 +10785,7 @@ Transform:
   m_GameObject: {fileID: 1776099892}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -64.99, y: -14.97, z: 0}
+  m_LocalPosition: {x: -56.24, y: -13.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11331,7 +11354,7 @@ Transform:
   m_GameObject: {fileID: 1876964892}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.04, y: -0.23, z: 0}
+  m_LocalPosition: {x: 132.13, y: -2.74, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -12295,9 +12318,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71f68f39a0db8cc43b04bd10fcafa8c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerObject: {fileID: 1982723263}
-  player: {fileID: 1982723269}
-  defaultRespawnPoint: {fileID: 1686325142}
+  heroSpawnManager: {fileID: 1764139176}
+  hero: {fileID: 1982723269}
+  heroObject: {fileID: 1982723263}
 --- !u!1001 &1987984571
 PrefabInstance:
   m_ObjectHideFlags: 0

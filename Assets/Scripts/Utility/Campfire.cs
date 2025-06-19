@@ -2,10 +2,12 @@ using UnityEngine;
 
 public class Campfire : MonoBehaviour, IInteractable
 {
-
+    [SerializeField] GameManager gameManager; // Reference to the GameManager
+    [SerializeField] HeroSpawnManager heroSpawnManager; // Reference to the SpawnPointManager
     [SerializeField] Transform spawnPoint;
     [SerializeField] GameObject campfirePrefab;
     [SerializeField] GameObject interactionIcon;
+    string campfireSceneName = "Campfire"; 
 
     bool IsInRange;
 
@@ -32,8 +34,8 @@ public class Campfire : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-
-        //SetSpawnPoint();
+        SetSpawnPoint();
+        //gameManager.LoadGameScene(campfireSceneName); // Load the campfire scene
     }
 
     public void OnTriggerEnter2D(Collider2D collision)
@@ -67,8 +69,8 @@ public class Campfire : MonoBehaviour, IInteractable
         // Logic to set the spawn point for the player
         if (spawnPoint != null)
         {
-            //.Instance.SetSpawnPoint(spawnPoint.position);
-            Debug.Log("Spawn point set to: " + spawnPoint.position);
+            heroSpawnManager.SetHeroSpawnPoint(spawnPoint);
+            Debug.Log("Spawn point set");
         }
     }
 
