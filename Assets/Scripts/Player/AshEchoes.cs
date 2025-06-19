@@ -3,6 +3,7 @@ using UnityEngine;
 public class AshEchoes : MonoBehaviour
 {
     [SerializeField] int current = 0;
+    [SerializeField] AshGrave ashGrave;
 
     public int Current => current;
 
@@ -36,8 +37,7 @@ public class AshEchoes : MonoBehaviour
 
     public void DropEchoes(Transform dropPoint)
     {
-        // Logic to drop echoes, e.g., instantiate a visual effect or sound
-        Debug.Log($"Dropped {current} Ash Echoes.");
+        ashGrave.DropAshEchoes(dropPoint, current);
         ResetEchoes();
     }
 

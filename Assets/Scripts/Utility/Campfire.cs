@@ -34,14 +34,7 @@ public class Campfire : MonoBehaviour, IInteractable
 
     }
 
-    public void Interact()
-    {
-        SetSpawnPoint();
-        campfireMenu.OpenCampfireMenu(); // Open the campfire menu
-        //gameManager.LoadGameScene(campfireSceneName); // Load the campfire scene
-    }
-
-    public void OnTriggerEnter2D(Collider2D collision)
+    void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
@@ -54,7 +47,7 @@ public class Campfire : MonoBehaviour, IInteractable
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
@@ -67,7 +60,7 @@ public class Campfire : MonoBehaviour, IInteractable
         }
     }
 
-    private void SetSpawnPoint()
+    void SetSpawnPoint()
     {
         // Logic to set the spawn point for the player
         if (spawnPoint != null)
@@ -75,6 +68,13 @@ public class Campfire : MonoBehaviour, IInteractable
             heroSpawnManager.SetHeroSpawnPoint(spawnPoint);
             Debug.Log("Spawn point set");
         }
+    }
+
+    public void Interact()
+    {
+        SetSpawnPoint();
+        campfireMenu.OpenCampfireMenu(); // Open the campfire menu
+        //gameManager.LoadGameScene(campfireSceneName); // Load the campfire scene
     }
 
     public bool IsInteractable()
