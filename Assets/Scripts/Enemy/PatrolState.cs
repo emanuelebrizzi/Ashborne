@@ -6,19 +6,19 @@ public class PatrolState : EnemyState
     [SerializeField] float detectionRange = 3f;
 
     bool goingToB = true;
-    Transform pointA, pointB;
     Vector2 target;
 
     public override void Enter()
     {
         base.Enter();
         Debug.Log("Enemy entered in the PatrolState");
-        enemy.PlayAnimation(Enemy.AnimationState.MOVE);
 
         if (nextState == null)
         {
             nextState = GetComponent<ChasingState>();
         }
+
+        target = enemy.PointB.position;
     }
 
     void FixedUpdate()
@@ -67,15 +67,6 @@ public class PatrolState : EnemyState
     void SwitchPatrolDirection()
     {
         goingToB = !goingToB;
-        target = goingToB ? pointB.position : pointA.position;
-    }
-
-    public void SetPatrolPoints(Transform pointA, Transform pointB)
-    {
-        this.pointA = pointA;
-        this.pointB = pointB;
-
-        target = pointB.position;
-        goingToB = true;
+        target = goingToB ? enemy.PointB.position : enemy.PointA.position;
     }
 }

@@ -59,7 +59,7 @@ public class EnemySpawnManager : MonoBehaviour
 
         if (enemyObj.TryGetComponent<Enemy>(out var enemy))
         {
-            enemy.ResetFroomPool();
+
             enemy.GetComponent<DeathState>().OnEnemyDeath += () => HandleRespawnOf(enemy);
         }
     }
@@ -95,8 +95,9 @@ public class EnemySpawnManager : MonoBehaviour
 
         Enemy enemy = enemyObj.GetComponent<Enemy>();
         enemy.MySpawnPoint = spawnPoint;
-        PatrolState patrolState = enemy.GetComponent<PatrolState>();
-        patrolState.SetPatrolPoints(spawnPoint.patrolPointA, spawnPoint.patrolPointB);
+        enemy.PointA = spawnPoint.patrolPointA;
+        enemy.PointB = spawnPoint.patrolPointB;
+        enemy.ResetFroomPool();
 
         Debug.Log($"Enemy {enemy.Id} spawned!");
     }

@@ -31,6 +31,8 @@ public class Enemy : MonoBehaviour
     }
 
     public EnemySpawnManager.SpawnPoint MySpawnPoint;
+    public Transform PointA;
+    public Transform PointB;
 
 
     void Awake()
@@ -43,7 +45,6 @@ public class Enemy : MonoBehaviour
     }
     void Start()
     {
-
         health = GetComponent<Health>();
         animator = GetComponentInChildren<Animator>();
         PlayerMask = LayerMask.GetMask("Player");
@@ -166,5 +167,11 @@ public class Enemy : MonoBehaviour
         {
             Body.simulated = value;
         }
+    }
+
+    public void SetPatrolPoints(Transform pointA, Transform pointB)
+    {
+        PointA = pointA;
+        PointB = pointB;
     }
 }

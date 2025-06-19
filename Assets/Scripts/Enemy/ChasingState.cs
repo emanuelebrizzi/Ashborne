@@ -32,9 +32,8 @@ public class ChasingState : EnemyState
 
     void FixedUpdate()
     {
-        if (IsPlayerTooFar())
+        if (IsPlayerTooFar() || IsEnemyNearBounds())
         {
-            Debug.Log("Player is too far. Exiting chasing state...");
             Exit();
             return;
         }
@@ -42,7 +41,7 @@ public class ChasingState : EnemyState
         Vector2 directionToPlayer = (Player.Instance.transform.position - enemy.transform.position).normalized;
         enemy.MoveInDirection(directionToPlayer.x);
 
-        if (Vector2.Distance(enemy.transform.position, Player.Instance.transform.position) <= attackRange)
+        if (CanAttackPlayer())
         {
             Attack();
         }
@@ -52,6 +51,35 @@ public class ChasingState : EnemyState
     {
         distanceFromStart = Vector2.Distance(enemyStartingPoint, enemy.transform.position);
         return distanceFromStart > maxChaseDistance;
+    }
+
+    bool IsEnemyNearBounds()
+    {
+        const float minimumDistance = 0.1f;
+
+        if (IsNearPointA(minimumDistance) || IsNearPointB(minimumDistance))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    bool IsNearPointA(float minimumDistance)
+    {
+        return Vector2.Distance(transform.position, enemy.PointA.position) < minimumDistance;
+    }
+
+    bool IsNearPointB(float minimumDistance)
+    {
+        return Vector2.Distance(transform.position, enemy.PointB.position) < minimumDistance;
+    }
+
+    bool CanAttackPlayer()
+    {
+        return Vector2.Distance(enemy.transform.position, Player.Instance.transform.position) <= attackRange;
     }
 
     void Attack()

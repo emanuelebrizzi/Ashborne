@@ -10040,7 +10040,7 @@ GameObject:
   - component: {fileID: 1599276500}
   - component: {fileID: 1599276499}
   m_Layer: 0
-  m_Name: EventSystem (dont delete this element ahah)
+  m_Name: EventSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
