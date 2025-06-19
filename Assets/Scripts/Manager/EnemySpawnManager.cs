@@ -1,12 +1,10 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
 public class EnemySpawnManager : MonoBehaviour
 {
-
     // TODO: transform in an array
     public GameObject enemyPrefab;
 
@@ -22,6 +20,9 @@ public class EnemySpawnManager : MonoBehaviour
     ObjectPool<GameObject> enemyPool;
     [SerializeField] SpawnPoint[] spawnPoints;
 
+    // It's only used for hierarchy management purpose
+    Transform enemiesParent;
+
     public static EnemySpawnManager Instance { get; private set; }
 
     void Awake()
@@ -34,6 +35,9 @@ public class EnemySpawnManager : MonoBehaviour
 
         Instance = this;
 
+        var enemiesParentObject = new GameObject("Enemies");
+        enemiesParent = enemiesParentObject.transform;
+
         enemyPool = new ObjectPool<GameObject>(
             OnEnemyCreate,
             OnTake,
@@ -45,7 +49,7 @@ public class EnemySpawnManager : MonoBehaviour
 
     GameObject OnEnemyCreate()
     {
-        GameObject enemy = Instantiate(enemyPrefab);
+        GameObject enemy = Instantiate(enemyPrefab, enemiesParent);
         return enemy;
     }
 

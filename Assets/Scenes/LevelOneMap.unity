@@ -8108,47 +8108,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f362c005dc407e4899aa8533b73b862, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyPrefab: {fileID: 827528970784738921, guid: b432721b0787613418cf994caf21fe14, type: 3}
   spawnPoints:
-  - enemyPrefab: {fileID: 827528970784738921, guid: b432721b0787613418cf994caf21fe14, type: 3}
-    position: {fileID: 1876964893}
+  - position: {fileID: 1876964893}
     patrolPointA: {fileID: 2083609724}
     patrolPointB: {fileID: 154521354}
     respawnDelay: 10
-    isOccupied: 0
-    activeEnemy: {fileID: 0}
-    pointId: 
-  - enemyPrefab: {fileID: 827528970784738921, guid: b432721b0787613418cf994caf21fe14, type: 3}
-    position: {fileID: 448576738}
+  - position: {fileID: 448576738}
     patrolPointA: {fileID: 943156002}
     patrolPointB: {fileID: 1184031846}
     respawnDelay: 10
-    isOccupied: 0
-    activeEnemy: {fileID: 0}
-    pointId: 
-  - enemyPrefab: {fileID: 827528970784738921, guid: b432721b0787613418cf994caf21fe14, type: 3}
-    position: {fileID: 769152068}
+  - position: {fileID: 769152068}
     patrolPointA: {fileID: 572522816}
     patrolPointB: {fileID: 918101083}
     respawnDelay: 10
-    isOccupied: 0
-    activeEnemy: {fileID: 0}
-    pointId: 
-  - enemyPrefab: {fileID: 827528970784738921, guid: b432721b0787613418cf994caf21fe14, type: 3}
-    position: {fileID: 640126083}
+  - position: {fileID: 640126083}
     patrolPointA: {fileID: 1094852607}
     patrolPointB: {fileID: 774400897}
     respawnDelay: 10
-    isOccupied: 0
-    activeEnemy: {fileID: 0}
-    pointId: 
-  - enemyPrefab: {fileID: 827528970784738921, guid: b432721b0787613418cf994caf21fe14, type: 3}
-    position: {fileID: 623413532}
+  - position: {fileID: 623413532}
     patrolPointA: {fileID: 604533070}
     patrolPointB: {fileID: 2002980048}
     respawnDelay: 10
-    isOccupied: 0
-    activeEnemy: {fileID: 0}
-    pointId: 
 --- !u!4 &1208672624
 Transform:
   m_ObjectHideFlags: 0
@@ -12986,7 +12967,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2669f91a9a93454393aa5f60afd7614, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackRange: 1
+  attackRange: 10
   attackDamage: 1
   attackCooldown: 0.1
   attackDelay: 0.4
