@@ -7032,9 +7032,6 @@ PrefabInstance:
       addedObject: {fileID: 1982723265}
     - targetCorrespondingSourceObject: {fileID: 1382782348239096657, guid: 0c6584498635a554d98de25a94f20f79, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1982723273}
-    - targetCorrespondingSourceObject: {fileID: 1382782348239096657, guid: 0c6584498635a554d98de25a94f20f79, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1982723274}
   m_SourcePrefab: {fileID: 100100000, guid: 0c6584498635a554d98de25a94f20f79, type: 3}
 --- !u!1001 &1051902417
@@ -11442,7 +11439,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1764139174}
-  - component: {fileID: 1764139175}
   - component: {fileID: 1764139176}
   m_Layer: 0
   m_Name: HeroSpawnManager
@@ -11466,18 +11462,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1105710523}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1764139175
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1764139173}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ee444c64a46fe3428c05a7df04d96be, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1764139176
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13547,18 +13531,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!114 &1982723273
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1982723263}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: edfe9865e445fbc439db7aac75b17639, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1982723274
 MonoBehaviour:
   m_ObjectHideFlags: 0
