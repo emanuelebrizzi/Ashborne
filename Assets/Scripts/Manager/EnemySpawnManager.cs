@@ -1,5 +1,5 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -19,9 +19,8 @@ public class EnemySpawnManager : MonoBehaviour
 
     ObjectPool<GameObject> enemyPool;
     [SerializeField] SpawnPoint[] spawnPoints;
-
-    // It's only used for hierarchy management purpose
-    Transform enemiesParent;
+    Transform enemiesParent; // It's only used for hierarchy management purpose
+    Dictionary<SpawnPoint, Enemy> activeEnemies = new();
 
     public static EnemySpawnManager Instance { get; private set; }
 
@@ -52,7 +51,7 @@ public class EnemySpawnManager : MonoBehaviour
         GameObject enemyObj = Instantiate(enemyPrefab, enemiesParent);
         if (enemyObj.TryGetComponent<Enemy>(out var enemy))
         {
-            enemy.GetComponent<DeathState>().OnEnemyDeath += () => HandleRespawnOf(enemy);
+            enemy.GetComponent<DeathState>().OnEnemyDeath += () => HandleDeathOf(enemy);
         }
         return enemyObj;
     }
@@ -65,13 +64,21 @@ public class EnemySpawnManager : MonoBehaviour
     void OnRelease(GameObject enemyObj)
     {
         enemyObj.SetActive(false);
+
+        if (enemyObj.TryGetComponent<Enemy>(out var enemy) && enemy.MySpawnPoint != null)
+        {
+            if (activeEnemies.ContainsKey(enemy.MySpawnPoint) && activeEnemies[enemy.MySpawnPoint] == enemy)
+            {
+                activeEnemies[enemy.MySpawnPoint] = null;
+            }
+        }
     }
 
     void OnObjectDestroy(GameObject enemyObj)
     {
         if (enemyObj.TryGetComponent<Enemy>(out var enemy))
         {
-            enemy.GetComponent<DeathState>().OnEnemyDeath -= () => HandleRespawnOf(enemy);
+            enemy.GetComponent<DeathState>().OnEnemyDeath -= () => HandleDeathOf(enemy);
         }
 
         Destroy(enemyObj);
@@ -87,6 +94,9 @@ public class EnemySpawnManager : MonoBehaviour
 
     void SpawnEnemyAt(SpawnPoint spawnPoint)
     {
+        if (activeEnemies.ContainsKey(spawnPoint) && activeEnemies[spawnPoint] != null && activeEnemies[spawnPoint].gameObject.activeInHierarchy)
+            return;
+
         GameObject enemyObj = enemyPool.Get();
         enemyObj.transform.SetPositionAndRotation(spawnPoint.position.position, spawnPoint.position.rotation);
 
@@ -96,23 +106,13 @@ public class EnemySpawnManager : MonoBehaviour
         enemy.PointB = spawnPoint.patrolPointB;
         enemy.ResetFroomPool();
 
+        activeEnemies[spawnPoint] = enemy;
         Debug.Log($"Enemy {enemy.Id} spawned!");
     }
 
-    public void HandleRespawnOf(Enemy enemy)
-    {
-        StartCoroutine(RespawnAfterDeleay(enemy));
-    }
-
-    IEnumerator RespawnAfterDeleay(Enemy enemy)
+    public void HandleDeathOf(Enemy enemy)
     {
         enemyPool.Release(enemy.gameObject);
-
-        yield return new WaitForSeconds(enemy.MySpawnPoint.respawnDelay);
-
-        if (GameManager.Instance.CurrentGameState == GameManager.GameState.Playing)
-        {
-            SpawnEnemyAt(enemy.MySpawnPoint);
-        }
     }
+
 }
