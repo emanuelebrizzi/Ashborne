@@ -50,6 +50,15 @@ public class GameManager : MonoBehaviour
         else if (scene.name == mainSceneName)
         {
             ChangeGameState(GameState.Playing);
+
+            if (enemySpawnManager != null)
+            {
+                enemySpawnManager.SpawnAllEnemies();
+            }
+            else
+            {
+                Debug.LogWarning("EnemySpawnManager not initialized when trying to spawn enemies.");
+            }
         }
     }
 

@@ -115,6 +115,7 @@ public class EnemySpawnManager : MonoBehaviour
     public void HandleDeathOf(Enemy enemy)
     {
         enemyPool.Release(enemy.gameObject);
+        Debug.Log($"Enemy {enemy.Id} died!");
     }
 
 }
