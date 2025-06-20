@@ -27,7 +27,6 @@ public class GameManager : MonoBehaviour
 
     public GameState CurrentGameState { get; private set; }
 
-    public event Action<GameState> OnGameStateChanged;
 
     void Awake()
     {
@@ -75,19 +74,20 @@ public class GameManager : MonoBehaviour
         if (newState == GameState.Paused)
         {
             Time.timeScale = 0f;
+            UIManager.ShowPauseMenu();
         }
-        else
+        else if (newState == GameState.Playing)
         {
             Time.timeScale = 1f;
+            UIManager.ShowGameplayUI();
+            enemySpawnManager.SpawnAllEnemies();
+        }
+        else if (newState == GameState.MainMenu)
+        {
+            UIManager.ShowMainMenuUI();
         }
 
         CurrentGameState = newState;
-        OnGameStateChanged?.Invoke(newState);
-
-        if (newState == GameState.Playing)
-        {
-            enemySpawnManager.SpawnAllEnemies();
-        }
     }
 
     public void StartNewGame()

@@ -30,11 +30,6 @@ public class UIManager : MonoBehaviour
 
     void RegisterToEventHandlers()
     {
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.OnGameStateChanged += UpdateUIPanels;
-        }
-
         if (Player.Instance != null)
         {
             Player.Instance.OnHealthChanged += UpdateHealthBar;
@@ -46,7 +41,6 @@ public class UIManager : MonoBehaviour
     {
         UpdateHealthBar(InitialHealthBarValue);
         UpdateAshEchoes(InitialEchoesValue);
-        UpdateUIPanels(GameManager.GameState.Playing);
     }
 
     void SetupButtonListeners()
@@ -92,26 +86,6 @@ public class UIManager : MonoBehaviour
         }
 
     }
-    void UpdateUIPanels(GameManager.GameState newState)
-    {
-        switch (newState)
-        {
-            case GameManager.GameState.MainMenu:
-                if (gameplayPanel) gameplayPanel.SetActive(false);
-                if (pauseMenuPanel) pauseMenuPanel.SetActive(false);
-                break;
-
-            case GameManager.GameState.Playing:
-                if (gameplayPanel) gameplayPanel.SetActive(true);
-                if (pauseMenuPanel) pauseMenuPanel.SetActive(false);
-                break;
-
-            case GameManager.GameState.Paused:
-                if (gameplayPanel) gameplayPanel.SetActive(true);
-                if (pauseMenuPanel) pauseMenuPanel.SetActive(true);
-                break;
-        }
-    }
 
     public void UpdateHealthBar(float currentHealth)
     {
@@ -129,13 +103,26 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void ShowPauseMenu()
+    {
+        if (gameplayPanel) gameplayPanel.SetActive(true);
+        if (pauseMenuPanel) pauseMenuPanel.SetActive(true);
+    }
+
+    public void ShowGameplayUI()
+    {
+        if (gameplayPanel) gameplayPanel.SetActive(true);
+        if (pauseMenuPanel) pauseMenuPanel.SetActive(false);
+    }
+
+    public void ShowMainMenuUI()
+    {
+        if (gameplayPanel) gameplayPanel.SetActive(false);
+        if (pauseMenuPanel) pauseMenuPanel.SetActive(false);
+    }
+
     void OnDestroy()
     {
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.OnGameStateChanged -= UpdateUIPanels;
-        }
-
         if (Player.Instance != null)
         {
             Player.Instance.OnHealthChanged -= UpdateHealthBar;
