@@ -9,13 +9,14 @@ public class ChasingState : EnemyState
     AttackHitbox hitbox;
     float lastAttackTime = -100f;
     readonly float attackCooldown = 1.0f;
+    float distanceFromStart;
 
     public override void Enter()
     {
         base.Enter();
         enemyStartingPoint = enemy.transform.position;
         hitbox = GetComponentInChildren<AttackHitbox>();
-        enemy.MyLogger.Log(Enemy.LoggerTAG, "Entered ChasingState");
+        Debug.Log("Enemy entered ChasingState");
 
         if (nextState == null)
         {
@@ -25,39 +26,21 @@ public class ChasingState : EnemyState
 
     public override void Exit()
     {
-
         StopAllCoroutines();
-
         base.Exit();
     }
 
     void FixedUpdate()
     {
-        if (enemy == null || enemy.Body == null || Player.Instance == null)
+        if (IsPlayerTooFar())
         {
+            Debug.Log("Player is too far. Exiting chasing state...");
+            Exit();
             return;
         }
-
-        float distanceFromStart = Vector2.Distance(enemyStartingPoint, enemy.transform.position);
-
-        if (distanceFromStart > maxChaseDistance)
-        {
-            enemy.MyLogger.Log(Enemy.LoggerTAG, "Player is too far, returning to PatrolState");
-            base.Exit();
-            return;
-        }
-
-        enemy.PlayAnimation(PlayerState.MOVE, 0);
 
         Vector2 directionToPlayer = (Player.Instance.transform.position - enemy.transform.position).normalized;
-
-        enemy.UpdateSpriteDirection(directionToPlayer.x);
-
-        Vector2 newPosition = new(
-            enemy.transform.position.x + enemy.Speed * Time.fixedDeltaTime * directionToPlayer.x,
-            enemy.transform.position.y
-        );
-        enemy.Body.MovePosition(newPosition);
+        enemy.MoveInDirection(directionToPlayer.x);
 
         if (Vector2.Distance(enemy.transform.position, Player.Instance.transform.position) <= attackRange)
         {
@@ -65,20 +48,25 @@ public class ChasingState : EnemyState
         }
     }
 
+    bool IsPlayerTooFar()
+    {
+        distanceFromStart = Vector2.Distance(enemyStartingPoint, enemy.transform.position);
+        return distanceFromStart > maxChaseDistance;
+    }
+
     void Attack()
     {
         if (Time.time < lastAttackTime + attackCooldown) return;
 
-
-        StartCoroutine(PerformAttack());
+        StartCoroutine(WaitForAttackAnimationAndCompletion());
 
         lastAttackTime = Time.time;
     }
 
-    IEnumerator PerformAttack()
+    IEnumerator WaitForAttackAnimationAndCompletion()
     {
         // Maybe we can factor out a general method to syncronize actions with the animations' length
-        enemy.PlayAnimation(PlayerState.ATTACK, 0);
+        enemy.PlayAnimation(Enemy.AnimationState.ATTACK);
         Animator animator = enemy.GetComponentInChildren<Animator>();
         if (animator != null)
         {

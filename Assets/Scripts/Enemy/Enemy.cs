@@ -12,24 +12,31 @@ public class Enemy : MonoBehaviour
     PatrolState patrolState;
     ChasingState chasingState;
     DeathState deathState;
+
     Animator animator;
     Health health;
 
-    public const string LoggerTAG = "Enemy";
-    public Logger MyLogger { get; private set; }
+    public LayerMask PlayerMask { get; private set; }
     public Rigidbody2D Body { get; private set; }
-    public float Speed => speed;
     public int Reward => ashEchoesReward;
+    public enum AnimationState
+    {
+        IDLE,
+        MOVE,
+        ATTACK,
+        DAMAGED,
+        DEATH,
+    }
 
     void Start()
     {
-        MyLogger = new Logger(Debug.unityLogger.logHandler);
         Body = GetComponent<Rigidbody2D>();
         patrolState = GetComponent<PatrolState>();
         chasingState = GetComponent<ChasingState>();
         deathState = GetComponent<DeathState>();
         health = GetComponent<Health>();
         animator = GetComponentInChildren<Animator>();
+        PlayerMask = LayerMask.GetMask("Player");
 
         ResetState();
     }
@@ -46,10 +53,17 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    public void MoveInDirection(float direction)
+    {
+        Body.linearVelocityX = direction * speed;
+        UpdateSpriteDirection(direction);
+        PlayAnimation(AnimationState.MOVE);
+    }
+
     public void TakeDamage(int damage)
     {
         health.TakeDamage(damage);
-        MyLogger.Log(LoggerTAG, $"Got {damage} damage, remaining {health.CurrentHealth} HP.");
+        Debug.Log($"Got {damage} damage, remaining {health.CurrentHealth} HP.");
 
         if (health.CurrentHealth <= 0)
         {
@@ -57,7 +71,7 @@ public class Enemy : MonoBehaviour
             return;
         }
 
-        PlayAnimation(PlayerState.DAMAGED, 0);
+        PlayAnimation(AnimationState.DAMAGED);
     }
 
     void Die()
@@ -89,33 +103,31 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public void PlayAnimation(PlayerState state, int index = 0)
+    public void PlayAnimation(AnimationState state)
     {
         if (animator == null) return;
 
-        MyLogger.Log(LoggerTAG, $"Playing animation: {state}");
-
         switch (state)
         {
-            case PlayerState.IDLE:
+            case AnimationState.IDLE:
                 animator.SetBool("isMoving", false);
                 animator.ResetTrigger("isAttacking");
                 animator.ResetTrigger("isDamaged");
                 break;
 
-            case PlayerState.MOVE:
+            case AnimationState.MOVE:
                 animator.SetBool("isMoving", true);
                 break;
 
-            case PlayerState.ATTACK:
+            case AnimationState.ATTACK:
                 animator.SetTrigger("isAttacking");
                 break;
 
-            case PlayerState.DAMAGED:
+            case AnimationState.DAMAGED:
                 animator.SetTrigger("isDamaged");
                 break;
 
-            case PlayerState.DEATH:
+            case AnimationState.DEATH:
                 animator.SetBool("isDead", true);
                 break;
         }
