@@ -7,8 +7,10 @@ public class Player : MonoBehaviour
     [SerializeField] SPUM_Prefabs spumPrefabs;
     Health health;
     AshEchoes ashEchoes;
+    [SerializeField] PlayerDeathHandler playerDeathHandler;
 
     public static Player Instance { get; private set; }
+
     public event Action<float> OnHealthChanged;
     public event Action<int> OnEchoesChanged;
 
@@ -59,8 +61,32 @@ public class Player : MonoBehaviour
     {
         PlayAnimation(PlayerState.DAMAGED, 0);
         health.TakeDamage(damage);
+        if (health.CurrentHealth <= 0)
+        {
+            OnHealthChanged?.Invoke(0);
+            Die();
+            OnEchoesChanged?.Invoke(ashEchoes.Current);
+        }
         var newValue = (float)health.CurrentHealth / health.MaxHealth;
         OnHealthChanged?.Invoke(newValue);
+
+    }
+
+    void Die()
+    {
+        PlayAnimation(PlayerState.DEATH, 0);
+
+        if (playerDeathHandler != null)
+        {
+
+            playerDeathHandler.Die();
+            PlayAnimation(PlayerState.MOVE, 0); // Reset to move state after death animation
+        }
+        else
+        {
+            Debug.LogError("PlayerDeathHandler is not assigned to the player.");
+        }
+
     }
 
     public void AddAshEchoes(int amount)
@@ -71,4 +97,8 @@ public class Player : MonoBehaviour
         }
         OnEchoesChanged?.Invoke(ashEchoes.Current);
     }
+
+    public AshEchoes AshEchoes { get { return ashEchoes; } }
+    public Health Health { get { return health; } }
+
 }
