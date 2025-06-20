@@ -4,7 +4,7 @@ public class AshGrave : MonoBehaviour, IInteractable
 {
     [SerializeField] private GameObject ashPrefab; // Reference to the ash prefab
     [SerializeField] private GameObject interactionIcon; // Reference to the interaction icon
-    [SerializeField] private AshEchoes ashEchoes; // Reference to the AshEchoes component
+    [SerializeField] private Player player; // Reference to the Player component
     [SerializeField] private int echoCount = 0; // Number of ash echoes 
     bool IsInRange;
     void Start()
@@ -50,7 +50,7 @@ public class AshGrave : MonoBehaviour, IInteractable
     public void Interact()
     {
         ashPrefab.SetActive(false);
-        ashEchoes.AddEchoes(echoCount);
+        player.AddAshEchoes(echoCount);
         echoCount = 0;
     }
 
