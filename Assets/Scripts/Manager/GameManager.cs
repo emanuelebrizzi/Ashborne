@@ -5,6 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("Managers")]
+    [SerializeField] UIManager UIManager;
+    [SerializeField] EnemySpawnManager enemySpawnManager;
+
+    // TODO: move it in a SceneManager componenet
     [Header("Scene settings")]
     [SerializeField] string mainMenuSceneName = "MainMenu";
     [SerializeField] string mainSceneName = "LevelOneMap";
@@ -52,7 +57,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        // TODO: Maybe refactor for something better handler
+        // TODO: Maybe refactor for something better handler, probably in an input manager or in player manager
         if (CurrentGameState == GameState.Playing && Input.GetKeyDown(KeyCode.Escape))
         {
             ChangeGameState(GameState.Paused);
@@ -78,6 +83,11 @@ public class GameManager : MonoBehaviour
 
         CurrentGameState = newState;
         OnGameStateChanged?.Invoke(newState);
+
+        if (newState == GameState.Playing)
+        {
+            enemySpawnManager.SpawnAllEnemies();
+        }
     }
 
     public void StartNewGame()

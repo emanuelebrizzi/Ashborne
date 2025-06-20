@@ -5,7 +5,7 @@ using UnityEngine.Pool;
 
 public class EnemySpawnManager : MonoBehaviour
 {
-    // TODO: transform in an array
+    // TODO: transform in an array when we have mages and others
     public GameObject enemyPrefab;
 
     [Serializable]
@@ -77,13 +77,7 @@ public class EnemySpawnManager : MonoBehaviour
         Destroy(enemyObj);
     }
 
-    void Start()
-    {
-        InitialSpawn();
-    }
-
-
-    void InitialSpawn()
+    public void SpawnAllEnemies()
     {
         foreach (var spawnPoint in spawnPoints)
         {
