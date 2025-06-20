@@ -67,9 +67,17 @@ public class Enemy : MonoBehaviour
     public void MoveInDirection(float direction)
     {
 
+        // Body.linearVelocityX = direction * speed;
+        // UpdateSpriteDirection(direction);
+        // PlayAnimation(AnimationState.MOVE);
+
         Body.linearVelocityX = direction * speed;
         UpdateSpriteDirection(direction);
-        PlayAnimation(AnimationState.MOVE);
+
+        if (Mathf.Abs(direction) > 0.01f)
+            PlayAnimation(AnimationState.MOVE);
+        else
+            PlayAnimation(AnimationState.IDLE);
     }
 
     public void TakeDamage(int damage)

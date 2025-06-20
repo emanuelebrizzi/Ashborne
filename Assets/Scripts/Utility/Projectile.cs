@@ -2,18 +2,14 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    public float moveSpeed = 5f;
+    public float speed = 5f;
     public int damage = 10;
-
-    void Start()
-    {
-        UpdateSpriteDirection(transform.position.x);
-    }
-
+    [HideInInspector] public Vector2 direction = Vector2.right;
 
     void Update()
     {
-        transform.Translate(moveSpeed * Time.deltaTime, 0, 0);
+        UpdateSpriteDirection(direction.x);
+        transform.Translate(speed * Time.deltaTime * direction.normalized, Space.World);
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -26,12 +22,12 @@ public class Projectile : MonoBehaviour
         Destroy(gameObject);
     }
 
-    void UpdateSpriteDirection(float directionX)
+    public void UpdateSpriteDirection(float directionX)
     {
         if (directionX != 0)
         {
             float sign = Mathf.Sign(directionX);
-            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * sign, transform.localScale.y, transform.localScale.z);
+            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * -sign, transform.localScale.y, transform.localScale.z);
         }
     }
 }

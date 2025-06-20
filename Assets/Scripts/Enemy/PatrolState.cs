@@ -19,6 +19,8 @@ public class PatrolState : EnemyState
         }
 
         target = enemy.PointB.position;
+
+        // enemy.SetPatrolPoints(enemy.PointA, enemy.PointB);
     }
 
     void FixedUpdate()
