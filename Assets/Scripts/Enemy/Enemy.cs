@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(PatrolState))]
@@ -16,6 +17,7 @@ public class Enemy : MonoBehaviour
     Animator animator;
     Health health;
 
+    public string Id { get; private set; }
     public LayerMask PlayerMask { get; private set; }
     public Rigidbody2D Body { get; private set; }
     public int Reward => ashEchoesReward;
@@ -28,12 +30,21 @@ public class Enemy : MonoBehaviour
         DEATH,
     }
 
-    void Start()
+    public EnemySpawnManager.SpawnPoint MySpawnPoint;
+    public Transform PointA;
+    public Transform PointB;
+
+
+    void Awake()
     {
         Body = GetComponent<Rigidbody2D>();
+        Id = Guid.NewGuid().ToString();
         patrolState = GetComponent<PatrolState>();
         chasingState = GetComponent<ChasingState>();
         deathState = GetComponent<DeathState>();
+    }
+    void Start()
+    {
         health = GetComponent<Health>();
         animator = GetComponentInChildren<Animator>();
         PlayerMask = LayerMask.GetMask("Player");
@@ -55,9 +66,18 @@ public class Enemy : MonoBehaviour
 
     public void MoveInDirection(float direction)
     {
+
+        // Body.linearVelocityX = direction * speed;
+        // UpdateSpriteDirection(direction);
+        // PlayAnimation(AnimationState.MOVE);
+
         Body.linearVelocityX = direction * speed;
         UpdateSpriteDirection(direction);
-        PlayAnimation(AnimationState.MOVE);
+
+        if (Mathf.Abs(direction) > 0.01f)
+            PlayAnimation(AnimationState.MOVE);
+        else
+            PlayAnimation(AnimationState.IDLE);
     }
 
     public void TakeDamage(int damage)
@@ -131,5 +151,35 @@ public class Enemy : MonoBehaviour
                 animator.SetBool("isDead", true);
                 break;
         }
+    }
+
+
+    public void ResetFroomPool()
+    {
+        if (health != null)
+            health.ResetHealth();
+
+        ResetState();
+        SetPhysicElementsTo(true);
+    }
+
+    public void SetPhysicElementsTo(bool value)
+    {
+        Collider2D[] colliders = GetComponentsInChildren<Collider2D>();
+        foreach (Collider2D col in colliders)
+        {
+            col.enabled = value;
+        }
+
+        if (Body != null)
+        {
+            Body.simulated = value;
+        }
+    }
+
+    public void SetPatrolPoints(Transform pointA, Transform pointB)
+    {
+        PointA = pointA;
+        PointB = pointB;
     }
 }

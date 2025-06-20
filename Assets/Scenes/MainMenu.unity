@@ -1076,7 +1076,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75684157300c3b847a9fac60147d082a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainMenuPanel: {fileID: 0}
   newGameButton: {fileID: 1902067196}
   loadGameButton: {fileID: 5749825839392830335}
   exitMainMenuButton: {fileID: 244372802}
@@ -1095,8 +1094,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1388431176}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 750.8484, y: 387.7734, z: -1.0363772}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 750.8484, y: 387.7734, z: -1.036377}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1136,6 +1135,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55a0d8ef94d0d724dba28c62c40cff44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UIManager: {fileID: 1388431177}
+  enemySpawnManager: {fileID: 0}
   mainMenuSceneName: MainMenu
   mainSceneName: LevelOneMap
   loadingSceneName: LoadingScene

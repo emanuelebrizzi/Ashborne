@@ -1,10 +1,14 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("Managers")]
+    [SerializeField] UIManager UIManager;
+    [SerializeField] EnemySpawnManager enemySpawnManager;
+
+    // TODO: move it in a SceneManager componenet
     [Header("Scene settings")]
     [SerializeField] string mainMenuSceneName = "MainMenu";
     [SerializeField] string mainSceneName = "LevelOneMap";
@@ -22,7 +26,6 @@ public class GameManager : MonoBehaviour
 
     public GameState CurrentGameState { get; private set; }
 
-    public event Action<GameState> OnGameStateChanged;
 
     void Awake()
     {
@@ -34,7 +37,7 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
 
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.sceneLoaded += OnSceneLoaded; // This is a built-in Unity event
         DontDestroyOnLoad(gameObject);
     }
 
@@ -47,12 +50,26 @@ public class GameManager : MonoBehaviour
         else if (scene.name == mainSceneName)
         {
             ChangeGameState(GameState.Playing);
+
+            if (enemySpawnManager != null)
+            {
+                enemySpawnManager.SpawnAllEnemies();
+            }
+            else
+            {
+                Debug.LogWarning("EnemySpawnManager not initialized when trying to spawn enemies.");
+            }
         }
     }
 
     void Update()
     {
-        // TODO: Maybe refactor for something better handler
+        // TODO: Move this function in another class
+        TogglePauseMenu();
+    }
+
+    void TogglePauseMenu()
+    {
         if (CurrentGameState == GameState.Playing && Input.GetKeyDown(KeyCode.Escape))
         {
             ChangeGameState(GameState.Paused);
@@ -63,6 +80,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Probably we can extract methods from this method or use switch case statements
     public void ChangeGameState(GameState newState)
     {
         if (CurrentGameState == newState) return;
@@ -70,26 +88,26 @@ public class GameManager : MonoBehaviour
         if (newState == GameState.Paused)
         {
             Time.timeScale = 0f;
+            UIManager.ShowPauseMenu();
         }
-        else
+        else if (newState == GameState.Playing)
         {
             Time.timeScale = 1f;
+            UIManager.ShowGameplayUI();
+            enemySpawnManager.SpawnAllEnemies();
         }
 
         CurrentGameState = newState;
-        OnGameStateChanged?.Invoke(newState);
     }
 
     public void StartNewGame()
     {
-        ChangeGameState(GameState.Playing);
         LoadGameScene(mainSceneName);
         Debug.Log("Game Started");
     }
 
     public void ReturnToMainMenu()
     {
-        ChangeGameState(GameState.MainMenu);
         LoadGameScene(mainMenuSceneName);
     }
 
@@ -126,6 +144,16 @@ public class GameManager : MonoBehaviour
 #else
             Application.Quit();
 #endif
+    }
+
+    public void RegisterEnemySpawnManager(EnemySpawnManager manager)
+    {
+        enemySpawnManager = manager;
+    }
+
+    public void RegisterUIManager(UIManager manager)
+    {
+        UIManager = manager;
     }
 
     void OnDestroy()

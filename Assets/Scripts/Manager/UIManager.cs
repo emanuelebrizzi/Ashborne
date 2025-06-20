@@ -21,20 +21,23 @@ public class UIManager : MonoBehaviour
     [SerializeField] Slider healthBar;
     [SerializeField] TextMeshProUGUI ashEchoesText;
 
+
+    void Awake()
+    {
+        if (GameManager.Instance != null)
+            GameManager.Instance.RegisterUIManager(this);
+    }
+
     void Start()
     {
         RegisterToEventHandlers();
         InitializeUIElements();
-        SetupButtonListeners();
+        SetUpMainMenuListeners();
+        SetUpPauseMenuListeners();
     }
 
     void RegisterToEventHandlers()
     {
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.OnGameStateChanged += UpdateUIPanels;
-        }
-
         if (Player.Instance != null)
         {
             Player.Instance.OnHealthChanged += UpdateHealthBar;
@@ -46,42 +49,17 @@ public class UIManager : MonoBehaviour
     {
         UpdateHealthBar(InitialHealthBarValue);
         UpdateAshEchoes(InitialEchoesValue);
-        UpdateUIPanels(GameManager.GameState.Playing);
     }
 
-    void SetupButtonListeners()
+
+    void SetUpMainMenuListeners()
     {
-        if (resumeButton != null)
-        {
-            resumeButton.onClick.AddListener(() =>
-            {
-                GameManager.Instance.ResumeGame();
-            });
-        }
-
-        if (menuButton != null)
-        {
-            menuButton.onClick.AddListener(() =>
-            {
-                GameManager.Instance.ReturnToMainMenu();
-            });
-        }
-
-        if (exitButton != null)
-        {
-            exitButton.onClick.AddListener(() =>
-            {
-
-                GameManager.Instance.QuitGame();
-            });
-        }
-
         if (newGameButton != null)
         {
             newGameButton.onClick.AddListener(() => GameManager.Instance.StartNewGame());
         }
 
-        // TODO:   implement when there is the loading state
+        // TODO: implement when there is the loading state
         // if (loadGameButton != null)
         // {
         // }
@@ -90,26 +68,23 @@ public class UIManager : MonoBehaviour
         {
             exitMainMenuButton.onClick.AddListener(() => GameManager.Instance.QuitGame());
         }
-
     }
-    void UpdateUIPanels(GameManager.GameState newState)
+
+    void SetUpPauseMenuListeners()
     {
-        switch (newState)
+        if (resumeButton != null)
         {
-            case GameManager.GameState.MainMenu:
-                if (gameplayPanel) gameplayPanel.SetActive(false);
-                if (pauseMenuPanel) pauseMenuPanel.SetActive(false);
-                break;
+            resumeButton.onClick.AddListener(() => GameManager.Instance.ResumeGame());
+        }
 
-            case GameManager.GameState.Playing:
-                if (gameplayPanel) gameplayPanel.SetActive(true);
-                if (pauseMenuPanel) pauseMenuPanel.SetActive(false);
-                break;
+        if (menuButton != null)
+        {
+            menuButton.onClick.AddListener(() => GameManager.Instance.ReturnToMainMenu());
+        }
 
-            case GameManager.GameState.Paused:
-                if (gameplayPanel) gameplayPanel.SetActive(true);
-                if (pauseMenuPanel) pauseMenuPanel.SetActive(true);
-                break;
+        if (exitButton != null)
+        {
+            exitButton.onClick.AddListener(() => GameManager.Instance.QuitGame());
         }
     }
 
@@ -129,13 +104,20 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void ShowPauseMenu()
+    {
+        if (gameplayPanel) gameplayPanel.SetActive(true);
+        if (pauseMenuPanel) pauseMenuPanel.SetActive(true);
+    }
+
+    public void ShowGameplayUI()
+    {
+        if (gameplayPanel) gameplayPanel.SetActive(true);
+        if (pauseMenuPanel) pauseMenuPanel.SetActive(false);
+    }
+
     void OnDestroy()
     {
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.OnGameStateChanged -= UpdateUIPanels;
-        }
-
         if (Player.Instance != null)
         {
             Player.Instance.OnHealthChanged -= UpdateHealthBar;
