@@ -49,18 +49,17 @@ public class EnemySpawnManager : MonoBehaviour
 
     GameObject OnEnemyCreate()
     {
-        GameObject enemy = Instantiate(enemyPrefab, enemiesParent);
-        return enemy;
+        GameObject enemyObj = Instantiate(enemyPrefab, enemiesParent);
+        if (enemyObj.TryGetComponent<Enemy>(out var enemy))
+        {
+            enemy.GetComponent<DeathState>().OnEnemyDeath += () => HandleRespawnOf(enemy);
+        }
+        return enemyObj;
     }
 
     void OnTake(GameObject enemyObj)
     {
         enemyObj.SetActive(true);
-
-        if (enemyObj.TryGetComponent<Enemy>(out var enemy))
-        {
-            enemy.GetComponent<DeathState>().OnEnemyDeath += () => HandleRespawnOf(enemy);
-        }
     }
 
     void OnRelease(GameObject enemyObj)
@@ -70,6 +69,11 @@ public class EnemySpawnManager : MonoBehaviour
 
     void OnObjectDestroy(GameObject enemyObj)
     {
+        if (enemyObj.TryGetComponent<Enemy>(out var enemy))
+        {
+            enemy.GetComponent<DeathState>().OnEnemyDeath -= () => HandleRespawnOf(enemy);
+        }
+
         Destroy(enemyObj);
     }
 
