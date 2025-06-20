@@ -32,7 +32,8 @@ public class UIManager : MonoBehaviour
     {
         RegisterToEventHandlers();
         InitializeUIElements();
-        SetupButtonListeners();
+        SetUpMainMenuListeners();
+        SetUpPauseMenuListeners();
     }
 
     void RegisterToEventHandlers()
@@ -50,39 +51,15 @@ public class UIManager : MonoBehaviour
         UpdateAshEchoes(InitialEchoesValue);
     }
 
-    void SetupButtonListeners()
+
+    void SetUpMainMenuListeners()
     {
-        if (resumeButton != null)
-        {
-            resumeButton.onClick.AddListener(() =>
-            {
-                GameManager.Instance.ResumeGame();
-            });
-        }
-
-        if (menuButton != null)
-        {
-            menuButton.onClick.AddListener(() =>
-            {
-                GameManager.Instance.ReturnToMainMenu();
-            });
-        }
-
-        if (exitButton != null)
-        {
-            exitButton.onClick.AddListener(() =>
-            {
-
-                GameManager.Instance.QuitGame();
-            });
-        }
-
         if (newGameButton != null)
         {
             newGameButton.onClick.AddListener(() => GameManager.Instance.StartNewGame());
         }
 
-        // TODO:   implement when there is the loading state
+        // TODO: implement when there is the loading state
         // if (loadGameButton != null)
         // {
         // }
@@ -91,7 +68,24 @@ public class UIManager : MonoBehaviour
         {
             exitMainMenuButton.onClick.AddListener(() => GameManager.Instance.QuitGame());
         }
+    }
 
+    void SetUpPauseMenuListeners()
+    {
+        if (resumeButton != null)
+        {
+            resumeButton.onClick.AddListener(() => GameManager.Instance.ResumeGame());
+        }
+
+        if (menuButton != null)
+        {
+            menuButton.onClick.AddListener(() => GameManager.Instance.ReturnToMainMenu());
+        }
+
+        if (exitButton != null)
+        {
+            exitButton.onClick.AddListener(() => GameManager.Instance.QuitGame());
+        }
     }
 
     public void UpdateHealthBar(float currentHealth)
@@ -119,12 +113,6 @@ public class UIManager : MonoBehaviour
     public void ShowGameplayUI()
     {
         if (gameplayPanel) gameplayPanel.SetActive(true);
-        if (pauseMenuPanel) pauseMenuPanel.SetActive(false);
-    }
-
-    public void ShowMainMenuUI()
-    {
-        if (gameplayPanel) gameplayPanel.SetActive(false);
         if (pauseMenuPanel) pauseMenuPanel.SetActive(false);
     }
 

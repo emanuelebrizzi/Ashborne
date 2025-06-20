@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
 
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.sceneLoaded += OnSceneLoaded; // This is a built-in Unity event
         DontDestroyOnLoad(gameObject);
     }
 
@@ -55,7 +55,12 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        // TODO: Maybe refactor for something better handler, probably in an input manager or in player manager
+        // TODO: Move this function in another class
+        TogglePauseMenu();
+    }
+
+    void TogglePauseMenu()
+    {
         if (CurrentGameState == GameState.Playing && Input.GetKeyDown(KeyCode.Escape))
         {
             ChangeGameState(GameState.Paused);
@@ -66,6 +71,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Probably we can extract methods from this method or use switch case statements
     public void ChangeGameState(GameState newState)
     {
         if (CurrentGameState == newState) return;
@@ -81,13 +87,8 @@ public class GameManager : MonoBehaviour
             UIManager.ShowGameplayUI();
             enemySpawnManager.SpawnAllEnemies();
         }
-        else if (newState == GameState.MainMenu)
-        {
-            UIManager.ShowMainMenuUI();
-        }
 
         CurrentGameState = newState;
-
     }
 
     public void StartNewGame()
