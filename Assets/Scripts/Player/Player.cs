@@ -65,6 +65,7 @@ public class Player : MonoBehaviour
         {
             OnHealthChanged?.Invoke(0);
             Die();
+            OnEchoesChanged?.Invoke(ashEchoes.Current);
         }
         var newValue = (float)health.CurrentHealth / health.MaxHealth;
         OnHealthChanged?.Invoke(newValue);

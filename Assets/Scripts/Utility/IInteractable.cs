@@ -2,8 +2,8 @@ using UnityEngine;
 
 public interface IInteractable
 {
-    void Interact();
-    bool IsInteractable();
+    public void Interact();
+    public bool IsInteractable();
     
 
 }
