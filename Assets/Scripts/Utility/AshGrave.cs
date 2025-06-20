@@ -2,17 +2,19 @@ using UnityEngine;
 
 public class AshGrave : MonoBehaviour, IInteractable
 {
-    [SerializeField] private GameObject ashPrefab; // Reference to the ash prefab
-    [SerializeField] private GameObject interactionIcon; // Reference to the interaction icon
-    [SerializeField] private Player player; // Reference to the Player component
-    [SerializeField] private int echoCount = 0; // Number of ash echoes 
+    [SerializeField] GameObject ashPrefab; // Reference to the ash prefab
+    [SerializeField] GameObject interactionIcon; // Reference to the interaction icon
+    [SerializeField] Player player; // Reference to the Player component
+    [SerializeField] int echoCount = 0; // Number of ash echoes 
     bool IsInRange;
+
     void Start()
     {
         IsInRange = false;
         ashPrefab.SetActive(false);
         interactionIcon.SetActive(false);
     }
+
     void Update()
     {
         if (IsInRange && Input.GetKeyDown(KeyCode.E))
@@ -58,7 +60,7 @@ public class AshGrave : MonoBehaviour, IInteractable
     {
         ashPrefab.transform.position = new Vector3(dropPoint.position.x, dropPoint.position.y, 0);
         ashPrefab.SetActive(true);
-        echoCount = amount; 
+        echoCount = amount;
     }
 
     public bool IsInteractable()

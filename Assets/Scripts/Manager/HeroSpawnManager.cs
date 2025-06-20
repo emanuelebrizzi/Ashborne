@@ -25,6 +25,7 @@ public class HeroSpawnManager : MonoBehaviour
     {
         SpawnHeroInPosition(heroSpawnPoint);
     }
+
     public void SpawnHeroInPosition(Transform position)
     {
         if (heroPrefab == null)

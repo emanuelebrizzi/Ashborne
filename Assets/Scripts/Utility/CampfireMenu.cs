@@ -15,7 +15,7 @@ public class CampfireMenu : MonoBehaviour
     public void OpenCampfireMenu()
     {
         Debug.Log("Opening campfire menu");
-   
+
         if (campfireMenuUI != null)
         {
             campfireMenuUI.SetActive(true); // Show the campfire menu
@@ -41,7 +41,7 @@ public class CampfireMenu : MonoBehaviour
             // Enable player controls
         }
     }
-        
+
 }
 
 
