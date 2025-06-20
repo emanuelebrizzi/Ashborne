@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -88,18 +87,17 @@ public class GameManager : MonoBehaviour
         }
 
         CurrentGameState = newState;
+
     }
 
     public void StartNewGame()
     {
-        ChangeGameState(GameState.Playing);
         LoadGameScene(mainSceneName);
         Debug.Log("Game Started");
     }
 
     public void ReturnToMainMenu()
     {
-        ChangeGameState(GameState.MainMenu);
         LoadGameScene(mainMenuSceneName);
     }
 
@@ -136,6 +134,16 @@ public class GameManager : MonoBehaviour
 #else
             Application.Quit();
 #endif
+    }
+
+    public void RegisterEnemySpawnManager(EnemySpawnManager manager)
+    {
+        enemySpawnManager = manager;
+    }
+
+    public void RegisterUIManager(UIManager manager)
+    {
+        UIManager = manager;
     }
 
     void OnDestroy()

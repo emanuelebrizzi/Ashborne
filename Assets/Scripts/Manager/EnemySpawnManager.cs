@@ -44,6 +44,8 @@ public class EnemySpawnManager : MonoBehaviour
             OnObjectDestroy,
             maxSize: spawnPoints.Length
         );
+
+        GameManager.Instance.RegisterEnemySpawnManager(this);
     }
 
     GameObject OnEnemyCreate()

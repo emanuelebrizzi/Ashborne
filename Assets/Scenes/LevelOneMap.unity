@@ -2641,7 +2641,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &428661666
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12137,6 +12137,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55a0d8ef94d0d724dba28c62c40cff44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UIManager: {fileID: 15325714}
+  enemySpawnManager: {fileID: 1208672623}
   mainMenuSceneName: MainMenu
   mainSceneName: LevelOneMap
   loadingSceneName: LoadingScene

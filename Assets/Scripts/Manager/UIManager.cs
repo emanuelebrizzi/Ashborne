@@ -21,6 +21,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] Slider healthBar;
     [SerializeField] TextMeshProUGUI ashEchoesText;
 
+
+    void Awake()
+    {
+        if (GameManager.Instance != null)
+            GameManager.Instance.RegisterUIManager(this);
+    }
+
     void Start()
     {
         RegisterToEventHandlers();
