@@ -11015,7 +11015,7 @@ Transform:
   m_GameObject: {fileID: 1686325141}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 171.22, y: 3.32, z: 1}
+  m_LocalPosition: {x: -2.24, y: -0.02, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12473,7 +12473,7 @@ Transform:
   m_GameObject: {fileID: 1876964892}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 132.13, y: -2.74, z: 0}
+  m_LocalPosition: {x: 1.24, y: 0.01, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -13915,7 +13915,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ashPrefab: {fileID: 2036907843}
   interactionIcon: {fileID: 1565220407}
-  ashEchoes: {fileID: 1982723265}
+  player: {fileID: 1982723269}
   echoCount: 0
 --- !u!212 &2036907845
 SpriteRenderer:
