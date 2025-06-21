@@ -3,6 +3,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(PatrolState))]
 [RequireComponent(typeof(ChasingState))]
+[RequireComponent(typeof(AttackState))]
 [RequireComponent(typeof(DeathState))]
 public class Enemy : MonoBehaviour
 {
@@ -10,16 +11,17 @@ public class Enemy : MonoBehaviour
     [SerializeField] int ashEchoesReward = 100;
     [SerializeField] EnemyState initialState;
 
-    PatrolState patrolState;
-    ChasingState chasingState;
-    DeathState deathState;
-
+    Rigidbody2D rigidBody;
     Animator animator;
     Health health;
+    bool isFacingLeft = true;
+    EnemyState currentState;
 
+    public PatrolState PatrolState { get; private set; }
+    public ChasingState ChasingState { get; private set; }
+    public AttackState AttackState { get; private set; }
+    public DeathState DeathState { get; private set; }
     public string Id { get; private set; }
-    public LayerMask PlayerMask { get; private set; }
-    public Rigidbody2D Body { get; private set; }
     public int Reward => ashEchoesReward;
     public enum AnimationState
     {
@@ -30,97 +32,80 @@ public class Enemy : MonoBehaviour
         DEATH,
     }
 
-    public EnemySpawnManager.SpawnPoint MySpawnPoint;
     public Transform PointA;
     public Transform PointB;
 
-
     void Awake()
     {
-        Body = GetComponent<Rigidbody2D>();
+        rigidBody = GetComponent<Rigidbody2D>();
         Id = Guid.NewGuid().ToString();
-        patrolState = GetComponent<PatrolState>();
-        chasingState = GetComponent<ChasingState>();
-        deathState = GetComponent<DeathState>();
+        PatrolState = GetComponent<PatrolState>();
+        ChasingState = GetComponent<ChasingState>();
+        AttackState = GetComponent<AttackState>();
+        DeathState = GetComponent<DeathState>();
     }
     void Start()
     {
         health = GetComponent<Health>();
         animator = GetComponentInChildren<Animator>();
-        PlayerMask = LayerMask.GetMask("Player");
 
-        ResetState();
-    }
+        health.OnDeath += Die;
 
-    void ResetState()
-    {
-        patrolState.Exit();
-        chasingState.Exit();
-        deathState.Exit();
-
-        if (initialState != null)
-        {
-            initialState.Enter();
-        }
-    }
-
-    public void MoveInDirection(float direction)
-    {
-
-        // Body.linearVelocityX = direction * speed;
-        // UpdateSpriteDirection(direction);
-        // PlayAnimation(AnimationState.MOVE);
-
-        Body.linearVelocityX = direction * speed;
-        UpdateSpriteDirection(direction);
-
-        if (Mathf.Abs(direction) > 0.01f)
-            PlayAnimation(AnimationState.MOVE);
-        else
-            PlayAnimation(AnimationState.IDLE);
-    }
-
-    public void TakeDamage(int damage)
-    {
-        health.TakeDamage(damage);
-        Debug.Log($"Got {damage} damage, remaining {health.CurrentHealth} HP.");
-
-        if (health.CurrentHealth <= 0)
-        {
-            Die();
-            return;
-        }
-
-        PlayAnimation(AnimationState.DAMAGED);
+        ChangeState(initialState);
     }
 
     void Die()
     {
-        EnemyState[] allStates = GetComponents<EnemyState>();
-        foreach (var state in allStates)
-        {
-            if (state != deathState)
-            {
-                state.enabled = false;
-            }
-        }
-
-        deathState.Enter();
+        ChangeState(DeathState);
     }
 
-    // The assumption is that the sprite is facing left when x is positive
+    public void ChangeState(EnemyState newState)
+    {
+        if (currentState != null)
+            currentState.Exit();
+
+        currentState = newState;
+        currentState.Enter();
+    }
+
+    void Update()
+    {
+        currentState.Tick();
+    }
+
+    public void MoveInDirection(float direction)
+    {
+        rigidBody.linearVelocityX = direction * speed;
+        UpdateSpriteDirection(direction);
+        PlayAnimation(AnimationState.MOVE);
+    }
+
+    public void TakeDamage(int damage)
+    {
+        health.ApplyDamaage(damage);
+        PlayAnimation(AnimationState.DAMAGED);
+        Debug.Log($"Got {damage} damage, remaining {health.CurrentHealth} HP.");
+    }
+
     public void UpdateSpriteDirection(float directionX)
     {
-        if (directionX > 0)
+        if (directionX > 0 && isFacingLeft)
         {
-            // Moving right
-            transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+            Flip();
         }
-        else if (directionX < 0)
+        else if (directionX < 0 && !isFacingLeft)
         {
-            // Moving left
-            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+            Flip();
         }
+    }
+
+    void Flip()
+    {
+        Vector3 currentScale = gameObject.transform.localScale;
+        currentScale.x *= -1;
+        gameObject.transform.localScale = currentScale;
+
+        isFacingLeft = !isFacingLeft;
     }
 
     public void PlayAnimation(AnimationState state)
@@ -129,12 +114,6 @@ public class Enemy : MonoBehaviour
 
         switch (state)
         {
-            case AnimationState.IDLE:
-                animator.SetBool("isMoving", false);
-                animator.ResetTrigger("isAttacking");
-                animator.ResetTrigger("isDamaged");
-                break;
-
             case AnimationState.MOVE:
                 animator.SetBool("isMoving", true);
                 break;
@@ -148,19 +127,35 @@ public class Enemy : MonoBehaviour
                 break;
 
             case AnimationState.DEATH:
+                animator.SetBool("isMoving", false);
+                animator.ResetTrigger("isAttacking");
+                animator.ResetTrigger("isDamaged");
                 animator.SetBool("isDead", true);
                 break;
         }
     }
-
 
     public void ResetFroomPool()
     {
         if (health != null)
             health.ResetHealth();
 
-        ResetState();
+
+        if (animator != null)
+        {
+            InitializeAnimatorVariables();
+        }
+
         SetPhysicElementsTo(true);
+        ChangeState(initialState);
+    }
+
+    void InitializeAnimatorVariables()
+    {
+        animator.SetBool("isDead", false);
+        animator.SetBool("isMoving", false);
+        animator.ResetTrigger("isAttacking");
+        animator.ResetTrigger("isDamaged");
     }
 
     public void SetPhysicElementsTo(bool value)
@@ -171,15 +166,9 @@ public class Enemy : MonoBehaviour
             col.enabled = value;
         }
 
-        if (Body != null)
+        if (rigidBody != null)
         {
-            Body.simulated = value;
+            rigidBody.simulated = value;
         }
-    }
-
-    public void SetPatrolPoints(Transform pointA, Transform pointB)
-    {
-        PointA = pointA;
-        PointB = pointB;
     }
 }

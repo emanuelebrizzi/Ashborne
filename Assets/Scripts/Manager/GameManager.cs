@@ -73,6 +73,10 @@ public class GameManager : MonoBehaviour
         if (CurrentGameState == GameState.Playing && Input.GetKeyDown(KeyCode.Escape))
         {
             ChangeGameState(GameState.Paused);
+
+            // TODO: Remove when refactoring the campfire
+            Cursor.lockState = CursorLockMode.None; // Unlock the cursor
+            Cursor.visible = true;
         }
         else if (CurrentGameState == GameState.Paused && Input.GetKeyDown(KeyCode.Escape))
         {

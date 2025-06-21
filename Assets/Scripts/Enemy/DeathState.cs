@@ -10,10 +10,8 @@ public class DeathState : EnemyState
     public override void Enter()
     {
         base.Enter();
-
         ProcessDeath();
     }
-
 
     void ProcessDeath()
     {

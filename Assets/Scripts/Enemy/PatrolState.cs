@@ -4,31 +4,24 @@ public class PatrolState : EnemyState
 {
     const float MinimumDistance = 0.1f;
     [SerializeField] float detectionRange = 3f;
-
-    bool goingToB = true;
+    LayerMask playerMask;
     Vector2 target;
+    bool goingToB = true;
 
     public override void Enter()
     {
         base.Enter();
         Debug.Log("Enemy entered in the PatrolState");
-
-        if (nextState == null)
-        {
-            nextState = GetComponent<ChasingState>();
-        }
-
+        playerMask = LayerMask.GetMask("Player");
         target = enemy.PointB.position;
-
-        // enemy.SetPatrolPoints(enemy.PointA, enemy.PointB);
     }
 
-    void FixedUpdate()
+    public override void Tick()
     {
         if (DetectPlayer())
         {
             Debug.Log("Player detected, exiting patrol state");
-            base.Exit();
+            enemy.ChangeState(enemy.ChasingState);
             return;
         }
 
@@ -55,7 +48,7 @@ public class PatrolState : EnemyState
             raycastOrigin,
             directionToPlayer,
             detectionRange,
-            enemy.PlayerMask
+            playerMask
         );
 
         if (hit.collider != null)

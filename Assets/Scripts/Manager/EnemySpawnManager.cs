@@ -45,7 +45,8 @@ public class EnemySpawnManager : MonoBehaviour
             maxSize: spawnPoints.Length
         );
 
-        GameManager.Instance.RegisterEnemySpawnManager(this);
+        if (GameManager.Instance != null)
+            GameManager.Instance.RegisterEnemySpawnManager(this);
     }
 
     GameObject OnEnemyCreate()
@@ -67,11 +68,15 @@ public class EnemySpawnManager : MonoBehaviour
     {
         enemyObj.SetActive(false);
 
-        if (enemyObj.TryGetComponent<Enemy>(out var enemy) && enemy.MySpawnPoint != null)
+        if (enemyObj.TryGetComponent<Enemy>(out var enemy))
         {
-            if (activeEnemies.ContainsKey(enemy.MySpawnPoint) && activeEnemies[enemy.MySpawnPoint] == enemy)
+            foreach (var kvp in activeEnemies)
             {
-                activeEnemies[enemy.MySpawnPoint] = null;
+                if (kvp.Value == enemy)
+                {
+                    activeEnemies[kvp.Key] = null;
+                    break;
+                }
             }
         }
     }
@@ -103,7 +108,7 @@ public class EnemySpawnManager : MonoBehaviour
         enemyObj.transform.SetPositionAndRotation(spawnPoint.position.position, spawnPoint.position.rotation);
 
         Enemy enemy = enemyObj.GetComponent<Enemy>();
-        enemy.MySpawnPoint = spawnPoint;
+        // enemy.MySpawnPoint = spawnPoint;
         enemy.PointA = spawnPoint.patrolPointA;
         enemy.PointB = spawnPoint.patrolPointB;
         enemy.ResetFroomPool();
