@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class AttackHitbox : MonoBehaviour
 {
-    // [SerializeField] private int damageAmount = 10;
     [SerializeField] float hitboxActiveTime = 1.0f;
 
     bool canDealDamage = false;

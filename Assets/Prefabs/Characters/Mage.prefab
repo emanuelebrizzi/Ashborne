@@ -484,6 +484,7 @@ GameObject:
   - component: {fileID: 1326854276226856862}
   - component: {fileID: 5965784281055749933}
   - component: {fileID: 622743470455108142}
+  - component: {fileID: 2615892050244837242}
   - component: {fileID: 1991175659566027179}
   - component: {fileID: 6536659331668968125}
   - component: {fileID: 210419670223932780}
@@ -503,7 +504,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 877561424279928533}
   m_LocalRotation: {x: -0, y: 0.008726557, z: -0, w: 0.9999619}
-  m_LocalPosition: {x: 0, y: 0, z: -0.57}
+  m_LocalPosition: {x: 0, y: 0, z: -0.569}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -513,7 +514,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 1, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -34.9, y: -66.54}
+  m_AnchoredPosition: {x: -34.936, y: -66.553}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!50 &5879132543600246743
@@ -610,6 +611,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 50
+--- !u!114 &2615892050244837242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 877561424279928533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d6e2da78fb954c46b912392e679c9da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackRange: 5
+  attackCooldown: 2
+  damageAmount: 10
+  projectile: {fileID: 5882281339199898898, guid: bf0b182b4d01ff04ba0999e757e5afba, type: 3}
+  firePoint: {fileID: 908822232101313340}
 --- !u!114 &1991175659566027179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -637,9 +655,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxChaseDistance: 5
   attackRange: 6
-  isMage: 1
-  projectilePrefab: {fileID: 1690595309072263089, guid: bf0b182b4d01ff04ba0999e757e5afba, type: 3}
-  firePoint: {fileID: 908822232101313340}
 --- !u!114 &210419670223932780
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -664,8 +679,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 598fa92e50fbe5a44be4b1b1ca76bb9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackRange: 1.5
-  attackCooldown: 1
 --- !u!1 &1065791964908130281
 GameObject:
   m_ObjectHideFlags: 0
@@ -4407,7 +4420,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9152870895383598814}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4415,6 +4428,6 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.606, y: 0.399}
+  m_AnchoredPosition: {x: -0.661, y: 0.375}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}

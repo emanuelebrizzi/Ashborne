@@ -12,8 +12,10 @@ public class AttackState : EnemyState
             return;
         }
 
+        Vector2 directionToPlayer = (Player.Instance.transform.position - enemy.transform.position).normalized;
         if (!isAttacking)
         {
+            enemy.UpdateSpriteDirection(directionToPlayer.x);
             StartCoroutine(AttackRoutine());
         }
     }

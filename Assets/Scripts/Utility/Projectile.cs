@@ -1,33 +1,27 @@
+using System;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    public float speed = 5f;
-    public int damage = 10;
-    [HideInInspector] public Vector2 direction = Vector2.right;
+    public float speed = 3f;
+    public event Action<Collider2D> OnHit;
+    public Vector2 direction;
 
-    void Update()
+    void FixedUpdate()
     {
-        UpdateSpriteDirection(direction.x);
-        transform.Translate(speed * Time.deltaTime * direction.normalized, Space.World);
+        transform.Translate(speed * Time.fixedDeltaTime * direction.normalized, Space.World);
     }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            Player.Instance.TakeDamage(damage);
+            Debug.Log("Hit: " + collision.gameObject.name);
+            OnHit?.Invoke(collision);
+            OnHit = null;
         }
 
         Destroy(gameObject);
     }
 
-    public void UpdateSpriteDirection(float directionX)
-    {
-        if (directionX != 0)
-        {
-            float sign = Mathf.Sign(directionX);
-            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * -sign, transform.localScale.y, transform.localScale.z);
-        }
-    }
 }
