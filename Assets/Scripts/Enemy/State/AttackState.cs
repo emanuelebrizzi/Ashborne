@@ -3,61 +3,59 @@ using UnityEngine;
 
 public class AttackState : EnemyState
 {
-    [SerializeField] float attackRange = 1.5f;
-    [SerializeField] float attackCooldown = 1.0f;
-    float lastAttackTime = -100f;
-    AttackHitbox hitbox;
-
-    public override void Enter()
+    bool isAttacking = false;
+    public override void Tick()
     {
-        base.Enter();
-        hitbox = GetComponentInChildren<AttackHitbox>();
-        Attack();
+        if (!CanAttackPlayer())
+        {
+            enemy.ChangeState(enemy.ChasingState);
+            return;
+        }
+
+        if (!isAttacking)
+        {
+            StartCoroutine(AttackRoutine());
+        }
+    }
+
+    IEnumerator AttackRoutine()
+    {
+        isAttacking = true;
+
+        enemy.PlayAnimation(Enemy.AnimationState.ATTACK);
+        enemy.AttackBehaviour.PerformAttack();
+
+        yield return null;
+
+        float animationLength = GetAnimationTime();
+        float waitTime = Mathf.Max(animationLength, enemy.AttackBehaviour.AttackCooldown);
+
+        yield return new WaitForSeconds(waitTime);
+
+        isAttacking = false;
+    }
+
+    float GetAnimationTime()
+    {
+        float animationLength = 0.5f;
+        AnimatorStateInfo stateInfo = enemy.Animator.GetCurrentAnimatorStateInfo(0);
+
+        if (stateInfo.IsName("ATTACK"))
+            animationLength = stateInfo.length;
+
+        return animationLength;
+    }
+
+
+    bool CanAttackPlayer()
+    {
+        return Vector2.Distance(enemy.transform.position, Player.Instance.transform.position) <= enemy.AttackBehaviour.AttackRange;
     }
 
     public override void Exit()
     {
         base.Exit();
         StopAllCoroutines();
-    }
-
-    public override void Tick()
-    {
-        if (!CanAttackPlayer())
-        {
-            enemy.ChangeState(enemy.ChasingState);
-        }
-    }
-
-    void Attack()
-    {
-        if (Time.time < lastAttackTime + attackCooldown) return;
-
-        enemy.PlayAnimation(Enemy.AnimationState.ATTACK);
-        if (hitbox != null)
-            hitbox.Activate();
-
-        lastAttackTime = Time.time;
-        StartCoroutine(WaitAndReturnToChase());
-    }
-
-    IEnumerator WaitAndReturnToChase()
-    {
-        Animator animator = enemy.GetComponentInChildren<Animator>();
-        float waitTime = 0.5f;
-        if (animator != null)
-        {
-            yield return null;
-            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-            if (stateInfo.IsName("ATTACK"))
-                waitTime = stateInfo.length;
-        }
-        yield return new WaitForSeconds(waitTime);
-        enemy.ChangeState(enemy.ChasingState);
-    }
-
-    bool CanAttackPlayer()
-    {
-        return Vector2.Distance(enemy.transform.position, Player.Instance.transform.position) <= attackRange;
+        isAttacking = false;
     }
 }

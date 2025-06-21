@@ -21,8 +21,10 @@ public abstract class Enemy : MonoBehaviour
     public ChasingState ChasingState { get; private set; }
     public AttackState AttackState { get; private set; }
     public DeathState DeathState { get; private set; }
+    public Attack AttackBehaviour { get; private set; }
     public string Id { get; private set; }
     public int Reward => ashEchoesReward;
+    public Animator Animator => animator;
     public enum AnimationState
     {
         IDLE,
@@ -48,6 +50,7 @@ public abstract class Enemy : MonoBehaviour
     void Start()
     {
         health = GetComponent<Health>();
+        AttackBehaviour = GetComponent<Attack>();
         animator = GetComponentInChildren<Animator>();
 
         health.OnDeath += Die;

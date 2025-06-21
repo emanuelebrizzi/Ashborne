@@ -7,10 +7,6 @@ public class ChasingState : EnemyState
     Vector2 enemyStartingPoint;
     float distanceFromStart;
 
-    [SerializeField] bool isMage = false;
-    [SerializeField] GameObject projectilePrefab;
-    [SerializeField] Transform firePoint;
-
     public override void Enter()
     {
         base.Enter();
@@ -28,41 +24,20 @@ public class ChasingState : EnemyState
 
         Vector2 directionToPlayer = (Player.Instance.transform.position - enemy.transform.position).normalized;
 
-        if (!isMage && Vector2.Distance(enemy.transform.position, Player.Instance.transform.position) <= attackRange)
+        if (IsPlayerInAttackRange())
         {
             enemy.UpdateSpriteDirection(directionToPlayer.x);
             enemy.ChangeState(enemy.AttackState);
             return;
         }
 
-
-        if (isMage)
-        {
-            enemy.MoveInDirection(0);
-        }
-        else
-        {
-            enemy.MoveInDirection(directionToPlayer.x);
-
-        }
+        enemy.MoveInDirection(directionToPlayer.x);
     }
 
     bool IsPlayerTooFar()
     {
-        // distanceFromStart = Vector2.Distance(enemyStartingPoint, enemy.transform.position);
-        // return distanceFromStart > maxChaseDistance;
-
-        if (isMage)
-        {
-            // Mage: use distance to player
-            return Vector2.Distance(enemy.transform.position, Player.Instance.transform.position) > maxChaseDistance;
-        }
-        else
-        {
-            // Melee: use distance from starting point
-            distanceFromStart = Vector2.Distance(enemyStartingPoint, enemy.transform.position);
-            return distanceFromStart > maxChaseDistance;
-        }
+        distanceFromStart = Vector2.Distance(enemyStartingPoint, enemy.transform.position);
+        return distanceFromStart > maxChaseDistance;
     }
 
     bool IsEnemyNearBounds()
@@ -87,5 +62,10 @@ public class ChasingState : EnemyState
     bool IsNearPointB(float minimumDistance)
     {
         return Vector2.Distance(transform.position, enemy.PointB.position) < minimumDistance;
+    }
+
+    bool IsPlayerInAttackRange()
+    {
+        return Vector2.Distance(enemy.transform.position, Player.Instance.transform.position) <= attackRange;
     }
 }

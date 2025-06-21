@@ -1,11 +1,15 @@
+using System;
 using UnityEngine;
 
 public class AttackHitbox : MonoBehaviour
 {
-    [SerializeField] private int damageAmount = 10;
-    [SerializeField] private float hitboxActiveTime = 1.0f;
+    // [SerializeField] private int damageAmount = 10;
+    [SerializeField] float hitboxActiveTime = 1.0f;
 
-    private bool canDealDamage = false;
+    bool canDealDamage = false;
+
+    public event Action<Collider2D> OnHit;
+
 
     public void Activate()
     {
@@ -18,36 +22,13 @@ public class AttackHitbox : MonoBehaviour
         canDealDamage = false;
     }
 
-    void OnTriggerStay2D(Collider2D other)
-    {
-        CheckCollision(other);
-    }
-
     void OnTriggerEnter2D(Collider2D other)
     {
-        CheckCollision(other);
-    }
-
-    void CheckCollision(Collider2D other)
-    {
-        if (!canDealDamage)
-        {
-            return;
-        }
-
+        if (!canDealDamage) return;
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-
-            if (Player.Instance != null)
-            {
-                Debug.Log($"Applying {damageAmount} damage to player");
-                Player.Instance.TakeDamage(damageAmount);
-                canDealDamage = false;
-            }
-            else
-            {
-                Debug.LogWarning("Player object doesn't have a Health component!");
-            }
+            OnHit?.Invoke(other);
+            canDealDamage = false;
         }
     }
 }
