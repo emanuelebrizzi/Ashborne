@@ -482,11 +482,12 @@ GameObject:
   - component: {fileID: 2976714384804494994}
   - component: {fileID: 5879132543600246743}
   - component: {fileID: 1326854276226856862}
-  - component: {fileID: 5529071178652053302}
+  - component: {fileID: 5965784281055749933}
   - component: {fileID: 622743470455108142}
   - component: {fileID: 1991175659566027179}
   - component: {fileID: 6536659331668968125}
   - component: {fileID: 210419670223932780}
+  - component: {fileID: 5386623038700175337}
   m_Layer: 8
   m_Name: Mage
   m_TagString: Untagged
@@ -579,7 +580,7 @@ CapsuleCollider2D:
   m_Offset: {x: 0.007989223, y: 0.35787773}
   m_Size: {x: 0.48402473, y: 0.6998329}
   m_Direction: 0
---- !u!114 &5529071178652053302
+--- !u!114 &5965784281055749933
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -588,17 +589,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 877561424279928533}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7a2c0c666b5a744ab086bd615f67808, type: 3}
+  m_Script: {fileID: 11500000, guid: 70734860b2ae1934c923eeffe42edc4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
-  ashEchoesReward: 200
+  speed: 3
+  ashEchoesReward: 100
   initialState: {fileID: 1991175659566027179}
-  MySpawnPoint:
-    position: {fileID: 0}
-    patrolPointA: {fileID: 0}
-    patrolPointB: {fileID: 0}
-    respawnDelay: 5
   PointA: {fileID: 0}
   PointB: {fileID: 0}
 --- !u!114 &622743470455108142
@@ -626,8 +622,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e6fcdd0ef551034687c252409744893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy: {fileID: 5529071178652053302}
-  nextState: {fileID: 6536659331668968125}
   detectionRange: 6
 --- !u!114 &6536659331668968125
 MonoBehaviour:
@@ -641,11 +635,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63db14f3a361e2940b76c4843798876f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy: {fileID: 5529071178652053302}
-  nextState: {fileID: 1991175659566027179}
   maxChaseDistance: 5
   attackRange: 6
-  attackCooldown: 2
   isMage: 1
   projectilePrefab: {fileID: 1690595309072263089, guid: bf0b182b4d01ff04ba0999e757e5afba, type: 3}
   firePoint: {fileID: 908822232101313340}
@@ -661,8 +652,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de6bf8ecb891d8a49bc13f76f6064654, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy: {fileID: 5529071178652053302}
-  nextState: {fileID: 0}
+--- !u!114 &5386623038700175337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 877561424279928533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 598fa92e50fbe5a44be4b1b1ca76bb9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackRange: 1.5
+  attackCooldown: 1
 --- !u!1 &1065791964908130281
 GameObject:
   m_ObjectHideFlags: 0

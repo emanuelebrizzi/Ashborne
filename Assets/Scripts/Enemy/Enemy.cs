@@ -5,17 +5,17 @@ using UnityEngine;
 [RequireComponent(typeof(ChasingState))]
 [RequireComponent(typeof(AttackState))]
 [RequireComponent(typeof(DeathState))]
-public class Enemy : MonoBehaviour
+public abstract class Enemy : MonoBehaviour
 {
-    [SerializeField] float speed = 5.0f;
-    [SerializeField] int ashEchoesReward = 100;
-    [SerializeField] EnemyState initialState;
+    [SerializeField] protected float speed = 3.0f;
+    [SerializeField] protected int ashEchoesReward = 100;
+    [SerializeField] protected EnemyState initialState;
 
-    Rigidbody2D rigidBody;
-    Animator animator;
-    Health health;
-    bool isFacingLeft = true;
-    EnemyState currentState;
+    protected Rigidbody2D rigidBody;
+    protected Animator animator;
+    protected Health health;
+    protected bool isFacingLeft = true;
+    protected EnemyState currentState;
 
     public PatrolState PatrolState { get; private set; }
     public ChasingState ChasingState { get; private set; }
@@ -44,6 +44,7 @@ public class Enemy : MonoBehaviour
         AttackState = GetComponent<AttackState>();
         DeathState = GetComponent<DeathState>();
     }
+
     void Start()
     {
         health = GetComponent<Health>();
@@ -73,7 +74,7 @@ public class Enemy : MonoBehaviour
         currentState.Tick();
     }
 
-    public void MoveInDirection(float direction)
+    public virtual void MoveInDirection(float direction)
     {
         rigidBody.linearVelocityX = direction * speed;
         UpdateSpriteDirection(direction);

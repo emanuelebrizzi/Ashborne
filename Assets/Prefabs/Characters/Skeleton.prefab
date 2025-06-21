@@ -296,7 +296,7 @@ GameObject:
   - component: {fileID: 2111711291868079218}
   - component: {fileID: 6372584557453951343}
   - component: {fileID: 4285843679354922343}
-  - component: {fileID: 5889209188217334380}
+  - component: {fileID: 4373497734990114872}
   - component: {fileID: 1133741725043832346}
   - component: {fileID: 1197041449834126574}
   - component: {fileID: 5488292281084522090}
@@ -394,7 +394,7 @@ CapsuleCollider2D:
   m_Offset: {x: -0.0066087833, y: 0.34119034}
   m_Size: {x: 0.42992646, y: 0.6823807}
   m_Direction: 0
---- !u!114 &5889209188217334380
+--- !u!114 &4373497734990114872
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -403,17 +403,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 827528970784738921}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7a2c0c666b5a744ab086bd615f67808, type: 3}
+  m_Script: {fileID: 11500000, guid: dd7e1a2c23f38a44896885d73f47cd22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
+  speed: 3
   ashEchoesReward: 100
   initialState: {fileID: 1133741725043832346}
-  MySpawnPoint:
-    position: {fileID: 0}
-    patrolPointA: {fileID: 0}
-    patrolPointB: {fileID: 0}
-    respawnDelay: 5
   PointA: {fileID: 0}
   PointB: {fileID: 0}
 --- !u!114 &1133741725043832346
