@@ -3,6 +3,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(PatrolState))]
 [RequireComponent(typeof(ChasingState))]
+[RequireComponent(typeof(AttackState))]
 [RequireComponent(typeof(DeathState))]
 public class Enemy : MonoBehaviour
 {
@@ -10,18 +11,17 @@ public class Enemy : MonoBehaviour
     [SerializeField] int ashEchoesReward = 100;
     [SerializeField] EnemyState initialState;
 
+    Rigidbody2D rigidBody;
+    Animator animator;
+    Health health;
+    bool isFacingLeft = true;
     EnemyState currentState;
+
     public PatrolState PatrolState { get; private set; }
     public ChasingState ChasingState { get; private set; }
     public AttackState AttackState { get; private set; }
     public DeathState DeathState { get; private set; }
-
-    Animator animator;
-    Health health;
-
     public string Id { get; private set; }
-    public LayerMask PlayerMask { get; private set; }
-    public Rigidbody2D Body { get; private set; }
     public int Reward => ashEchoesReward;
     public enum AnimationState
     {
@@ -31,16 +31,13 @@ public class Enemy : MonoBehaviour
         DAMAGED,
         DEATH,
     }
-    bool isFacingLeft = true;
 
-    public EnemySpawnManager.SpawnPoint MySpawnPoint;
     public Transform PointA;
     public Transform PointB;
 
-
     void Awake()
     {
-        Body = GetComponent<Rigidbody2D>();
+        rigidBody = GetComponent<Rigidbody2D>();
         Id = Guid.NewGuid().ToString();
         PatrolState = GetComponent<PatrolState>();
         ChasingState = GetComponent<ChasingState>();
@@ -51,11 +48,15 @@ public class Enemy : MonoBehaviour
     {
         health = GetComponent<Health>();
         animator = GetComponentInChildren<Animator>();
-        PlayerMask = LayerMask.GetMask("Player");
 
         health.OnDeath += Die;
 
         ChangeState(initialState);
+    }
+
+    void Die()
+    {
+        ChangeState(DeathState);
     }
 
     public void ChangeState(EnemyState newState)
@@ -74,7 +75,7 @@ public class Enemy : MonoBehaviour
 
     public void MoveInDirection(float direction)
     {
-        Body.linearVelocityX = direction * speed;
+        rigidBody.linearVelocityX = direction * speed;
         UpdateSpriteDirection(direction);
         PlayAnimation(AnimationState.MOVE);
     }
@@ -84,13 +85,6 @@ public class Enemy : MonoBehaviour
         health.ApplyDamaage(damage);
         PlayAnimation(AnimationState.DAMAGED);
         Debug.Log($"Got {damage} damage, remaining {health.CurrentHealth} HP.");
-    }
-
-
-
-    void Die()
-    {
-        ChangeState(DeathState);
     }
 
     public void UpdateSpriteDirection(float directionX)
@@ -141,7 +135,6 @@ public class Enemy : MonoBehaviour
         }
     }
 
-
     public void ResetFroomPool()
     {
         if (health != null)
@@ -173,15 +166,9 @@ public class Enemy : MonoBehaviour
             col.enabled = value;
         }
 
-        if (Body != null)
+        if (rigidBody != null)
         {
-            Body.simulated = value;
+            rigidBody.simulated = value;
         }
-    }
-
-    public void SetPatrolPoints(Transform pointA, Transform pointB)
-    {
-        PointA = pointA;
-        PointB = pointB;
     }
 }

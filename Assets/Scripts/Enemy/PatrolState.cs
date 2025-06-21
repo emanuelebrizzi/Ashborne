@@ -4,16 +4,15 @@ public class PatrolState : EnemyState
 {
     const float MinimumDistance = 0.1f;
     [SerializeField] float detectionRange = 3f;
-
-    bool goingToB = true;
+    LayerMask playerMask;
     Vector2 target;
+    bool goingToB = true;
 
     public override void Enter()
     {
         base.Enter();
         Debug.Log("Enemy entered in the PatrolState");
-        if (enemy.PointB == null)
-            Debug.LogError("PointB is not assigned on enemy!");
+        playerMask = LayerMask.GetMask("Player");
         target = enemy.PointB.position;
     }
 
@@ -49,7 +48,7 @@ public class PatrolState : EnemyState
             raycastOrigin,
             directionToPlayer,
             detectionRange,
-            enemy.PlayerMask
+            playerMask
         );
 
         if (hit.collider != null)
