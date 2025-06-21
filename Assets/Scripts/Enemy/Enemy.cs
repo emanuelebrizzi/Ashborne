@@ -5,23 +5,23 @@ using UnityEngine;
 [RequireComponent(typeof(ChasingState))]
 [RequireComponent(typeof(AttackState))]
 [RequireComponent(typeof(DeathState))]
-public abstract class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
-    [SerializeField] protected float speed = 3.0f;
-    [SerializeField] protected int ashEchoesReward = 100;
-    [SerializeField] protected EnemyState initialState;
+    [SerializeField] float speed = 3.0f;
+    [SerializeField] int ashEchoesReward = 100;
+    [SerializeField] EnemyState initialState;
 
-    protected Rigidbody2D rigidBody;
-    protected Animator animator;
-    protected Health health;
-    protected bool isFacingLeft = true;
-    protected EnemyState currentState;
+    Rigidbody2D rigidBody;
+    Animator animator;
+    Health health;
+    bool isFacingLeft = true;
+    EnemyState currentState;
 
     public PatrolState PatrolState { get; private set; }
     public ChasingState ChasingState { get; private set; }
     public AttackState AttackState { get; private set; }
     public DeathState DeathState { get; private set; }
-    public Attack AttackBehaviour { get; private set; }
+    public Attack Attack { get; private set; }
     public string Id { get; private set; }
     public int Reward => ashEchoesReward;
     public Animator Animator => animator;
@@ -50,7 +50,7 @@ public abstract class Enemy : MonoBehaviour
     void Start()
     {
         health = GetComponent<Health>();
-        AttackBehaviour = GetComponent<Attack>();
+        Attack = GetComponent<Attack>();
         animator = GetComponentInChildren<Animator>();
 
         health.OnDeath += Die;
@@ -77,7 +77,7 @@ public abstract class Enemy : MonoBehaviour
         currentState.Tick();
     }
 
-    public virtual void MoveInDirection(float direction)
+    public void MoveInDirection(float direction)
     {
         rigidBody.linearVelocityX = direction * speed;
         UpdateSpriteDirection(direction);
@@ -174,5 +174,10 @@ public abstract class Enemy : MonoBehaviour
         {
             rigidBody.simulated = value;
         }
+    }
+
+    public bool CanAttackPlayer()
+    {
+        return Vector2.Distance(transform.position, Player.Instance.transform.position) <= Attack.AttackRange;
     }
 }

@@ -6,7 +6,7 @@ public class AttackState : EnemyState
     bool isAttacking = false;
     public override void Tick()
     {
-        if (!CanAttackPlayer())
+        if (!enemy.CanAttackPlayer())
         {
             enemy.ChangeState(enemy.ChasingState);
             return;
@@ -25,12 +25,12 @@ public class AttackState : EnemyState
         isAttacking = true;
 
         enemy.PlayAnimation(Enemy.AnimationState.ATTACK);
-        enemy.AttackBehaviour.PerformAttack();
+        enemy.Attack.PerformAttack();
 
         yield return null;
 
         float animationLength = GetAnimationTime();
-        float waitTime = Mathf.Max(animationLength, enemy.AttackBehaviour.AttackCooldown);
+        float waitTime = Mathf.Max(animationLength, enemy.Attack.AttackCooldown);
 
         yield return new WaitForSeconds(waitTime);
 
@@ -48,11 +48,6 @@ public class AttackState : EnemyState
         return animationLength;
     }
 
-
-    bool CanAttackPlayer()
-    {
-        return Vector2.Distance(enemy.transform.position, Player.Instance.transform.position) <= enemy.AttackBehaviour.AttackRange;
-    }
 
     public override void Exit()
     {

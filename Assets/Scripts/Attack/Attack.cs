@@ -9,5 +9,14 @@ public abstract class Attack : MonoBehaviour
     public float AttackRange => attackRange;
     public float AttackCooldown => attackCooldown;
 
+    protected void OnHit(Collider2D target)
+    {
+        if (target.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
+            Player.Instance.TakeDamage(damageAmount);
+            Debug.Log($"RangedAttack: Dealt {damageAmount} damage to player.");
+        }
+    }
+
     public virtual void PerformAttack() { }
 }

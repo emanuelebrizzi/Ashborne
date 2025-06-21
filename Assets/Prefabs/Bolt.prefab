@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 216005029367757510}
   - component: {fileID: 2585819219884739331}
   - component: {fileID: 3433522655596196369}
-  - component: {fileID: 5882281339199898898}
   - component: {fileID: 5063567553468187839}
   - component: {fileID: -5120402996103612101}
+  - component: {fileID: 1567719318964900893}
   m_Layer: 11
   m_Name: Bolt
   m_TagString: Untagged
@@ -113,20 +113,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &5882281339199898898
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1690595309072263089}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b01dda7dc5f5f847b167201cb5d5bd9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 3
-  direction: {x: 0, y: 0}
 --- !u!70 &5063567553468187839
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -191,3 +177,17 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1567719318964900893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1690595309072263089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a4df50472626bf4b977945cd92937af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 3
+  direction: {x: 0, y: 0}

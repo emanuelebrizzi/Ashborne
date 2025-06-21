@@ -17,14 +17,4 @@ public class RangedAttack : Attack
         proj.direction = direction;
         proj.OnHit += OnHit;
     }
-
-    void OnHit(Collider2D target)
-    {
-        Debug.Log("Hitted something");
-        if (target.gameObject.layer == LayerMask.NameToLayer("Player"))
-        {
-            Player.Instance.TakeDamage(damageAmount);
-            Debug.Log($"RangedAttack: Dealt {damageAmount} damage to player.");
-        }
-    }
 }

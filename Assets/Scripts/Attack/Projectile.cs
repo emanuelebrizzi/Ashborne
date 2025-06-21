@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    public float speed = 3f;
-    public event Action<Collider2D> OnHit;
-    public Vector2 direction;
+    [SerializeField] float speed = 3f;
     bool isFacingLeft = true;
+    public Vector2 direction;
+    public event Action<Collider2D> OnHit;
 
     void Start()
     {
@@ -42,9 +42,8 @@ public class Projectile : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            Debug.Log("Hit: " + collision.gameObject.name);
             OnHit?.Invoke(collision);
-            OnHit = null;
+            OnHit = null; // Force unsubscription
         }
 
         Destroy(gameObject);

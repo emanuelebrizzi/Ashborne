@@ -482,9 +482,9 @@ GameObject:
   - component: {fileID: 2976714384804494994}
   - component: {fileID: 5879132543600246743}
   - component: {fileID: 1326854276226856862}
-  - component: {fileID: 5965784281055749933}
+  - component: {fileID: 877110293756605543}
   - component: {fileID: 622743470455108142}
-  - component: {fileID: 2615892050244837242}
+  - component: {fileID: 1074229318712270977}
   - component: {fileID: 1991175659566027179}
   - component: {fileID: 6536659331668968125}
   - component: {fileID: 210419670223932780}
@@ -581,7 +581,7 @@ CapsuleCollider2D:
   m_Offset: {x: 0.007989223, y: 0.35787773}
   m_Size: {x: 0.48402473, y: 0.6998329}
   m_Direction: 0
---- !u!114 &5965784281055749933
+--- !u!114 &877110293756605543
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -590,12 +590,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 877561424279928533}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70734860b2ae1934c923eeffe42edc4c, type: 3}
+  m_Script: {fileID: 11500000, guid: d7a2c0c666b5a744ab086bd615f67808, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 3
   ashEchoesReward: 100
-  initialState: {fileID: 1991175659566027179}
+  initialState: {fileID: 0}
   PointA: {fileID: 0}
   PointB: {fileID: 0}
 --- !u!114 &622743470455108142
@@ -611,7 +611,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 50
---- !u!114 &2615892050244837242
+--- !u!114 &1074229318712270977
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -620,13 +620,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 877561424279928533}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d6e2da78fb954c46b912392e679c9da, type: 3}
+  m_Script: {fileID: 11500000, guid: d5dde24f103aa2844bef9927134b7250, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackRange: 5
-  attackCooldown: 2
+  attackRange: 2
+  attackCooldown: 1
   damageAmount: 10
-  projectile: {fileID: 5882281339199898898, guid: bf0b182b4d01ff04ba0999e757e5afba, type: 3}
+  projectile: {fileID: 1567719318964900893, guid: bf0b182b4d01ff04ba0999e757e5afba, type: 3}
   firePoint: {fileID: 908822232101313340}
 --- !u!114 &1991175659566027179
 MonoBehaviour:
@@ -640,7 +640,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e6fcdd0ef551034687c252409744893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectionRange: 6
+  detectionRange: 4
 --- !u!114 &6536659331668968125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -654,7 +654,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxChaseDistance: 5
-  attackRange: 6
 --- !u!114 &210419670223932780
 MonoBehaviour:
   m_ObjectHideFlags: 0

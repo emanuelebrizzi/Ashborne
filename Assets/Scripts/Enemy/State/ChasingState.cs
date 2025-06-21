@@ -3,7 +3,6 @@ using UnityEngine;
 public class ChasingState : EnemyState
 {
     [SerializeField] float maxChaseDistance = 3.0f;
-    [SerializeField] float attackRange = 2.0f;
     Vector2 enemyStartingPoint;
     float distanceFromStart;
 
@@ -24,7 +23,7 @@ public class ChasingState : EnemyState
 
         Vector2 directionToPlayer = (Player.Instance.transform.position - enemy.transform.position).normalized;
 
-        if (IsPlayerInAttackRange())
+        if (enemy.CanAttackPlayer())
         {
             enemy.UpdateSpriteDirection(directionToPlayer.x);
             enemy.ChangeState(enemy.AttackState);
@@ -62,10 +61,5 @@ public class ChasingState : EnemyState
     bool IsNearPointB(float minimumDistance)
     {
         return Vector2.Distance(transform.position, enemy.PointB.position) < minimumDistance;
-    }
-
-    bool IsPlayerInAttackRange()
-    {
-        return Vector2.Distance(enemy.transform.position, Player.Instance.transform.position) <= attackRange;
     }
 }
