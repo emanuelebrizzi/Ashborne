@@ -12,23 +12,17 @@ public class PatrolState : EnemyState
     {
         base.Enter();
         Debug.Log("Enemy entered in the PatrolState");
-
-        if (nextState == null)
-        {
-            nextState = GetComponent<ChasingState>();
-        }
-
+        if (enemy.PointB == null)
+            Debug.LogError("PointB is not assigned on enemy!");
         target = enemy.PointB.position;
-
-        // enemy.SetPatrolPoints(enemy.PointA, enemy.PointB);
     }
 
-    void FixedUpdate()
+    public override void Tick()
     {
         if (DetectPlayer())
         {
             Debug.Log("Player detected, exiting patrol state");
-            base.Exit();
+            enemy.ChangeState(enemy.chasingState);
             return;
         }
 

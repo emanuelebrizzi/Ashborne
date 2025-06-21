@@ -2,10 +2,9 @@ using UnityEngine;
 
 public abstract class EnemyState : MonoBehaviour
 {
-    [SerializeField] protected Enemy enemy;
-    public EnemyState nextState;
+    protected Enemy enemy;
 
-    void Start()
+    void Awake()
     {
         enemy = GetComponent<Enemy>();
     }
@@ -13,16 +12,12 @@ public abstract class EnemyState : MonoBehaviour
     public virtual void Enter()
     {
         enabled = true;
-        CancelInvoke();
     }
 
     public virtual void Exit()
     {
         enabled = false;
-        CancelInvoke();
-        if (nextState != null)
-        {
-            nextState.Enter();
-        }
     }
+
+    public virtual void Tick() { }
 }

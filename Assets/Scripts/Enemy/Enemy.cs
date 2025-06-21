@@ -10,9 +10,10 @@ public class Enemy : MonoBehaviour
     [SerializeField] int ashEchoesReward = 100;
     [SerializeField] EnemyState initialState;
 
-    PatrolState patrolState;
-    ChasingState chasingState;
-    DeathState deathState;
+    EnemyState currentState;
+    public PatrolState patrolState { get; private set; }
+    public ChasingState chasingState { get; private set; }
+    public DeathState deathState { get; private set; }
 
     Animator animator;
     Health health;
@@ -49,19 +50,21 @@ public class Enemy : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         PlayerMask = LayerMask.GetMask("Player");
 
-        ResetState();
+        ChangeState(initialState);
     }
 
-    void ResetState()
+    public void ChangeState(EnemyState newState)
     {
-        patrolState.Exit();
-        chasingState.Exit();
-        deathState.Exit();
+        if (currentState != null)
+            currentState.Exit();
 
-        if (initialState != null)
-        {
-            initialState.Enter();
-        }
+        currentState = newState;
+        currentState.Enter();
+    }
+
+    void Update()
+    {
+        currentState.Tick();
     }
 
     public void MoveInDirection(float direction)
@@ -159,8 +162,8 @@ public class Enemy : MonoBehaviour
         if (health != null)
             health.ResetHealth();
 
-        ResetState();
         SetPhysicElementsTo(true);
+        ChangeState(initialState);
     }
 
     public void SetPhysicElementsTo(bool value)

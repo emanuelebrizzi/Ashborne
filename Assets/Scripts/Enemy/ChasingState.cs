@@ -21,11 +21,6 @@ public class ChasingState : EnemyState
         enemyStartingPoint = enemy.transform.position;
         hitbox = GetComponentInChildren<AttackHitbox>();
         Debug.Log("Enemy entered ChasingState");
-
-        if (nextState == null)
-        {
-            nextState = GetComponent<PatrolState>();
-        }
     }
 
     public override void Exit()
@@ -34,11 +29,11 @@ public class ChasingState : EnemyState
         base.Exit();
     }
 
-    void FixedUpdate()
+    public override void Tick()
     {
         if (IsPlayerTooFar() || IsEnemyNearBounds())
         {
-            Exit();
+            enemy.ChangeState(enemy.patrolState);
             return;
         }
 
