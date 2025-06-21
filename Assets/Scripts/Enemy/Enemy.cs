@@ -11,9 +11,10 @@ public class Enemy : MonoBehaviour
     [SerializeField] EnemyState initialState;
 
     EnemyState currentState;
-    public PatrolState patrolState { get; private set; }
-    public ChasingState chasingState { get; private set; }
-    public DeathState deathState { get; private set; }
+    public PatrolState PatrolState { get; private set; }
+    public ChasingState ChasingState { get; private set; }
+    public AttackState AttackState { get; private set; }
+    public DeathState DeathState { get; private set; }
 
     Animator animator;
     Health health;
@@ -30,6 +31,7 @@ public class Enemy : MonoBehaviour
         DAMAGED,
         DEATH,
     }
+    bool isFacingLeft = true;
 
     public EnemySpawnManager.SpawnPoint MySpawnPoint;
     public Transform PointA;
@@ -40,9 +42,10 @@ public class Enemy : MonoBehaviour
     {
         Body = GetComponent<Rigidbody2D>();
         Id = Guid.NewGuid().ToString();
-        patrolState = GetComponent<PatrolState>();
-        chasingState = GetComponent<ChasingState>();
-        deathState = GetComponent<DeathState>();
+        PatrolState = GetComponent<PatrolState>();
+        ChasingState = GetComponent<ChasingState>();
+        AttackState = GetComponent<AttackState>();
+        DeathState = GetComponent<DeathState>();
     }
     void Start()
     {
@@ -69,18 +72,9 @@ public class Enemy : MonoBehaviour
 
     public void MoveInDirection(float direction)
     {
-
-        // Body.linearVelocityX = direction * speed;
-        // UpdateSpriteDirection(direction);
-        // PlayAnimation(AnimationState.MOVE);
-
         Body.linearVelocityX = direction * speed;
         UpdateSpriteDirection(direction);
-
-        if (Mathf.Abs(direction) > 0.01f)
-            PlayAnimation(AnimationState.MOVE);
-        else
-            PlayAnimation(AnimationState.IDLE);
+        PlayAnimation(AnimationState.MOVE);
     }
 
     public void TakeDamage(int damage)
@@ -102,28 +96,34 @@ public class Enemy : MonoBehaviour
         EnemyState[] allStates = GetComponents<EnemyState>();
         foreach (var state in allStates)
         {
-            if (state != deathState)
+            if (state != DeathState)
             {
                 state.enabled = false;
             }
         }
 
-        deathState.Enter();
+        DeathState.Enter();
     }
 
-    // The assumption is that the sprite is facing left when x is positive
     public void UpdateSpriteDirection(float directionX)
     {
-        if (directionX > 0)
+        if (directionX > 0 && isFacingLeft)
         {
-            // Moving right
-            transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+            Flip();
         }
-        else if (directionX < 0)
+        else if (directionX < 0 && !isFacingLeft)
         {
-            // Moving left
-            transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+            Flip();
         }
+    }
+
+    void Flip()
+    {
+        Vector3 currentScale = gameObject.transform.localScale;
+        currentScale.x *= -1;
+        gameObject.transform.localScale = currentScale;
+
+        isFacingLeft = !isFacingLeft;
     }
 
     public void PlayAnimation(AnimationState state)
@@ -151,6 +151,9 @@ public class Enemy : MonoBehaviour
                 break;
 
             case AnimationState.DEATH:
+                animator.SetBool("isMoving", false);
+                animator.ResetTrigger("isAttacking");
+                animator.ResetTrigger("isDamaged");
                 animator.SetBool("isDead", true);
                 break;
         }

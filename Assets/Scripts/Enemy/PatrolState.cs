@@ -22,7 +22,7 @@ public class PatrolState : EnemyState
         if (DetectPlayer())
         {
             Debug.Log("Player detected, exiting patrol state");
-            enemy.ChangeState(enemy.chasingState);
+            enemy.ChangeState(enemy.ChasingState);
             return;
         }
 
