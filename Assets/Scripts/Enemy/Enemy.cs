@@ -7,7 +7,7 @@ using UnityEngine;
 [RequireComponent(typeof(DeathState))]
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] float speed = 5.0f;
+    [SerializeField] float speed = 3.0f;
     [SerializeField] int ashEchoesReward = 100;
     [SerializeField] EnemyState initialState;
 
@@ -21,8 +21,10 @@ public class Enemy : MonoBehaviour
     public ChasingState ChasingState { get; private set; }
     public AttackState AttackState { get; private set; }
     public DeathState DeathState { get; private set; }
+    public Attack Attack { get; private set; }
     public string Id { get; private set; }
     public int Reward => ashEchoesReward;
+    public Animator Animator => animator;
     public enum AnimationState
     {
         IDLE,
@@ -44,9 +46,11 @@ public class Enemy : MonoBehaviour
         AttackState = GetComponent<AttackState>();
         DeathState = GetComponent<DeathState>();
     }
+
     void Start()
     {
         health = GetComponent<Health>();
+        Attack = GetComponent<Attack>();
         animator = GetComponentInChildren<Animator>();
 
         health.OnDeath += Die;
@@ -170,5 +174,10 @@ public class Enemy : MonoBehaviour
         {
             rigidBody.simulated = value;
         }
+    }
+
+    public bool CanAttackPlayer()
+    {
+        return Vector2.Distance(transform.position, Player.Instance.transform.position) <= Attack.AttackRange;
     }
 }

@@ -1138,7 +1138,7 @@ MonoBehaviour:
   UIManager: {fileID: 1388431177}
   enemySpawnManager: {fileID: 0}
   mainMenuSceneName: MainMenu
-  mainSceneName: LevelOneMap
+  mainSceneName: LevelOne
   loadingSceneName: LoadingScene
   minimumLoadingTime: 0.5
 --- !u!4 &1874988551

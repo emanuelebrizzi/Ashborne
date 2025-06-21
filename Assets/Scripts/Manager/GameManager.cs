@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     // TODO: move it in a SceneManager componenet
     [Header("Scene settings")]
     [SerializeField] string mainMenuSceneName = "MainMenu";
-    [SerializeField] string mainSceneName = "LevelOneMap";
+    [SerializeField] string mainSceneName = "LevelOne";
     [SerializeField] string loadingSceneName = "LoadingScene";
     [SerializeField] float minimumLoadingTime = 0.5f;
 
