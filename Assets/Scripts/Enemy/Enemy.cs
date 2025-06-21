@@ -53,6 +53,8 @@ public class Enemy : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         PlayerMask = LayerMask.GetMask("Player");
 
+        health.OnDeath += Die;
+
         ChangeState(initialState);
     }
 
@@ -79,30 +81,16 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        health.TakeDamage(damage);
-        Debug.Log($"Got {damage} damage, remaining {health.CurrentHealth} HP.");
-
-        if (health.CurrentHealth <= 0)
-        {
-            Die();
-            return;
-        }
-
+        health.ApplyDamaage(damage);
         PlayAnimation(AnimationState.DAMAGED);
+        Debug.Log($"Got {damage} damage, remaining {health.CurrentHealth} HP.");
     }
+
+
 
     void Die()
     {
-        EnemyState[] allStates = GetComponents<EnemyState>();
-        foreach (var state in allStates)
-        {
-            if (state != DeathState)
-            {
-                state.enabled = false;
-            }
-        }
-
-        DeathState.Enter();
+        ChangeState(DeathState);
     }
 
     public void UpdateSpriteDirection(float directionX)
@@ -132,12 +120,6 @@ public class Enemy : MonoBehaviour
 
         switch (state)
         {
-            case AnimationState.IDLE:
-                animator.SetBool("isMoving", false);
-                animator.ResetTrigger("isAttacking");
-                animator.ResetTrigger("isDamaged");
-                break;
-
             case AnimationState.MOVE:
                 animator.SetBool("isMoving", true);
                 break;
@@ -165,8 +147,22 @@ public class Enemy : MonoBehaviour
         if (health != null)
             health.ResetHealth();
 
+
+        if (animator != null)
+        {
+            InitializeAnimatorVariables();
+        }
+
         SetPhysicElementsTo(true);
         ChangeState(initialState);
+    }
+
+    void InitializeAnimatorVariables()
+    {
+        animator.SetBool("isDead", false);
+        animator.SetBool("isMoving", false);
+        animator.ResetTrigger("isAttacking");
+        animator.ResetTrigger("isDamaged");
     }
 
     public void SetPhysicElementsTo(bool value)

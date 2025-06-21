@@ -13,7 +13,6 @@ public class DeathState : EnemyState
         ProcessDeath();
     }
 
-
     void ProcessDeath()
     {
         enemy.SetPhysicElementsTo(false);
