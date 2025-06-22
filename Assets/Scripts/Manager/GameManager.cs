@@ -73,10 +73,6 @@ public class GameManager : MonoBehaviour
         if (CurrentGameState == GameState.Playing && Input.GetKeyDown(KeyCode.Escape))
         {
             ChangeGameState(GameState.Paused);
-
-            // TODO: Remove when refactoring the campfire
-            Cursor.lockState = CursorLockMode.None; // Unlock the cursor
-            Cursor.visible = true;
         }
         else if (CurrentGameState == GameState.Paused && Input.GetKeyDown(KeyCode.Escape))
         {
@@ -92,11 +88,15 @@ public class GameManager : MonoBehaviour
         if (newState == GameState.Paused)
         {
             Time.timeScale = 0f;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
             UIManager.ShowPauseMenu();
         }
         else if (newState == GameState.Playing)
         {
             Time.timeScale = 1f;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
             UIManager.ShowGameplayUI();
             enemySpawnManager.SpawnAllWaves();
         }
