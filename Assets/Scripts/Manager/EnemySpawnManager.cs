@@ -5,8 +5,12 @@ using UnityEngine.Pool;
 
 public class EnemySpawnManager : MonoBehaviour
 {
-    // TODO: transform in an array when we have mages and others
-    public GameObject enemyPrefab;
+    [Serializable]
+    public enum EnemyType
+    {
+        Melee,
+        Ranged,
+    }
 
     [Serializable]
     public class SpawnPoint
@@ -14,13 +18,20 @@ public class EnemySpawnManager : MonoBehaviour
         public Transform position;
         public Transform patrolPointA;
         public Transform patrolPointB;
-        public float respawnDelay = 5f;
     }
 
-    ObjectPool<GameObject> enemyPool;
-    [SerializeField] SpawnPoint[] spawnPoints;
+    [Serializable]
+    public class EnemyConfiguration
+    {
+        public EnemyType type;
+        public GameObject prefab;
+        public SpawnPoint[] spawnPoints;
+    }
+
+    [SerializeField] List<EnemyConfiguration> enemyConfigurations = new();
     Transform enemiesParent; // It's only used for hierarchy management purpose
-    Dictionary<SpawnPoint, Enemy> activeEnemies = new();
+    readonly Dictionary<EnemyType, ObjectPool<GameObject>> enemyPools = new();
+    readonly Dictionary<EnemyType, Dictionary<SpawnPoint, Enemy>> activeEnemies = new();
 
     public static EnemySpawnManager Instance { get; private set; }
 
@@ -37,25 +48,38 @@ public class EnemySpawnManager : MonoBehaviour
         var enemiesParentObject = new GameObject("Enemies");
         enemiesParent = enemiesParentObject.transform;
 
-        enemyPool = new ObjectPool<GameObject>(
-            OnEnemyCreate,
-            OnTake,
-            OnRelease,
-            OnObjectDestroy,
-            maxSize: spawnPoints.Length
-        );
+        foreach (var config in enemyConfigurations)
+        {
+            // Create pool for this enemy type
+            enemyPools[config.type] = new ObjectPool<GameObject>(
+                () => OnEnemyCreate(config),
+                OnTake,
+                OnRelease,
+                (enemyObj) => OnObjectDestroy(enemyObj, config),
+                maxSize: config.spawnPoints.Length
+            );
+
+            // Init functions for tracking
+            activeEnemies[config.type] = new Dictionary<SpawnPoint, Enemy>();
+            foreach (var spawnPoint in config.spawnPoints)
+            {
+                activeEnemies[config.type][spawnPoint] = null;
+            }
+        }
 
         if (GameManager.Instance != null)
             GameManager.Instance.RegisterEnemySpawnManager(this);
     }
 
-    GameObject OnEnemyCreate()
+    GameObject OnEnemyCreate(EnemyConfiguration configuration)
     {
-        GameObject enemyObj = Instantiate(enemyPrefab, enemiesParent);
+        GameObject enemyObj = Instantiate(configuration.prefab, enemiesParent);
+
         if (enemyObj.TryGetComponent<Enemy>(out var enemy))
         {
-            enemy.GetComponent<DeathState>().OnEnemyDeath += () => HandleDeathOf(enemy);
+            enemy.GetComponent<DeathState>().OnEnemyDeath += () => HandleDeathOf(enemy, configuration.type);
         }
+
         return enemyObj;
     }
 
@@ -67,60 +91,65 @@ public class EnemySpawnManager : MonoBehaviour
     void OnRelease(GameObject enemyObj)
     {
         enemyObj.SetActive(false);
-
-        if (enemyObj.TryGetComponent<Enemy>(out var enemy))
-        {
-            foreach (var kvp in activeEnemies)
-            {
-                if (kvp.Value == enemy)
-                {
-                    activeEnemies[kvp.Key] = null;
-                    break;
-                }
-            }
-        }
-    }
-
-    void OnObjectDestroy(GameObject enemyObj)
-    {
-        if (enemyObj.TryGetComponent<Enemy>(out var enemy))
-        {
-            enemy.GetComponent<DeathState>().OnEnemyDeath -= () => HandleDeathOf(enemy);
-        }
-
-        Destroy(enemyObj);
     }
 
     public void SpawnAllEnemies()
     {
-        foreach (var spawnPoint in spawnPoints)
+        foreach (var config in enemyConfigurations)
         {
-            SpawnEnemyAt(spawnPoint);
+            foreach (var spawnPoint in config.spawnPoints)
+            {
+                SpawnEnemyAt(config.type, spawnPoint);
+            }
         }
     }
 
-    void SpawnEnemyAt(SpawnPoint spawnPoint)
+    void SpawnEnemyAt(EnemyType type, SpawnPoint spawnPoint)
     {
-        if (activeEnemies.ContainsKey(spawnPoint) && activeEnemies[spawnPoint] != null && activeEnemies[spawnPoint].gameObject.activeInHierarchy)
+        if (activeEnemies[type].ContainsKey(spawnPoint) &&
+       activeEnemies[type][spawnPoint] != null &&
+       activeEnemies[type][spawnPoint].gameObject.activeInHierarchy)
             return;
 
-        GameObject enemyObj = enemyPool.Get();
+
+        GameObject enemyObj = enemyPools[type].Get();
         enemyObj.transform.SetPositionAndRotation(spawnPoint.position.position, spawnPoint.position.rotation);
 
         Enemy enemy = enemyObj.GetComponent<Enemy>();
-        // enemy.MySpawnPoint = spawnPoint;
         enemy.PointA = spawnPoint.patrolPointA;
         enemy.PointB = spawnPoint.patrolPointB;
         enemy.ResetFroomPool();
 
-        activeEnemies[spawnPoint] = enemy;
+        activeEnemies[type][spawnPoint] = enemy;
         Debug.Log($"Enemy {enemy.Id} spawned!");
     }
 
-    public void HandleDeathOf(Enemy enemy)
+    public void HandleDeathOf(Enemy enemy, EnemyType type)
     {
-        enemyPool.Release(enemy.gameObject);
-        Debug.Log($"Enemy {enemy.Id} died!");
+        SpawnPoint associatedSpawnPoint = null;
+
+        foreach (var kvp in activeEnemies[type])
+        {
+            if (kvp.Value == enemy)
+            {
+                associatedSpawnPoint = kvp.Key;
+                activeEnemies[type][associatedSpawnPoint] = null;
+                break;
+            }
+        }
+
+        enemyPools[type].Release(enemy.gameObject);
+        Debug.Log($"Enemy {enemy.Id} (Type: {type}) died!");
+    }
+
+    void OnObjectDestroy(GameObject enemyObj, EnemyConfiguration configuration)
+    {
+        if (enemyObj.TryGetComponent<Enemy>(out var enemy))
+        {
+            enemy.GetComponent<DeathState>().OnEnemyDeath -= () => HandleDeathOf(enemy, configuration.type);
+        }
+
+        Destroy(enemyObj);
     }
 
 }
