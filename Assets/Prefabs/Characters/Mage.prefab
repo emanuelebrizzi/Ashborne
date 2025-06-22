@@ -594,8 +594,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 3
-  ashEchoesReward: 100
-  initialState: {fileID: 0}
+  ashEchoesReward: 200
+  initialState: {fileID: 1991175659566027179}
   PointA: {fileID: 0}
   PointB: {fileID: 0}
 --- !u!114 &622743470455108142
@@ -610,7 +610,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4033ce3ed0d58b1429380ea32ab9d5f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 50
+  maxHealth: 5
 --- !u!114 &1074229318712270977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -623,9 +623,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5dde24f103aa2844bef9927134b7250, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackRange: 2
-  attackCooldown: 1
-  damageAmount: 10
+  attackRange: 4
+  attackCooldown: 2
+  damageAmount: 20
   projectile: {fileID: 1567719318964900893, guid: bf0b182b4d01ff04ba0999e757e5afba, type: 3}
   firePoint: {fileID: 908822232101313340}
 --- !u!114 &1991175659566027179

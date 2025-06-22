@@ -180,4 +180,27 @@ public class Enemy : MonoBehaviour
     {
         return Vector2.Distance(transform.position, Player.Instance.transform.position) <= Attack.AttackRange;
     }
+
+    public void Empower(float damageMultiplier, float healthMultiplier, float speedMultiplier)
+    {
+        ashEchoesReward += 500;
+        speed *= speedMultiplier;
+        Attack.IncreaseDamage(damageMultiplier);
+        health.IncreaseMaxHealth(healthMultiplier);
+        ChangeVisualAspect();
+
+        Debug.Log($"Enemy {Id} empowered!");
+    }
+
+    void ChangeVisualAspect()
+    {
+        SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>();
+
+        foreach (var renderer in renderers)
+        {
+            renderer.color = new Color(1f, 0.6f, 0.6f);
+        }
+
+        transform.localScale *= 1.15f;
+    }
 }

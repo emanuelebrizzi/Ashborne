@@ -5,8 +5,29 @@ using UnityEngine.Pool;
 
 public class EnemySpawnManager : MonoBehaviour
 {
-    // TODO: transform in an array when we have mages and others
-    public GameObject enemyPrefab;
+    const int SecondWaveEchoesThreshold = 200;
+    const int EmpowermentEchoesThreshold = 500;
+
+    [Header("Waves Settings")]
+    [SerializeField] List<EnemyWave> enemyWaves = new();
+
+    [Header("Empowerment Settings")]
+    [SerializeField] float damageMultiplier = 1.5f;
+    [SerializeField] float healthMultiplier = 1.3f;
+    [SerializeField] float speedMultiplier = 1.2f;
+
+    Transform enemiesParent; // It's only used for hierarchy management
+    readonly Dictionary<EnemyType, ObjectPool<GameObject>> enemyPools = new();
+    readonly Dictionary<EnemyType, Dictionary<SpawnPoint, Enemy>> activeEnemies = new();
+    bool secondWaveSpawned = false;
+    bool enemiesEmpowered = false;
+
+    [Serializable]
+    public enum EnemyType
+    {
+        Melee,
+        Ranged,
+    }
 
     [Serializable]
     public class SpawnPoint
@@ -14,13 +35,15 @@ public class EnemySpawnManager : MonoBehaviour
         public Transform position;
         public Transform patrolPointA;
         public Transform patrolPointB;
-        public float respawnDelay = 5f;
     }
 
-    ObjectPool<GameObject> enemyPool;
-    [SerializeField] SpawnPoint[] spawnPoints;
-    Transform enemiesParent; // It's only used for hierarchy management purpose
-    Dictionary<SpawnPoint, Enemy> activeEnemies = new();
+    [Serializable]
+    public class EnemyWave
+    {
+        public EnemyType type;
+        public GameObject prefab;
+        public SpawnPoint[] spawnPoints;
+    }
 
     public static EnemySpawnManager Instance { get; private set; }
 
@@ -34,28 +57,40 @@ public class EnemySpawnManager : MonoBehaviour
 
         Instance = this;
 
+        // Only used for hierarchy management
         var enemiesParentObject = new GameObject("Enemies");
         enemiesParent = enemiesParentObject.transform;
 
-        enemyPool = new ObjectPool<GameObject>(
-            OnEnemyCreate,
-            OnTake,
-            OnRelease,
-            OnObjectDestroy,
-            maxSize: spawnPoints.Length
-        );
+        foreach (var wave in enemyWaves)
+        {
+            SetupEnemyObjectPool(wave);
+            SetupActiveEnemies(wave);
+        }
 
         if (GameManager.Instance != null)
             GameManager.Instance.RegisterEnemySpawnManager(this);
     }
 
-    GameObject OnEnemyCreate()
+    void SetupEnemyObjectPool(EnemyWave wave)
     {
-        GameObject enemyObj = Instantiate(enemyPrefab, enemiesParent);
+        enemyPools[wave.type] = new ObjectPool<GameObject>(
+                () => OnEnemyCreate(wave),
+                OnTake,
+                OnRelease,
+                (enemyObj) => OnObjectDestroy(enemyObj, wave),
+                maxSize: wave.spawnPoints.Length
+            );
+    }
+
+    GameObject OnEnemyCreate(EnemyWave wave)
+    {
+        GameObject enemyObj = Instantiate(wave.prefab, enemiesParent);
+
         if (enemyObj.TryGetComponent<Enemy>(out var enemy))
         {
-            enemy.GetComponent<DeathState>().OnEnemyDeath += () => HandleDeathOf(enemy);
+            enemy.GetComponent<DeathState>().OnEnemyDeath += () => HandleDeathOf(enemy, wave.type);
         }
+
         return enemyObj;
     }
 
@@ -67,60 +102,133 @@ public class EnemySpawnManager : MonoBehaviour
     void OnRelease(GameObject enemyObj)
     {
         enemyObj.SetActive(false);
-
-        if (enemyObj.TryGetComponent<Enemy>(out var enemy))
-        {
-            foreach (var kvp in activeEnemies)
-            {
-                if (kvp.Value == enemy)
-                {
-                    activeEnemies[kvp.Key] = null;
-                    break;
-                }
-            }
-        }
     }
 
-    void OnObjectDestroy(GameObject enemyObj)
+    void OnObjectDestroy(GameObject enemyObj, EnemyWave configuration)
     {
         if (enemyObj.TryGetComponent<Enemy>(out var enemy))
         {
-            enemy.GetComponent<DeathState>().OnEnemyDeath -= () => HandleDeathOf(enemy);
+            enemy.GetComponent<DeathState>().OnEnemyDeath -= () => HandleDeathOf(enemy, configuration.type);
         }
 
         Destroy(enemyObj);
     }
 
-    public void SpawnAllEnemies()
+    void SetupActiveEnemies(EnemyWave wave)
     {
-        foreach (var spawnPoint in spawnPoints)
+        activeEnemies[wave.type] = new Dictionary<SpawnPoint, Enemy>();
+        foreach (var spawnPoint in wave.spawnPoints)
         {
-            SpawnEnemyAt(spawnPoint);
+            activeEnemies[wave.type][spawnPoint] = null;
         }
     }
 
-    void SpawnEnemyAt(SpawnPoint spawnPoint)
+    void Start()
     {
-        if (activeEnemies.ContainsKey(spawnPoint) && activeEnemies[spawnPoint] != null && activeEnemies[spawnPoint].gameObject.activeInHierarchy)
+        if (Player.Instance != null)
+        {
+            Player.Instance.OnEchoesChanged += CheckEchoesThreshold;
+        }
+    }
+
+    public void SpawnAllWaves()
+    {
+        foreach (var wave in enemyWaves)
+        {
+            Spawn(wave);
+        }
+    }
+
+    void Spawn(EnemyWave wave)
+    {
+        if (wave.type == EnemyType.Ranged && !secondWaveSpawned)
+        {
+            return;
+        }
+
+        foreach (var spawnPoint in wave.spawnPoints)
+        {
+            SpawnEnemyAt(spawnPoint, wave.type);
+        }
+    }
+
+    void SpawnEnemyAt(SpawnPoint spawnPoint, EnemyType type)
+    {
+        if (HasAlreadySpawnedAt(spawnPoint, type))
             return;
 
-        GameObject enemyObj = enemyPool.Get();
+        GameObject enemyObj = enemyPools[type].Get();
         enemyObj.transform.SetPositionAndRotation(spawnPoint.position.position, spawnPoint.position.rotation);
 
         Enemy enemy = enemyObj.GetComponent<Enemy>();
-        // enemy.MySpawnPoint = spawnPoint;
         enemy.PointA = spawnPoint.patrolPointA;
         enemy.PointB = spawnPoint.patrolPointB;
         enemy.ResetFroomPool();
 
-        activeEnemies[spawnPoint] = enemy;
+        activeEnemies[type][spawnPoint] = enemy;
         Debug.Log($"Enemy {enemy.Id} spawned!");
     }
 
-    public void HandleDeathOf(Enemy enemy)
+    bool HasAlreadySpawnedAt(SpawnPoint spawnPoint, EnemyType type)
     {
-        enemyPool.Release(enemy.gameObject);
-        Debug.Log($"Enemy {enemy.Id} died!");
+        return activeEnemies[type].ContainsKey(spawnPoint) &&
+        activeEnemies[type][spawnPoint] != null &&
+        activeEnemies[type][spawnPoint].gameObject.activeInHierarchy;
     }
 
+    public void HandleDeathOf(Enemy enemy, EnemyType type)
+    {
+        foreach (var kvp in activeEnemies[type])
+        {
+            if (kvp.Value == enemy)
+            {
+                SpawnPoint associatedSpawnPoint = kvp.Key;
+                activeEnemies[type][associatedSpawnPoint] = null;
+                break;
+            }
+        }
+
+        enemyPools[type].Release(enemy.gameObject);
+        Debug.Log($"Enemy {enemy.Id} (Type: {type}) died!");
+    }
+
+    void CheckEchoesThreshold(int echoesAmount)
+    {
+        if (!secondWaveSpawned && echoesAmount >= SecondWaveEchoesThreshold)
+        {
+            secondWaveSpawned = true;
+            Spawn(enemyWaves[1]);
+            Debug.Log($"Player reached {SecondWaveEchoesThreshold} echoes! Spawning second wave!");
+        }
+
+        if (!enemiesEmpowered && echoesAmount >= EmpowermentEchoesThreshold)
+        {
+            EmpowerAllEnemies();
+            enemiesEmpowered = true;
+            Debug.Log($"Player reached {EmpowermentEchoesThreshold} echoes! All enemies empowered!");
+        }
+    }
+
+    void EmpowerAllEnemies()
+    {
+        foreach (var typeDict in activeEnemies)
+        {
+            foreach (var kvp in typeDict.Value)
+            {
+                Enemy enemy = kvp.Value;
+                if (enemy != null && enemy.gameObject.activeInHierarchy)
+                {
+                    enemy.Empower(damageMultiplier, healthMultiplier, speedMultiplier);
+                }
+            }
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (Player.Instance != null)
+        {
+            Player.Instance.OnEchoesChanged -= CheckEchoesThreshold;
+        }
+    }
 }
