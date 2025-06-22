@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
 
             if (enemySpawnManager != null)
             {
-                enemySpawnManager.SpawnAllEnemies();
+                enemySpawnManager.SpawnAllWaves();
             }
             else
             {
@@ -98,7 +98,7 @@ public class GameManager : MonoBehaviour
         {
             Time.timeScale = 1f;
             UIManager.ShowGameplayUI();
-            enemySpawnManager.SpawnAllEnemies();
+            enemySpawnManager.SpawnAllWaves();
         }
 
         CurrentGameState = newState;

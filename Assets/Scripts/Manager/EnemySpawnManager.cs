@@ -21,17 +21,19 @@ public class EnemySpawnManager : MonoBehaviour
     }
 
     [Serializable]
-    public class EnemyConfiguration
+    public class EnemyWave
     {
         public EnemyType type;
         public GameObject prefab;
         public SpawnPoint[] spawnPoints;
     }
 
-    [SerializeField] List<EnemyConfiguration> enemyConfigurations = new();
+    const int EchoesThreshold = 200;
+    [SerializeField] List<EnemyWave> enemyWaves = new();
     Transform enemiesParent; // It's only used for hierarchy management purpose
     readonly Dictionary<EnemyType, ObjectPool<GameObject>> enemyPools = new();
     readonly Dictionary<EnemyType, Dictionary<SpawnPoint, Enemy>> activeEnemies = new();
+    bool secondWaveSpawned = false;
 
     public static EnemySpawnManager Instance { get; private set; }
 
@@ -48,22 +50,22 @@ public class EnemySpawnManager : MonoBehaviour
         var enemiesParentObject = new GameObject("Enemies");
         enemiesParent = enemiesParentObject.transform;
 
-        foreach (var config in enemyConfigurations)
+        foreach (var wave in enemyWaves)
         {
             // Create pool for this enemy type
-            enemyPools[config.type] = new ObjectPool<GameObject>(
-                () => OnEnemyCreate(config),
+            enemyPools[wave.type] = new ObjectPool<GameObject>(
+                () => OnEnemyCreate(wave),
                 OnTake,
                 OnRelease,
-                (enemyObj) => OnObjectDestroy(enemyObj, config),
-                maxSize: config.spawnPoints.Length
+                (enemyObj) => OnObjectDestroy(enemyObj, wave),
+                maxSize: wave.spawnPoints.Length
             );
 
             // Init functions for tracking
-            activeEnemies[config.type] = new Dictionary<SpawnPoint, Enemy>();
-            foreach (var spawnPoint in config.spawnPoints)
+            activeEnemies[wave.type] = new Dictionary<SpawnPoint, Enemy>();
+            foreach (var spawnPoint in wave.spawnPoints)
             {
-                activeEnemies[config.type][spawnPoint] = null;
+                activeEnemies[wave.type][spawnPoint] = null;
             }
         }
 
@@ -71,13 +73,21 @@ public class EnemySpawnManager : MonoBehaviour
             GameManager.Instance.RegisterEnemySpawnManager(this);
     }
 
-    GameObject OnEnemyCreate(EnemyConfiguration configuration)
+    void Start()
     {
-        GameObject enemyObj = Instantiate(configuration.prefab, enemiesParent);
+        if (Player.Instance != null)
+        {
+            Player.Instance.OnEchoesChanged += CheckEchoesThreshold;
+        }
+    }
+
+    GameObject OnEnemyCreate(EnemyWave wave)
+    {
+        GameObject enemyObj = Instantiate(wave.prefab, enemiesParent);
 
         if (enemyObj.TryGetComponent<Enemy>(out var enemy))
         {
-            enemy.GetComponent<DeathState>().OnEnemyDeath += () => HandleDeathOf(enemy, configuration.type);
+            enemy.GetComponent<DeathState>().OnEnemyDeath += () => HandleDeathOf(enemy, wave.type);
         }
 
         return enemyObj;
@@ -93,14 +103,24 @@ public class EnemySpawnManager : MonoBehaviour
         enemyObj.SetActive(false);
     }
 
-    public void SpawnAllEnemies()
+    public void SpawnAllWaves()
     {
-        foreach (var config in enemyConfigurations)
+        foreach (var wave in enemyWaves)
         {
-            foreach (var spawnPoint in config.spawnPoints)
-            {
-                SpawnEnemyAt(config.type, spawnPoint);
-            }
+            Spawn(wave);
+        }
+    }
+
+    void Spawn(EnemyWave wave)
+    {
+        if (wave.type == EnemyType.Ranged && !secondWaveSpawned)
+        {
+            return;
+        }
+
+        foreach (var spawnPoint in wave.spawnPoints)
+        {
+            SpawnEnemyAt(wave.type, spawnPoint);
         }
     }
 
@@ -126,13 +146,11 @@ public class EnemySpawnManager : MonoBehaviour
 
     public void HandleDeathOf(Enemy enemy, EnemyType type)
     {
-        SpawnPoint associatedSpawnPoint = null;
-
         foreach (var kvp in activeEnemies[type])
         {
             if (kvp.Value == enemy)
             {
-                associatedSpawnPoint = kvp.Key;
+                SpawnPoint associatedSpawnPoint = kvp.Key;
                 activeEnemies[type][associatedSpawnPoint] = null;
                 break;
             }
@@ -142,7 +160,7 @@ public class EnemySpawnManager : MonoBehaviour
         Debug.Log($"Enemy {enemy.Id} (Type: {type}) died!");
     }
 
-    void OnObjectDestroy(GameObject enemyObj, EnemyConfiguration configuration)
+    void OnObjectDestroy(GameObject enemyObj, EnemyWave configuration)
     {
         if (enemyObj.TryGetComponent<Enemy>(out var enemy))
         {
@@ -152,4 +170,21 @@ public class EnemySpawnManager : MonoBehaviour
         Destroy(enemyObj);
     }
 
+    void OnDestroy()
+    {
+        if (Player.Instance != null)
+        {
+            Player.Instance.OnEchoesChanged -= CheckEchoesThreshold;
+        }
+    }
+
+    void CheckEchoesThreshold(int echoesAmount)
+    {
+        if (!secondWaveSpawned && echoesAmount >= EchoesThreshold)
+        {
+            secondWaveSpawned = true;
+            Spawn(enemyWaves[1]);
+            Debug.Log($"Player reached {EchoesThreshold} echoes! Spawning second wave!");
+        }
+    }
 }
