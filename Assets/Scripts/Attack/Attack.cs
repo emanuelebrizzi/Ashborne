@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public abstract class Attack : MonoBehaviour
@@ -19,4 +20,9 @@ public abstract class Attack : MonoBehaviour
     }
 
     public virtual void PerformAttack() { }
+
+    public void IncreaseDamage(float damageMultiplier)
+    {
+        damageAmount = Mathf.RoundToInt(damageAmount * damageMultiplier);
+    }
 }
