@@ -98,6 +98,19 @@ public class Player : MonoBehaviour
         OnEchoesChanged?.Invoke(ashEchoes.Current);
     }
 
+    public void RemoveEchoes(int amount)
+    {
+        if (ashEchoes != null)
+        {
+            ashEchoes.RemoveEchoes(amount);
+        }
+        OnEchoesChanged?.Invoke(ashEchoes.Current);
+    }
+    public int GetEchoes()
+    {
+        return ashEchoes.Current;
+    }
+
     public AshEchoes AshEchoes { get { return ashEchoes; } }
     public Health Health { get { return health; } }
 

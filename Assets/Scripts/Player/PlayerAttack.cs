@@ -6,7 +6,7 @@ public class PlayerAttack : MonoBehaviour
 
     [Header("Attack Settings")]
     [SerializeField] float attackRange = 1f;
-    [SerializeField] int attackDamage = 1;
+    [SerializeField] int attackDamage = 10;
     [SerializeField] float attackCooldown = 0.3f;
     [SerializeField] float attackDelay = 0.4f;
     [SerializeField] LayerMask enemyLayer; // Layer mask to identify enemies

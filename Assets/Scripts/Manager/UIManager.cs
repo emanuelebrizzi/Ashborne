@@ -18,6 +18,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] Button resumeButton;
     [SerializeField] Button menuButton;
     [SerializeField] Button exitButton;
+
+    [Header("Gameplay UI Elements")]
     [SerializeField] Slider healthBar;
     [SerializeField] TextMeshProUGUI ashEchoesText;
 
