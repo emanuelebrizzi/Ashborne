@@ -1,9 +1,9 @@
-using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Collections.Generic;
 
 public class CharacterLevelStats : MonoBehaviour
 {
-    [System.Serializable]
     private struct LevelStat
     {
         public int value;
@@ -29,6 +29,7 @@ public class CharacterLevelStats : MonoBehaviour
     }
 
     private Dictionary<StatType, LevelStat> stats;
+    public event Action<StatType> OnStatChanged;
 
     private void Awake()
     {
@@ -49,7 +50,8 @@ public class CharacterLevelStats : MonoBehaviour
         {
             if (stat.Increase(amount))
             {
-                stats[statType] = stat; 
+                stats[statType] = stat;
+                OnStatChanged?.Invoke(statType);
                 return true;
             }
         }

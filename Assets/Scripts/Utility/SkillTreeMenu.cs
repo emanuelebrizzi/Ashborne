@@ -3,17 +3,29 @@ using System;
 
 public class SkillTreeMenu : MonoBehaviour
 {
-    [SerializeField] private GameObject skillTreePanel;
-    [SerializeField] private CharacterLevelStats characterStats;
-    [SerializeField] private Player player;
+    [SerializeField] GameObject skillTreePanel;
+    [SerializeField] CharacterLevelStats characterStats;
+    [SerializeField] Player player;
+
+    [Header("UI Text Elements")]
+    [SerializeField] TMPro.TextMeshProUGUI healthText;
+    [SerializeField] TMPro.TextMeshProUGUI speedText;
+    [SerializeField] TMPro.TextMeshProUGUI strengthText;
+    [SerializeField] TMPro.TextMeshProUGUI attackRangeText;
+    [SerializeField] TMPro.TextMeshProUGUI fireballDamageText;
+    [SerializeField] TMPro.TextMeshProUGUI fireballRangeText;
+
 
     private void Start()
     {
         if (skillTreePanel != null)
         {
-            skillTreePanel.SetActive(false); 
+            skillTreePanel.SetActive(false);
         }
+        UpdateAllText();
+        characterStats.OnStatChanged += UpdateText;
     }
+
 
     public void OpenSkillTree()
     {
@@ -46,17 +58,53 @@ public class SkillTreeMenu : MonoBehaviour
             }
         }
     }
+
+
     public void AquireStat(string statType)
     {
         Enum.TryParse(statType, out StatType parsedStatType);
         AquireStat(parsedStatType);
     }
 
-    
+
     public int GetSkillCost(StatType statType)
     {
         return characterStats.GetStat(statType) + 1 * 100;
     }
 
     public bool IsBuyable(StatType statType) => (GetSkillCost(statType) <= player.GetEchoes() || !characterStats.IsMaxed(statType));
+
+    private void UpdateAllText()
+    {
+        foreach (StatType statType in Enum.GetValues(typeof(StatType)))
+        {
+            UpdateText(statType);
+        }
+    }
+    private void UpdateText(StatType statType)
+    {
+        string text = $"{statType}: {characterStats.GetStat(statType)}/{characterStats.GetMaxStat(statType)}\nCost: {GetSkillCost(statType)} Echoes";
+        switch (statType)
+        {
+            case StatType.Health:
+                healthText.text = text;
+                break;
+            case StatType.Speed:
+                speedText.text = text;
+                break;
+            case StatType.Strength:
+                strengthText.text = text;
+                break;
+            case StatType.AttackRange:
+                attackRangeText.text = text;
+                break;
+            case StatType.FireballDamage:
+                fireballDamageText.text = text;
+                break;
+            case StatType.FireballRange:
+                fireballRangeText.text = text;
+                break;
+        }
+    }
+
 }

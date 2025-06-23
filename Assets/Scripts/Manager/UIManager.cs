@@ -7,7 +7,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] PauseMenu pauseMenu;
     [SerializeField] GameplayHUD gameplayHUD;
 
-
     void Awake()
     {
         if (GameManager.Instance != null)
