@@ -1,38 +1,25 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(PatrolState))]
-[RequireComponent(typeof(ChasingState))]
-[RequireComponent(typeof(AttackState))]
-[RequireComponent(typeof(DeathState))]
+[RequireComponent(typeof(EnemyStateController))]
+[RequireComponent(typeof(EnemyAnimator))]
 public class Enemy : MonoBehaviour
 {
     [SerializeField] float speed = 3.0f;
     [SerializeField] int ashEchoesReward = 100;
-    [SerializeField] EnemyState initialState;
 
     Rigidbody2D rigidBody;
-    Animator animator;
+    EnemyAnimator enemyAnimator;
+    EnemyStateController stateController;
     Health health;
     bool isFacingLeft = true;
-    EnemyState currentState;
 
-    public PatrolState PatrolState { get; private set; }
-    public ChasingState ChasingState { get; private set; }
-    public AttackState AttackState { get; private set; }
-    public DeathState DeathState { get; private set; }
     public Attack Attack { get; private set; }
+    public EnemyAnimator Animator => enemyAnimator;
+    public EnemyStateController Controller => stateController;
     public string Id { get; private set; }
     public int Reward => ashEchoesReward;
-    public Animator Animator => animator;
-    public enum AnimationState
-    {
-        IDLE,
-        MOVE,
-        ATTACK,
-        DAMAGED,
-        DEATH,
-    }
 
     public Transform PointA;
     public Transform PointB;
@@ -40,102 +27,58 @@ public class Enemy : MonoBehaviour
     void Awake()
     {
         rigidBody = GetComponent<Rigidbody2D>();
+        enemyAnimator = GetComponent<EnemyAnimator>();
+        stateController = GetComponent<EnemyStateController>();
         Id = Guid.NewGuid().ToString();
-        PatrolState = GetComponent<PatrolState>();
-        ChasingState = GetComponent<ChasingState>();
-        AttackState = GetComponent<AttackState>();
-        DeathState = GetComponent<DeathState>();
     }
 
     void Start()
     {
         health = GetComponent<Health>();
         Attack = GetComponent<Attack>();
-        animator = GetComponentInChildren<Animator>();
 
         health.OnDeath += Die;
 
-        ChangeState(initialState);
-    }
-
-    void Die()
-    {
-        ChangeState(DeathState);
-    }
-
-    public void ChangeState(EnemyState newState)
-    {
-        if (currentState != null)
-            currentState.Exit();
-
-        currentState = newState;
-        currentState.Enter();
+        enemyAnimator.InitializeAnimationStates();
+        stateController.InitializeState();
     }
 
     void Update()
     {
-        currentState.Tick();
+        stateController.UpdateState();
+    }
+
+    void Die()
+    {
+        stateController.ChangeState(stateController.DeathState);
     }
 
     public void MoveInDirection(float direction)
     {
         rigidBody.linearVelocityX = direction * speed;
-        UpdateSpriteDirection(direction);
-        PlayAnimation(AnimationState.MOVE);
+        EntityUtility.FlipSpriteHorizontally(transform, direction, ref isFacingLeft);
+        enemyAnimator.PlayAnimation(EnemyAnimator.AnimationState.MOVE);
     }
 
     public void TakeDamage(int damage)
     {
         health.ApplyDamaage(damage);
-        PlayAnimation(AnimationState.DAMAGED);
+        enemyAnimator.PlayAnimation(EnemyAnimator.AnimationState.DAMAGED);
+        StartCoroutine(AfterDamageRoutine());
+
         Debug.Log($"Got {damage} damage, remaining {health.CurrentHealth} HP.");
     }
 
-    public void UpdateSpriteDirection(float directionX)
+    private IEnumerator AfterDamageRoutine()
     {
-        if (directionX > 0 && isFacingLeft)
+        rigidBody.linearVelocity = Vector2.zero;
+        float damageAnimationTime = enemyAnimator.GetAnimationLength(EnemyAnimator.AnimationState.DAMAGED);
+
+        yield return new WaitForSeconds(damageAnimationTime);
+
+        if (stateController.IsInAttackState())
         {
-            Flip();
-        }
-        else if (directionX < 0 && !isFacingLeft)
-        {
-            Flip();
-        }
-    }
-
-    void Flip()
-    {
-        Vector3 currentScale = gameObject.transform.localScale;
-        currentScale.x *= -1;
-        gameObject.transform.localScale = currentScale;
-
-        isFacingLeft = !isFacingLeft;
-    }
-
-    public void PlayAnimation(AnimationState state)
-    {
-        if (animator == null) return;
-
-        switch (state)
-        {
-            case AnimationState.MOVE:
-                animator.SetBool("isMoving", true);
-                break;
-
-            case AnimationState.ATTACK:
-                animator.SetTrigger("isAttacking");
-                break;
-
-            case AnimationState.DAMAGED:
-                animator.SetTrigger("isDamaged");
-                break;
-
-            case AnimationState.DEATH:
-                animator.SetBool("isMoving", false);
-                animator.ResetTrigger("isAttacking");
-                animator.ResetTrigger("isDamaged");
-                animator.SetBool("isDead", true);
-                break;
+            stateController.AttackState.CancelAttack();
         }
     }
 
@@ -144,36 +87,9 @@ public class Enemy : MonoBehaviour
         if (health != null)
             health.ResetHealth();
 
-
-        if (animator != null)
-        {
-            InitializeAnimatorVariables();
-        }
-
-        SetPhysicElementsTo(true);
-        ChangeState(initialState);
-    }
-
-    void InitializeAnimatorVariables()
-    {
-        animator.SetBool("isDead", false);
-        animator.SetBool("isMoving", false);
-        animator.ResetTrigger("isAttacking");
-        animator.ResetTrigger("isDamaged");
-    }
-
-    public void SetPhysicElementsTo(bool value)
-    {
-        Collider2D[] colliders = GetComponentsInChildren<Collider2D>();
-        foreach (Collider2D col in colliders)
-        {
-            col.enabled = value;
-        }
-
-        if (rigidBody != null)
-        {
-            rigidBody.simulated = value;
-        }
+        EntityUtility.SetPhysicsEnabled(gameObject, true);
+        enemyAnimator.InitializeAnimationStates();
+        stateController.InitializeState();
     }
 
     public bool CanAttackPlayer()

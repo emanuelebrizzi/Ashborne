@@ -215,16 +215,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75684157300c3b847a9fac60147d082a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  newGameButton: {fileID: 0}
-  loadGameButton: {fileID: 0}
-  exitMainMenuButton: {fileID: 0}
-  gameplayPanel: {fileID: 634663533}
-  pauseMenuPanel: {fileID: 428661665}
-  resumeButton: {fileID: 448197877}
-  menuButton: {fileID: 1045967027}
-  exitButton: {fileID: 2012122517}
-  healthBar: {fileID: 15362050}
-  ashEchoesText: {fileID: 1619431804}
+  mainMenu: {fileID: 0}
+  pauseMenu: {fileID: 428661669}
+  gameplayHUD: {fileID: 634663537}
 --- !u!4 &15325715
 Transform:
   m_ObjectHideFlags: 0
@@ -3281,6 +3274,7 @@ GameObject:
   - component: {fileID: 428661666}
   - component: {fileID: 428661668}
   - component: {fileID: 428661667}
+  - component: {fileID: 428661669}
   m_Layer: 5
   m_Name: PausePanel
   m_TagString: Untagged
@@ -3348,6 +3342,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 428661665}
   m_CullTransparentMesh: 1
+--- !u!114 &428661669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 428661665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a05314debb3ab8459b12ddd80d3fbf7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panel: {fileID: 428661665}
+  resumeButton: {fileID: 448197877}
+  menuButton: {fileID: 1045967027}
+  exitButton: {fileID: 2012122517}
 --- !u!1001 &448197875
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5120,6 +5130,7 @@ GameObject:
   - component: {fileID: 634663534}
   - component: {fileID: 634663536}
   - component: {fileID: 634663535}
+  - component: {fileID: 634663537}
   m_Layer: 5
   m_Name: GameplayPanel
   m_TagString: Untagged
@@ -5186,6 +5197,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 634663533}
   m_CullTransparentMesh: 1
+--- !u!114 &634663537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 634663533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28110aaa32376c149a809705c1cd6eda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panel: {fileID: 634663533}
+  healthBar: {fileID: 15362050}
+  ashEchoesText: {fileID: 1619431804}
 --- !u!1001 &635496798
 PrefabInstance:
   m_ObjectHideFlags: 0
