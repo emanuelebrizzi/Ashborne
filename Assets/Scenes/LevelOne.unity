@@ -8648,6 +8648,9 @@ MonoBehaviour:
     - position: {fileID: 2117415774}
       patrolPointA: {fileID: 492375980}
       patrolPointB: {fileID: 1323549576}
+  damageMultiplier: 1.5
+  healthMultiplier: 1.3
+  speedMultiplier: 1.2
 --- !u!4 &1208672624
 Transform:
   m_ObjectHideFlags: 0

@@ -483,6 +483,8 @@ GameObject:
   - component: {fileID: 5879132543600246743}
   - component: {fileID: 1326854276226856862}
   - component: {fileID: 877110293756605543}
+  - component: {fileID: 7189622623963755389}
+  - component: {fileID: 9161168620341377899}
   - component: {fileID: 622743470455108142}
   - component: {fileID: 1074229318712270977}
   - component: {fileID: 1991175659566027179}
@@ -595,9 +597,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 3
   ashEchoesReward: 200
-  initialState: {fileID: 1991175659566027179}
   PointA: {fileID: 0}
   PointB: {fileID: 0}
+--- !u!114 &7189622623963755389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 877561424279928533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0829f669a1ed044abd3e0740c4fbb02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 7461029990841192748}
+--- !u!114 &9161168620341377899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 877561424279928533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6890526f96105f84194d530d0df4ec1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialState: {fileID: 1991175659566027179}
 --- !u!114 &622743470455108142
 MonoBehaviour:
   m_ObjectHideFlags: 0
