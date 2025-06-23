@@ -1097,6 +1097,54 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6798700745982073400, guid: dfe7a5ac4d5f50945b6718ac87a11994, type: 3}
   m_PrefabInstance: {fileID: 5749825839392830334}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1527121998
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1527122000}
+  - component: {fileID: 1527122001}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1527122000
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1527121998}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 54.810722, y: -45.69211, z: 1.9538527}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1527122001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1527121998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7c4722b56a54fc4f9446a8b7d807f1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musicSource: {fileID: 0}
+  menuMusic: {fileID: 8300000, guid: de29a38d3a20aba4ba63a44becafb16b, type: 3}
+  gameplayMusic: {fileID: 8300000, guid: a1587d7e6dd43aa4f843e9ec3501f970, type: 3}
+  musicVolume: 0.5
 --- !u!1 &1728768842
 GameObject:
   m_ObjectHideFlags: 0
@@ -1192,6 +1240,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UIManager: {fileID: 1388431177}
   enemySpawnManager: {fileID: 0}
+  audioManager: {fileID: 1527122001}
   mainMenuSceneName: MainMenu
   mainSceneName: LevelOne
   loadingSceneName: LoadingScene
@@ -1542,6 +1591,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1874988551}
+  - {fileID: 1527122000}
   - {fileID: 1388431178}
   - {fileID: 390883837}
   - {fileID: 1159311950}

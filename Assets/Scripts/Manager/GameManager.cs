@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     [Header("Managers")]
     [SerializeField] UIManager UIManager;
     [SerializeField] EnemySpawnManager enemySpawnManager;
+    [SerializeField] AudioManager audioManager;
 
     // TODO: move it in a SceneManager componenet
     [Header("Scene settings")]
@@ -46,11 +47,12 @@ public class GameManager : MonoBehaviour
         if (scene.name == mainMenuSceneName)
         {
             ChangeGameState(GameState.MainMenu);
+            if (audioManager != null) audioManager.PlayMenuMusic();
         }
         else if (scene.name == mainSceneName)
         {
             ChangeGameState(GameState.Playing);
-
+            if (audioManager != null) audioManager.PlayGameMusic();
             if (enemySpawnManager != null)
             {
                 enemySpawnManager.SpawnAllWaves();
@@ -158,6 +160,11 @@ public class GameManager : MonoBehaviour
     public void RegisterUIManager(UIManager manager)
     {
         UIManager = manager;
+    }
+
+    public void RegisterAudioManager(AudioManager manager)
+    {
+        audioManager = manager;
     }
 
     void OnDestroy()
