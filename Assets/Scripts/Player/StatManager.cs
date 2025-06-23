@@ -38,7 +38,7 @@ public class StatsManager : MonoBehaviour
 
     public int GetHealth() => HEALTH_BASE + characterStats.GetStat(StatType.Health) * HEALTH_MULT;
     public float GetSpeed() => SPEED_BASE + characterStats.GetStat(StatType.Speed) * SPEED_MULT;
-    public int GetStrength() => STRENGTH_BASE + characterStats.GetStat(StatType.Strength) * STRENGTH_MULT;
+    public int GetAttackDamage() => STRENGTH_BASE + characterStats.GetStat(StatType.Strength) * STRENGTH_MULT;
     public float GetAttackRange() => ATTACK_RANGE_BASE + characterStats.GetStat(StatType.AttackRange) * ATTACK_RANGE_MULT;
     public int GetFireballDamage() => FIREBALL_DAMAGE_BASE + characterStats.GetStat(StatType.FireballDamage) * FIREBALL_DAMAGE_MULT;
     public float GetFireballRange() => FIREBALL_RANGE_BASE + characterStats.GetStat(StatType.FireballRange) * FIREBALL_RANGE_MULT;

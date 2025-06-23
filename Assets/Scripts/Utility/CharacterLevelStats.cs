@@ -49,7 +49,7 @@ public class CharacterLevelStats : MonoBehaviour
         {
             if (stat.Increase(amount))
             {
-                stats[statType] = stat; // struct is value type, must assign back
+                stats[statType] = stat; 
                 return true;
             }
         }

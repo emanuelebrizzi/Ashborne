@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 public class SkillTreeMenu : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class SkillTreeMenu : MonoBehaviour
     {
         if (skillTreePanel != null)
         {
-            skillTreePanel.SetActive(false); // Hide the skill tree panel at the start
+            skillTreePanel.SetActive(false); 
         }
     }
 
@@ -35,7 +36,7 @@ public class SkillTreeMenu : MonoBehaviour
         }
     }
 
-    public void IncreaseStat(StatType statType)
+    public void AquireStat(StatType statType)
     {
         if (IsBuyable(statType))
         {
@@ -45,7 +46,13 @@ public class SkillTreeMenu : MonoBehaviour
             }
         }
     }
+    public void AquireStat(string statType)
+    {
+        Enum.TryParse(statType, out StatType parsedStatType);
+        AquireStat(parsedStatType);
+    }
 
+    
     public int GetSkillCost(StatType statType)
     {
         return characterStats.GetStat(statType) + 1 * 100;
