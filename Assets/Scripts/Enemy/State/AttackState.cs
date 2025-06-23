@@ -10,7 +10,7 @@ public class AttackState : EnemyState
     {
         if (!enemy.CanAttackPlayer())
         {
-            enemy.ChangeState(enemy.ChasingState);
+            enemy.Controller.ChangeState(enemy.Controller.ChasingState);
             return;
         }
 

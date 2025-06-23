@@ -2,29 +2,22 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(PatrolState))]
-[RequireComponent(typeof(ChasingState))]
-[RequireComponent(typeof(AttackState))]
-[RequireComponent(typeof(DeathState))]
+[RequireComponent(typeof(EnemyStateController))]
 [RequireComponent(typeof(EnemyAnimator))]
 public class Enemy : MonoBehaviour
 {
     [SerializeField] float speed = 3.0f;
     [SerializeField] int ashEchoesReward = 100;
-    [SerializeField] EnemyState initialState;
 
     Rigidbody2D rigidBody;
     EnemyAnimator enemyAnimator;
+    EnemyStateController stateController;
     Health health;
     bool isFacingLeft = true;
-    EnemyState currentState;
 
-    public PatrolState PatrolState { get; private set; }
-    public ChasingState ChasingState { get; private set; }
-    public AttackState AttackState { get; private set; }
-    public DeathState DeathState { get; private set; }
     public Attack Attack { get; private set; }
     public EnemyAnimator Animator => enemyAnimator;
+    public EnemyStateController Controller => stateController;
     public string Id { get; private set; }
     public int Reward => ashEchoesReward;
 
@@ -35,11 +28,8 @@ public class Enemy : MonoBehaviour
     {
         rigidBody = GetComponent<Rigidbody2D>();
         enemyAnimator = GetComponent<EnemyAnimator>();
+        stateController = GetComponent<EnemyStateController>();
         Id = Guid.NewGuid().ToString();
-        PatrolState = GetComponent<PatrolState>();
-        ChasingState = GetComponent<ChasingState>();
-        AttackState = GetComponent<AttackState>();
-        DeathState = GetComponent<DeathState>();
     }
 
     void Start()
@@ -49,26 +39,18 @@ public class Enemy : MonoBehaviour
 
         health.OnDeath += Die;
 
-        ChangeState(initialState);
-    }
-
-    void Die()
-    {
-        ChangeState(DeathState);
-    }
-
-    public void ChangeState(EnemyState newState)
-    {
-        if (currentState != null)
-            currentState.Exit();
-
-        currentState = newState;
-        currentState.Enter();
+        enemyAnimator.InitializeAnimationStates();
+        stateController.InitializeState();
     }
 
     void Update()
     {
-        currentState.Tick();
+        stateController.UpdateState();
+    }
+
+    void Die()
+    {
+        stateController.ChangeState(stateController.DeathState);
     }
 
     public void MoveInDirection(float direction)
@@ -94,9 +76,9 @@ public class Enemy : MonoBehaviour
 
         yield return new WaitForSeconds(damageAnimationTime);
 
-        if (currentState == AttackState)
+        if (stateController.IsInAttackState())
         {
-            AttackState.CancelAttack();
+            stateController.AttackState.CancelAttack();
         }
     }
 
@@ -126,10 +108,9 @@ public class Enemy : MonoBehaviour
         if (health != null)
             health.ResetHealth();
 
-        enemyAnimator.ResetAnimationState();
-
         SetPhysicElementsTo(true);
-        ChangeState(initialState);
+        enemyAnimator.InitializeAnimationStates();
+        stateController.InitializeState();
     }
 
     public void SetPhysicElementsTo(bool value)

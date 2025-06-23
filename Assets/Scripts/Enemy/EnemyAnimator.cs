@@ -52,7 +52,7 @@ public class EnemyAnimator : MonoBehaviour
         }
     }
 
-    public void ResetAnimationState()
+    public void InitializeAnimationStates()
     {
         animator.SetBool("isDead", false);
         animator.SetBool("isMoving", false);
