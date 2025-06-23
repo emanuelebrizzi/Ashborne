@@ -15,7 +15,7 @@ public class DeathState : EnemyState
 
     void ProcessDeath()
     {
-        enemy.SetPhysicElementsTo(false);
+        EntityUtility.SetPhysicsEnabled(gameObject, false);
         enemy.Animator.PlayAnimation(EnemyAnimator.AnimationState.DEATH);
         AwardAshEchoes();
         StartCoroutine(WaitForCorpseDisappears());

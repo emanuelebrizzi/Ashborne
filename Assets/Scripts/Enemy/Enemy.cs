@@ -56,7 +56,7 @@ public class Enemy : MonoBehaviour
     public void MoveInDirection(float direction)
     {
         rigidBody.linearVelocityX = direction * speed;
-        UpdateSpriteDirection(direction);
+        EntityUtility.FlipSpriteHorizontally(transform, direction, ref isFacingLeft);
         enemyAnimator.PlayAnimation(EnemyAnimator.AnimationState.MOVE);
     }
 
@@ -82,49 +82,14 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public void UpdateSpriteDirection(float directionX)
-    {
-        if (directionX > 0 && isFacingLeft)
-        {
-            Flip();
-        }
-        else if (directionX < 0 && !isFacingLeft)
-        {
-            Flip();
-        }
-    }
-
-    void Flip()
-    {
-        Vector3 currentScale = gameObject.transform.localScale;
-        currentScale.x *= -1;
-        gameObject.transform.localScale = currentScale;
-
-        isFacingLeft = !isFacingLeft;
-    }
-
     public void ResetFroomPool()
     {
         if (health != null)
             health.ResetHealth();
 
-        SetPhysicElementsTo(true);
+        EntityUtility.SetPhysicsEnabled(gameObject, true);
         enemyAnimator.InitializeAnimationStates();
         stateController.InitializeState();
-    }
-
-    public void SetPhysicElementsTo(bool value)
-    {
-        Collider2D[] colliders = GetComponentsInChildren<Collider2D>();
-        foreach (Collider2D col in colliders)
-        {
-            col.enabled = value;
-        }
-
-        if (rigidBody != null)
-        {
-            rigidBody.simulated = value;
-        }
     }
 
     public bool CanAttackPlayer()

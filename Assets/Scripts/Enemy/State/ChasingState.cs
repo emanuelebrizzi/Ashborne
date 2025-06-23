@@ -25,7 +25,7 @@ public class ChasingState : EnemyState
 
         if (enemy.CanAttackPlayer())
         {
-            enemy.UpdateSpriteDirection(directionToPlayer.x);
+            // enemy.UpdateSpriteDirection(directionToPlayer.x);
             enemy.Controller.ChangeState(enemy.Controller.AttackState);
             return;
         }

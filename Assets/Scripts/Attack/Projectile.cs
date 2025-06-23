@@ -10,32 +10,12 @@ public class Projectile : MonoBehaviour
 
     void Start()
     {
-        UpdateSpriteDirection(direction.x);
+        EntityUtility.FlipSpriteHorizontally(transform, direction.x, ref isFacingLeft);
     }
 
     void FixedUpdate()
     {
         transform.Translate(speed * Time.fixedDeltaTime * direction.normalized, Space.World);
-    }
-
-    public void UpdateSpriteDirection(float directionX)
-    {
-        if (directionX > 0 && isFacingLeft)
-        {
-            Flip();
-        }
-        else if (directionX < 0 && !isFacingLeft)
-        {
-            Flip();
-        }
-    }
-
-    void Flip()
-    {
-        Vector3 currentScale = gameObject.transform.localScale;
-        currentScale.x *= -1;
-        gameObject.transform.localScale = currentScale;
-        isFacingLeft = !isFacingLeft;
     }
 
     void OnTriggerEnter2D(Collider2D collision)

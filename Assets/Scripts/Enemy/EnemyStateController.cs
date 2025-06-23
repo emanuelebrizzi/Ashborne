@@ -12,7 +12,7 @@ public class EnemyStateController : MonoBehaviour
     public AttackState AttackState { get; private set; }
     public DeathState DeathState { get; private set; }
 
-    private void Awake()
+    void Awake()
     {
         PatrolState = GetComponent<PatrolState>();
         ChasingState = GetComponent<ChasingState>();

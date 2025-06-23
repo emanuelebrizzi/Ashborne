@@ -14,10 +14,10 @@ public class AttackState : EnemyState
             return;
         }
 
-        Vector2 directionToPlayer = (Player.Instance.transform.position - enemy.transform.position).normalized;
+        // Vector2 directionToPlayer = (Player.Instance.transform.position - enemy.transform.position).normalized;
         if (!isAttacking)
         {
-            enemy.UpdateSpriteDirection(directionToPlayer.x);
+            // enemy.UpdateSpriteDirection(directionToPlayer.x);
             currentAttackRoutine = StartCoroutine(AttackRoutine());
         }
     }
