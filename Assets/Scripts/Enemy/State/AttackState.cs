@@ -4,6 +4,8 @@ using UnityEngine;
 public class AttackState : EnemyState
 {
     bool isAttacking = false;
+    Coroutine currentAttackRoutine;
+
     public override void Tick()
     {
         if (!enemy.CanAttackPlayer())
@@ -16,7 +18,7 @@ public class AttackState : EnemyState
         if (!isAttacking)
         {
             enemy.UpdateSpriteDirection(directionToPlayer.x);
-            StartCoroutine(AttackRoutine());
+            currentAttackRoutine = StartCoroutine(AttackRoutine());
         }
     }
 
@@ -24,35 +26,41 @@ public class AttackState : EnemyState
     {
         isAttacking = true;
 
-        enemy.PlayAnimation(Enemy.AnimationState.ATTACK);
+        enemy.Animator.PlayAnimation(EnemyAnimator.AnimationState.ATTACK);
         enemy.Attack.PerformAttack();
 
         yield return null;
 
-        float animationLength = GetAnimationTime();
+        float animationLength = enemy.Animator.GetAnimationLength(EnemyAnimator.AnimationState.ATTACK);
         float waitTime = Mathf.Max(animationLength, enemy.Attack.AttackCooldown);
 
         yield return new WaitForSeconds(waitTime);
 
         isAttacking = false;
+        currentAttackRoutine = null;
     }
 
-    float GetAnimationTime()
+    public void CancelAttack()
     {
-        float animationLength = 0.5f;
-        AnimatorStateInfo stateInfo = enemy.Animator.GetCurrentAnimatorStateInfo(0);
-
-        if (stateInfo.IsName("ATTACK"))
-            animationLength = stateInfo.length;
-
-        return animationLength;
+        if (isAttacking && currentAttackRoutine != null)
+        {
+            StopCoroutine(currentAttackRoutine);
+            currentAttackRoutine = null;
+            isAttacking = false;
+            enemy.Animator.PlayAnimation(EnemyAnimator.AnimationState.IDLE);
+        }
     }
-
 
     public override void Exit()
     {
         base.Exit();
-        StopAllCoroutines();
+
+        if (currentAttackRoutine != null)
+        {
+            StopCoroutine(currentAttackRoutine);
+            currentAttackRoutine = null;
+        }
+
         isAttacking = false;
     }
 }

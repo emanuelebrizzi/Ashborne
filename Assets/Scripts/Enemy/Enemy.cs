@@ -1,10 +1,12 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(PatrolState))]
 [RequireComponent(typeof(ChasingState))]
 [RequireComponent(typeof(AttackState))]
 [RequireComponent(typeof(DeathState))]
+[RequireComponent(typeof(EnemyAnimator))]
 public class Enemy : MonoBehaviour
 {
     [SerializeField] float speed = 3.0f;
@@ -12,7 +14,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] EnemyState initialState;
 
     Rigidbody2D rigidBody;
-    Animator animator;
+    EnemyAnimator enemyAnimator;
     Health health;
     bool isFacingLeft = true;
     EnemyState currentState;
@@ -22,17 +24,9 @@ public class Enemy : MonoBehaviour
     public AttackState AttackState { get; private set; }
     public DeathState DeathState { get; private set; }
     public Attack Attack { get; private set; }
+    public EnemyAnimator Animator => enemyAnimator;
     public string Id { get; private set; }
     public int Reward => ashEchoesReward;
-    public Animator Animator => animator;
-    public enum AnimationState
-    {
-        IDLE,
-        MOVE,
-        ATTACK,
-        DAMAGED,
-        DEATH,
-    }
 
     public Transform PointA;
     public Transform PointB;
@@ -40,6 +34,7 @@ public class Enemy : MonoBehaviour
     void Awake()
     {
         rigidBody = GetComponent<Rigidbody2D>();
+        enemyAnimator = GetComponent<EnemyAnimator>();
         Id = Guid.NewGuid().ToString();
         PatrolState = GetComponent<PatrolState>();
         ChasingState = GetComponent<ChasingState>();
@@ -51,7 +46,6 @@ public class Enemy : MonoBehaviour
     {
         health = GetComponent<Health>();
         Attack = GetComponent<Attack>();
-        animator = GetComponentInChildren<Animator>();
 
         health.OnDeath += Die;
 
@@ -81,14 +75,29 @@ public class Enemy : MonoBehaviour
     {
         rigidBody.linearVelocityX = direction * speed;
         UpdateSpriteDirection(direction);
-        PlayAnimation(AnimationState.MOVE);
+        enemyAnimator.PlayAnimation(EnemyAnimator.AnimationState.MOVE);
     }
 
     public void TakeDamage(int damage)
     {
         health.ApplyDamaage(damage);
-        PlayAnimation(AnimationState.DAMAGED);
+        enemyAnimator.PlayAnimation(EnemyAnimator.AnimationState.DAMAGED);
+        StartCoroutine(AfterDamageRoutine());
+
         Debug.Log($"Got {damage} damage, remaining {health.CurrentHealth} HP.");
+    }
+
+    private IEnumerator AfterDamageRoutine()
+    {
+        rigidBody.linearVelocity = Vector2.zero;
+        float damageAnimationTime = enemyAnimator.GetAnimationLength(EnemyAnimator.AnimationState.DAMAGED);
+
+        yield return new WaitForSeconds(damageAnimationTime);
+
+        if (currentState == AttackState)
+        {
+            AttackState.CancelAttack();
+        }
     }
 
     public void UpdateSpriteDirection(float directionX)
@@ -112,54 +121,15 @@ public class Enemy : MonoBehaviour
         isFacingLeft = !isFacingLeft;
     }
 
-    public void PlayAnimation(AnimationState state)
-    {
-        if (animator == null) return;
-
-        switch (state)
-        {
-            case AnimationState.MOVE:
-                animator.SetBool("isMoving", true);
-                break;
-
-            case AnimationState.ATTACK:
-                animator.SetTrigger("isAttacking");
-                break;
-
-            case AnimationState.DAMAGED:
-                animator.SetTrigger("isDamaged");
-                break;
-
-            case AnimationState.DEATH:
-                animator.SetBool("isMoving", false);
-                animator.ResetTrigger("isAttacking");
-                animator.ResetTrigger("isDamaged");
-                animator.SetBool("isDead", true);
-                break;
-        }
-    }
-
     public void ResetFroomPool()
     {
         if (health != null)
             health.ResetHealth();
 
-
-        if (animator != null)
-        {
-            InitializeAnimatorVariables();
-        }
+        enemyAnimator.ResetAnimationState();
 
         SetPhysicElementsTo(true);
         ChangeState(initialState);
-    }
-
-    void InitializeAnimatorVariables()
-    {
-        animator.SetBool("isDead", false);
-        animator.SetBool("isMoving", false);
-        animator.ResetTrigger("isAttacking");
-        animator.ResetTrigger("isDamaged");
     }
 
     public void SetPhysicElementsTo(bool value)
