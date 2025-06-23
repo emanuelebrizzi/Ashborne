@@ -2,9 +2,11 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
+
     [SerializeField] MainMenu mainMenu;
     [SerializeField] PauseMenu pauseMenu;
     [SerializeField] GameplayHUD gameplayHUD;
+
 
     void Awake()
     {
