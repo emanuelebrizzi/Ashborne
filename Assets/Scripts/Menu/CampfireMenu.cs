@@ -9,6 +9,9 @@ public class CampfireMenu : Panel
 
     private void Start()
     {
+        if (exitButton != null)
+            exitButton.onClick.RemoveAllListeners();
+
         SetupListeners();
     }
 
