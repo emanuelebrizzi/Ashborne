@@ -22,7 +22,8 @@ public class GameManager : MonoBehaviour
     {
         MainMenu,
         Playing,
-        Paused
+        Paused,
+        Campfire
     }
 
     public GameState CurrentGameState { get; private set; }
@@ -72,7 +73,7 @@ public class GameManager : MonoBehaviour
 
     void TogglePauseMenu()
     {
-        if (CurrentGameState == GameState.Playing && Input.GetKeyDown(KeyCode.Escape))
+        if (CurrentGameState != GameState.Paused && Input.GetKeyDown(KeyCode.Escape))
         {
             ChangeGameState(GameState.Paused);
         }
@@ -89,21 +90,32 @@ public class GameManager : MonoBehaviour
 
         if (newState == GameState.Paused)
         {
-            Time.timeScale = 0f;
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            PauseGame();
             UIManager.ShowPauseMenu();
+        }
+        else if (newState == GameState.Campfire)
+        {
+            PauseGame();
         }
         else if (newState == GameState.Playing)
         {
-            Time.timeScale = 1f;
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            UnpauseGame();
             UIManager.ShowGameplayUI();
             enemySpawnManager.SpawnAllWaves();
         }
-
         CurrentGameState = newState;
+    }
+    void PauseGame()
+    {
+        Time.timeScale = 0f;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+    void UnpauseGame()
+    {
+        Time.timeScale = 1f;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     public void StartNewGame()
@@ -148,7 +160,7 @@ public class GameManager : MonoBehaviour
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
-            Application.Quit();
+        Application.Quit();
 #endif
     }
 
@@ -171,4 +183,22 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
+
+    public void OpenCampfire()
+    {
+        ChangeGameState(GameState.Campfire);
+        UIManager.ShowCampfireMenu();
+
+    }
+
+    public void OpenSkillTree()
+    {
+        UIManager.ShowSkillTreeMenu();
+    }
+
+    public void Rest()
+    { 
+        // TODO: Reset Spwan and full Hero's health
+    }
+
 }

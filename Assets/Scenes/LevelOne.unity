@@ -195,7 +195,6 @@ GameObject:
   m_Component:
   - component: {fileID: 15325715}
   - component: {fileID: 15325714}
-  - component: {fileID: 15325716}
   m_Layer: 5
   m_Name: UIManager
   m_TagString: Untagged
@@ -218,6 +217,8 @@ MonoBehaviour:
   mainMenu: {fileID: 0}
   pauseMenu: {fileID: 428661669}
   gameplayHUD: {fileID: 634663537}
+  campfireMenu: {fileID: 363202041}
+  skillTreeMenu: {fileID: 2065652862}
 --- !u!4 &15325715
 Transform:
   m_ObjectHideFlags: 0
@@ -233,19 +234,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &15325716
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 15325713}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9644073e3ed53e148aad278d95484960, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  campfireMenuUI: {fileID: 363202036}
 --- !u!224 &15362049 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2387530070931895070, guid: 08ae6c232eab3d74095dac6065fbfe93, type: 3}
@@ -660,16 +648,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 661528486}
+        m_TargetAssemblyTypeName: SkillTree, Assembly-CSharp
+        m_MethodName: AquireStat
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Health
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1001 &39100362
@@ -1264,6 +1252,7 @@ GameObject:
   - component: {fileID: 137780135}
   - component: {fileID: 137780137}
   - component: {fileID: 137780136}
+  - component: {fileID: 137780138}
   m_Layer: 5
   m_Name: Attack Range
   m_TagString: Untagged
@@ -1329,6 +1318,62 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 137780134}
   m_CullTransparentMesh: 1
+--- !u!114 &137780138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 137780134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 137780136}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 661528486}
+        m_TargetAssemblyTypeName: SkillTree, Assembly-CSharp
+        m_MethodName: AquireStat
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: AttackRange
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &142504449
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2714,8 +2759,9 @@ GameObject:
   - component: {fileID: 363202039}
   - component: {fileID: 363202038}
   - component: {fileID: 363202037}
+  - component: {fileID: 363202041}
   m_Layer: 5
-  m_Name: CampfireCanvas
+  m_Name: CampfirePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2806,6 +2852,22 @@ RectTransform:
   m_AnchoredPosition: {x: 960, y: 735.3192}
   m_SizeDelta: {x: 1222, y: 936}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &363202041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 363202036}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9644073e3ed53e148aad278d95484960, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panel: {fileID: 1878812273}
+  skillTreeButton: {fileID: 1979718570}
+  restButton: {fileID: 1103331253}
+  exitButton: {fileID: 580999374}
 --- !u!1 &365488467
 GameObject:
   m_ObjectHideFlags: 0
@@ -2818,7 +2880,7 @@ GameObject:
   - component: {fileID: 365488470}
   - component: {fileID: 365488469}
   m_Layer: 5
-  m_Name: 'Fireball Text '
+  m_Name: 'FireballDamage Text '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2840,7 +2902,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 100, y: 0}
+  m_AnchoredPosition: {x: 80, y: 0}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &365488469
@@ -2928,7 +2990,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -205.04695, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -3080,7 +3142,7 @@ PrefabInstance:
     - target: {fileID: 3958152790211907768, guid: 04123dcb7299b8945ad35ef76feba63b, type: 3}
       propertyPath: campfireMenu
       value: 
-      objectReference: {fileID: 15325716}
+      objectReference: {fileID: 0}
     - target: {fileID: 3958152790211907768, guid: 04123dcb7299b8945ad35ef76feba63b, type: 3}
       propertyPath: interactionIcon
       value: 
@@ -3542,7 +3604,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 100, y: 0}
+  m_AnchoredPosition: {x: 80, y: 0}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &443854614
@@ -3630,7 +3692,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -198.24982, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -4865,9 +4927,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 15325716}
-        m_TargetAssemblyTypeName: CampfireMenu, Assembly-CSharp
-        m_MethodName: CloseCampfireMenu
+      - m_Target: {fileID: 1878812274}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: OpenCampfire
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5341,6 +5403,7 @@ GameObject:
   - component: {fileID: 632945752}
   - component: {fileID: 632945754}
   - component: {fileID: 632945753}
+  - component: {fileID: 632945755}
   m_Layer: 5
   m_Name: Range Fireball
   m_TagString: Untagged
@@ -5406,6 +5469,62 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 632945751}
   m_CullTransparentMesh: 1
+--- !u!114 &632945755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 632945751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 632945753}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 661528486}
+        m_TargetAssemblyTypeName: SkillTree, Assembly-CSharp
+        m_MethodName: AquireStat
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 'FireballRange '
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &634663533
 GameObject:
   m_ObjectHideFlags: 0
@@ -5637,15 +5756,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f42286f3fa86dda42aff968066f10c2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillTreePanel: {fileID: 2065652857}
   characterStats: {fileID: 1565174114}
   player: {fileID: 1982723269}
-  healthText: {fileID: 0}
-  speedText: {fileID: 0}
-  strengthText: {fileID: 0}
-  attackRangeText: {fileID: 0}
-  fireballDamageText: {fileID: 0}
-  fireballRangeText: {fileID: 0}
 --- !u!4 &661528487
 Transform:
   m_ObjectHideFlags: 0
@@ -5654,12 +5766,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 661528485}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 560.84015, y: 624.6341, z: 3.5302036}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -49.240437, y: 157.65804, z: 3.5359905}
+  m_LocalScale: {x: 1.0016394, y: 1.0016394, z: 1.0016394}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2065652858}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &671648345
 PrefabInstance:
@@ -6459,7 +6571,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 100, y: 0}
+  m_AnchoredPosition: {x: 80, y: 0}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &803154141
@@ -6547,7 +6659,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -205.04694, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -7029,7 +7141,7 @@ PrefabInstance:
     - target: {fileID: 3958152790211907768, guid: 04123dcb7299b8945ad35ef76feba63b, type: 3}
       propertyPath: campfireMenu
       value: 
-      objectReference: {fileID: 15325716}
+      objectReference: {fileID: 0}
     - target: {fileID: 3958152790211907768, guid: 04123dcb7299b8945ad35ef76feba63b, type: 3}
       propertyPath: interactionIcon
       value: 
@@ -7233,6 +7345,7 @@ GameObject:
   - component: {fileID: 925744047}
   - component: {fileID: 925744049}
   - component: {fileID: 925744048}
+  - component: {fileID: 925744050}
   m_Layer: 5
   m_Name: Speed
   m_TagString: Untagged
@@ -7298,6 +7411,62 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 925744046}
   m_CullTransparentMesh: 1
+--- !u!114 &925744050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 925744046}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 925744048}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 661528486}
+        m_TargetAssemblyTypeName: SkillTree, Assembly-CSharp
+        m_MethodName: AquireStat
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Speed
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &930255466
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8685,6 +8854,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1382782348239096657, guid: f233d7da355559647bdc718aa845334a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1982723274}
+    - targetCorrespondingSourceObject: {fileID: 1382782348239096657, guid: f233d7da355559647bdc718aa845334a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1982723275}
   m_SourcePrefab: {fileID: 100100000, guid: f233d7da355559647bdc718aa845334a, type: 3}
 --- !u!1001 &1045967025
 PrefabInstance:
@@ -9201,7 +9373,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1103331254}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1878812274}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: Rest
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1103331254
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9406,7 +9590,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 100, y: 0}
+  m_AnchoredPosition: {x: 80, y: 0}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1132958403
@@ -9494,7 +9678,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -195.98416, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -9589,6 +9773,7 @@ GameObject:
   - component: {fileID: 1170358438}
   - component: {fileID: 1170358440}
   - component: {fileID: 1170358439}
+  - component: {fileID: 1170358441}
   m_Layer: 5
   m_Name: Fireball
   m_TagString: Untagged
@@ -9654,6 +9839,62 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1170358437}
   m_CullTransparentMesh: 1
+--- !u!114 &1170358441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1170358437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1170358439}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 661528486}
+        m_TargetAssemblyTypeName: SkillTree, Assembly-CSharp
+        m_MethodName: AquireStat
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: FireballDamage
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1184031845
 GameObject:
   m_ObjectHideFlags: 0
@@ -11924,7 +12165,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 100, y: 0}
+  m_AnchoredPosition: {x: 80, y: 0}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1454258430
@@ -12012,7 +12253,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -200.51558, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -13448,7 +13689,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 100, y: 0}
+  m_AnchoredPosition: {x: 80, y: 0}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1682516887
@@ -13536,7 +13777,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -212.97797, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -16123,9 +16364,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 15325713}
+      - m_Target: {fileID: 1878812274}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: 
+        m_MethodName: OpenSkillTree
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -16335,6 +16576,18 @@ MonoBehaviour:
   heroSpawnManager: {fileID: 1764139176}
   hero: {fileID: 1982723269}
   heroObject: {fileID: 1982723263}
+--- !u!114 &1982723275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1982723263}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 796a15ec8f5d1b3408e82f9164f2e790, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1987984571
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -32914,13 +33167,14 @@ GameObject:
   - component: {fileID: 2065652861}
   - component: {fileID: 2065652860}
   - component: {fileID: 2065652859}
+  - component: {fileID: 2065652862}
   m_Layer: 5
-  m_Name: SkillTreeCanvas
+  m_Name: SkillTreePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2065652858
 RectTransform:
   m_ObjectHideFlags: 0
@@ -32935,12 +33189,13 @@ RectTransform:
   m_Children:
   - {fileID: 177250383}
   - {fileID: 1018435818}
-  - {fileID: 632945752}
-  - {fileID: 2132003025}
-  - {fileID: 1170358438}
   - {fileID: 32709886}
   - {fileID: 925744047}
+  - {fileID: 2132003025}
   - {fileID: 137780135}
+  - {fileID: 1170358438}
+  - {fileID: 632945752}
+  - {fileID: 661528487}
   m_Father: {fileID: 1619865776}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -33011,6 +33266,34 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &2065652862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2065652857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6b08f71f6744ef4ab0f8caa911a6cc6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panel: {fileID: 1878812273}
+  skillTree: {fileID: 661528486}
+  characterStats: {fileID: 1982723275}
+  healthButton: {fileID: 32709889}
+  speedButton: {fileID: 925744050}
+  strengthButton: {fileID: 2132003028}
+  attackRangeButton: {fileID: 137780138}
+  fireballDamageButton: {fileID: 1170358441}
+  fireballRangeButton: {fileID: 632945755}
+  closeButton: {fileID: 177250384}
+  healthText: {fileID: 443854614}
+  speedText: {fileID: 1454258430}
+  strengthText: {fileID: 1132958403}
+  attackRangeText: {fileID: 803154141}
+  fireballDamageText: {fileID: 365488469}
+  fireballRangeText: {fileID: 1682516887}
 --- !u!1001 &2066801193
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -33668,6 +33951,7 @@ GameObject:
   - component: {fileID: 2132003025}
   - component: {fileID: 2132003027}
   - component: {fileID: 2132003026}
+  - component: {fileID: 2132003028}
   m_Layer: 5
   m_Name: 'Strength '
   m_TagString: Untagged
@@ -33733,6 +34017,62 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2132003024}
   m_CullTransparentMesh: 1
+--- !u!114 &2132003028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132003024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 2132003026}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 661528486}
+        m_TargetAssemblyTypeName: SkillTree, Assembly-CSharp
+        m_MethodName: AquireStat
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Strength
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -33749,5 +34089,4 @@ SceneRoots:
   - {fileID: 2036907846}
   - {fileID: 1686325142}
   - {fileID: 1242019049}
-  - {fileID: 661528487}
   - {fileID: 1565174116}

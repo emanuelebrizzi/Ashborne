@@ -7,8 +7,6 @@ public class Campfire : MonoBehaviour, IInteractable
     [SerializeField] Transform spawnPoint;
     [SerializeField] GameObject campfirePrefab;
     [SerializeField] GameObject interactionIcon;
-    [SerializeField] CampfireMenu campfireMenu;
-
 
     bool IsInRange;
 
@@ -28,9 +26,8 @@ public class Campfire : MonoBehaviour, IInteractable
 
         if (IsInRange && Input.GetKeyDown(KeyCode.E))
         {
-            // Interact();
             SetSpawnPoint();
-            campfireMenu.OpenCampfireMenu();
+            gameManager.OpenCampfire();
         }
 
     }
@@ -73,9 +70,7 @@ public class Campfire : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        // SetSpawnPoint();
-        // campfireMenu.OpenCampfireMenu(); // Open the campfire menu
-        //gameManager.LoadGameScene(campfireSceneName); // Load the campfire scene
+
     }
 
     public bool IsInteractable()
