@@ -23,10 +23,6 @@ public class Campfire : MonoBehaviour, IInteractable
     void Update()
     {
 
-        if (IsInRange && Input.GetKeyDown(KeyCode.E))
-        {
-            Interact();
-        }
 
     }
 

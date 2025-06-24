@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [Header("Managers")]
+    [SerializeField] PlayerCommandManager playerCommandManager;
     [SerializeField] UIManager UIManager;
     [SerializeField] EnemySpawnManager enemySpawnManager;
     [SerializeField] AudioManager audioManager;

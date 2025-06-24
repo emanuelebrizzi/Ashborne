@@ -9,40 +9,29 @@ public class PlayerAttack : MonoBehaviour
 
     float nextAttackTime = 0f;
     bool isAttacking = false;
-
-    void Update()
+    public void StartAttack()
     {
-        if (isAttacking || Time.time < nextAttackTime)
-            return;
-
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            StartAttack();
-        }
-
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            RangedAttack();
+        if (!(isAttacking || Time.time < nextAttackTime))
+        {  
+            isAttacking = true;
+            nextAttackTime = Time.time + Player.Instance.MeleeAttack.AttackCooldown;
+            Player.Instance.PlayAnimation(PlayerState.ATTACK, 0);
+            Player.Instance.MeleeAttack.PerformAttack();
+            StartCoroutine(PerformAttackAfterDelay());
         }
     }
 
-    void StartAttack()
+    public void RangedAttack()
     {
-        isAttacking = true;
-        nextAttackTime = Time.time + Player.Instance.MeleeAttack.AttackCooldown;
-        Player.Instance.PlayAnimation(PlayerState.ATTACK, 0);
-        Player.Instance.MeleeAttack.PerformAttack();
-        StartCoroutine(PerformAttackAfterDelay());
-    }
+        if (!(isAttacking || Time.time < nextAttackTime))
+        {
+            isAttacking = true;
+            nextAttackTime = Time.time + Player.Instance.RangedAttack.AttackCooldown;
+            Player.Instance.PlayAnimation(PlayerState.ATTACK, 0);
+            Player.Instance.RangedAttack.PerformAttack();
+            StartCoroutine(PerformAttackAfterDelay());
+        }
 
-
-    void RangedAttack()
-    {
-        isAttacking = true;
-        nextAttackTime = Time.time + Player.Instance.RangedAttack.AttackCooldown;
-        Player.Instance.PlayAnimation(PlayerState.ATTACK, 0);
-        Player.Instance.RangedAttack.PerformAttack();
-        StartCoroutine(PerformAttackAfterDelay());
     }
 
     IEnumerator PerformAttackAfterDelay()
