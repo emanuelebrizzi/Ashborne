@@ -8103,7 +8103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f42286f3fa86dda42aff968066f10c2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterStats: {fileID: 1565174114}
+  characterStats: {fileID: 1982723275}
   player: {fileID: 1982723269}
 --- !u!1001 &1022413536
 PrefabInstance:
@@ -12732,7 +12732,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1565174116}
   - component: {fileID: 1565174115}
-  - component: {fileID: 1565174114}
   m_Layer: 0
   m_Name: StatManager
   m_TagString: Untagged
@@ -12740,18 +12739,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1565174114
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1565174113}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 796a15ec8f5d1b3408e82f9164f2e790, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1565174115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12764,10 +12751,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6227950a6bf096b42b8682926b98fec0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: {fileID: 0}
-  movement: {fileID: 0}
-  attack: {fileID: 0}
-  characterStats: {fileID: 1565174114}
+  health: {fileID: 1982723266}
+  attack: {fileID: 1982723277}
+  movement: {fileID: 1982723268}
+  characterStats: {fileID: 1982723275}
   healthMultiplier: 50
   speedMultiplier: 0.5
   strengthMultiplier: 2
@@ -16654,8 +16641,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackDelay: 0.4
-  attackDamage: 10
-  attackRange: 10
 --- !u!114 &1982723268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16803,7 +16788,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackRange: 2
   attackCooldown: 0.1
-  damageAmount: 10
+  attackDamage: 10
   hitbox: {fileID: 505627883}
 --- !u!114 &1982723278
 MonoBehaviour:
@@ -16819,7 +16804,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackRange: 2
   attackCooldown: 1
-  damageAmount: 10
+  attackDamage: 10
   projectile: {fileID: 1567719318964900893, guid: 5da17963afec1d14890e1fdd6bcb61a8, type: 3}
   firePoint: {fileID: 505627881}
   target: {fileID: 1618718863}
@@ -33450,7 +33435,7 @@ MonoBehaviour:
   attackRangeButton: {fileID: 137780138}
   fireballDamageButton: {fileID: 1170358441}
   fireballRangeButton: {fileID: 632945755}
-  backButton: {fileID: 0}
+  backButton: {fileID: 177250384}
   healthText: {fileID: 443854614}
   speedText: {fileID: 1454258430}
   strengthText: {fileID: 1132958403}
@@ -34246,6 +34231,6 @@ SceneRoots:
   - {fileID: 1776099897}
   - {fileID: 1029265941}
   - {fileID: 2036907846}
+  - {fileID: 1565174116}
   - {fileID: 1686325142}
   - {fileID: 1242019049}
-  - {fileID: 1565174116}

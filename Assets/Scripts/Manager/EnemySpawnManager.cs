@@ -5,8 +5,7 @@ using UnityEngine.Pool;
 
 public class EnemySpawnManager : MonoBehaviour
 {
-    const int SecondWaveEchoesThreshold = 200;
-    const int EmpowermentEchoesThreshold = 500;
+    private const int PowerUpThreshold = 5;
 
     [Header("Waves Settings")]
     [SerializeField] List<EnemyWave> enemyWaves = new();
@@ -19,8 +18,8 @@ public class EnemySpawnManager : MonoBehaviour
     Transform enemiesParent; // It's only used for hierarchy management
     readonly Dictionary<EnemyType, ObjectPool<GameObject>> enemyPools = new();
     readonly Dictionary<EnemyType, Dictionary<SpawnPoint, Enemy>> activeEnemies = new();
-    bool secondWaveSpawned = false;
-    bool enemiesEmpowered = false;
+    bool mageWaveSpawned = false;
+    int appliedPowerUp = 0;
 
     [Serializable]
     public enum EnemyType
@@ -69,6 +68,8 @@ public class EnemySpawnManager : MonoBehaviour
 
         if (GameManager.Instance != null)
             GameManager.Instance.RegisterEnemySpawnManager(this);
+
+
     }
 
     void SetupEnemyObjectPool(EnemyWave wave)
@@ -127,7 +128,9 @@ public class EnemySpawnManager : MonoBehaviour
     {
         if (Player.Instance != null)
         {
-            Player.Instance.OnEchoesChanged += CheckEchoesThreshold;
+            CharacterLevelStats characterStatistics = Player.Instance.GetComponent<CharacterLevelStats>();
+            characterStatistics.OnStatChanged += CheckPlayerStatistics;
+            Player.Instance.OnDeath += SpawnAllWaves;
         }
     }
 
@@ -141,7 +144,7 @@ public class EnemySpawnManager : MonoBehaviour
 
     void Spawn(EnemyWave wave)
     {
-        if (wave.type == EnemyType.Ranged && !secondWaveSpawned)
+        if (wave.type == EnemyType.Ranged && !mageWaveSpawned)
         {
             return;
         }
@@ -192,25 +195,28 @@ public class EnemySpawnManager : MonoBehaviour
         Debug.Log($"Enemy {enemy.Id} (Type: {type}) died!");
     }
 
-    void CheckEchoesThreshold(int echoesAmount)
+    void CheckPlayerStatistics(StatType statType)
     {
-        if (!secondWaveSpawned && echoesAmount >= SecondWaveEchoesThreshold)
+        if (!mageWaveSpawned && statType == StatType.FireballDamage)
         {
-            secondWaveSpawned = true;
+            mageWaveSpawned = true;
             Spawn(enemyWaves[1]);
-            Debug.Log($"Player reached {SecondWaveEchoesThreshold} echoes! Spawning second wave!");
+            Debug.Log($"Player got the fireball! Spawning mage wave to counter it!");
         }
 
-        if (!enemiesEmpowered && echoesAmount >= EmpowermentEchoesThreshold)
+        appliedPowerUp++;
+        if (appliedPowerUp >= PowerUpThreshold)
         {
             EmpowerAllEnemies();
-            enemiesEmpowered = true;
-            Debug.Log($"Player reached {EmpowermentEchoesThreshold} echoes! All enemies empowered!");
+            Debug.Log($"Player too dangerous! All enemies empowered!");
+            appliedPowerUp = 0;
         }
     }
 
     void EmpowerAllEnemies()
     {
+        SpawnAllWaves();
+
         foreach (var typeDict in activeEnemies)
         {
             foreach (var kvp in typeDict.Value)
@@ -228,7 +234,9 @@ public class EnemySpawnManager : MonoBehaviour
     {
         if (Player.Instance != null)
         {
-            Player.Instance.OnEchoesChanged -= CheckEchoesThreshold;
+            CharacterLevelStats characterStatistics = Player.Instance.GetComponent<CharacterLevelStats>();
+            characterStatistics.OnStatChanged -= CheckPlayerStatistics;
+            Player.Instance.OnDeath -= SpawnAllWaves;
         }
     }
 }

@@ -46,7 +46,7 @@ public class UIManager : MonoBehaviour
     {
         if (mainMenu) mainMenu.Hide();
         if (pauseMenu) pauseMenu.Hide();
-        if (gameplayHUD) gameplayHUD.Hide();
+        if (gameplayHUD) gameplayHUD.Show();
         if (campfireMenu) campfireMenu.Show();
         if (skillTreeMenu) skillTreeMenu.Hide();
 
@@ -55,7 +55,7 @@ public class UIManager : MonoBehaviour
     {
         if (mainMenu) mainMenu.Hide();
         if (pauseMenu) pauseMenu.Hide();
-        if (gameplayHUD) gameplayHUD.Hide();
+        if (gameplayHUD) gameplayHUD.Show();
         if (campfireMenu) campfireMenu.Hide();
         if (skillTreeMenu) skillTreeMenu.Show();
     }

@@ -81,6 +81,11 @@ public class GameManager : MonoBehaviour
                 UIManager.ShowGameplayUI();
                 break;
 
+            case GameState.SkillTree:
+                PauseGame();
+                UIManager.ShowSkillTreeMenu();
+                break;
+
             default:
                 Debug.LogWarning($"Unhandled game state: {newState}");
                 break;
@@ -155,12 +160,12 @@ public class GameManager : MonoBehaviour
 
     public void OpenSkillTree()
     {
-        UIManager.ShowSkillTreeMenu();
+        ChangeGameState(GameState.SkillTree);
     }
 
     public void Rest()
     {
-        // TODO: Reset Spwan and full Hero's health
+        Player.Instance.Heal();
         enemySpawnManager.SpawnAllWaves();
     }
 

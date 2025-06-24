@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float jumpForce = 500f;
     [SerializeField] Collider2D groundCheck;
     [SerializeField] float coyoteTime = 0.05f;
+
     float coyoteTimeCounter;
 
     void Start()
@@ -66,7 +67,7 @@ public class PlayerMovement : MonoBehaviour
         if (coyoteTimeCounter > 0f)
         {
             body.AddForce(new Vector2(0, jumpForce));
-            coyoteTimeCounter = 0f; 
+            coyoteTimeCounter = 0f;
         }
     }
 
@@ -75,7 +76,7 @@ public class PlayerMovement : MonoBehaviour
         return groundCheck.IsTouchingLayers(LayerMask.GetMask("Ground"));
     }
 
-    public void IncreaseFlatSpeed(float value)
+    public void IncreaseSpeed(float value)
     {
         speed += value;
     }

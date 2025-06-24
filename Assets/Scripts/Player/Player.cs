@@ -16,6 +16,7 @@ public class Player : MonoBehaviour, IDamageable
     public static Player Instance { get; private set; }
     public event Action<float> OnHealthChanged;
     public event Action<int> OnEchoesChanged;
+    public event Action OnDeath;
 
 
     void Awake()
@@ -77,6 +78,7 @@ public class Player : MonoBehaviour, IDamageable
         }
 
         OnEchoesChanged?.Invoke(ashEchoes.Current);
+        OnDeath?.Invoke();
     }
 
     public void AddAshEchoes(int amount)
@@ -99,6 +101,12 @@ public class Player : MonoBehaviour, IDamageable
     public int GetEchoes()
     {
         return ashEchoes.Current;
+    }
+
+    public void Heal()
+    {
+        health.ResetHealth();
+        OnHealthChanged?.Invoke(health.CurrentHealth);
     }
 
     public AshEchoes AshEchoes { get { return ashEchoes; } }

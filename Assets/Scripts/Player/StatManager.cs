@@ -2,12 +2,10 @@ using UnityEngine;
 
 public class StatsManager : MonoBehaviour
 {
-    public static StatsManager Instance { get; private set; }
-
     [Header("Player ")]
     [SerializeField] Health health;
+    [SerializeField] Attack attack;
     [SerializeField] PlayerMovement movement;
-    [SerializeField] PlayerAttack attack;
 
     [Header("Character Level Stats")]
     [SerializeField] CharacterLevelStats characterStats;
@@ -19,6 +17,9 @@ public class StatsManager : MonoBehaviour
     [SerializeField] float attackRangeMultiplier = 0.2f;
     [SerializeField] int fireballDamageMultiplier = 1;
     [SerializeField] float fireballRangeMultiplier = 0.5f;
+
+    public static StatsManager Instance { get; private set; }
+
 
     void Start()
     {
@@ -37,7 +38,7 @@ public class StatsManager : MonoBehaviour
         }
     }
 
- void UpdateStat(StatType statType)
+    void UpdateStat(StatType statType)
     {
         switch (statType)
         {
@@ -58,42 +59,42 @@ public class StatsManager : MonoBehaviour
                 break;
             case StatType.FireballRange:
                 UpdateFireballRange();
-                break;  
+                break;
         }
     }
 
     void UpdateHealth()
     {
         int statLevel = characterStats.GetStat(StatType.Health);
-        health.IncreaseFlatMaxHealth(Mathf.RoundToInt(statLevel * healthMultiplier));
+        health.IncreaseMaxHealth(Mathf.RoundToInt(statLevel * healthMultiplier));
     }
 
     void UpdateSpeed()
     {
         int statLevel = characterStats.GetStat(StatType.Speed);
-        movement.IncreaseFlatSpeed(statLevel * speedMultiplier);
+        movement.IncreaseSpeed(statLevel * speedMultiplier);
     }
 
     void UpdateStrength()
     {
         int statLevel = characterStats.GetStat(StatType.Strength);
-        attack.IncreaseFlatDamage(Mathf.RoundToInt(statLevel * strengthMultiplier));
+        attack.IncreaseAttackDamage(Mathf.RoundToInt(statLevel * strengthMultiplier));
     }
 
     void UpdateAttackRange()
     {
         int statLevel = characterStats.GetStat(StatType.AttackRange);
-        attack.IncreaseFlatRange(statLevel * attackRangeMultiplier);
+        attack.IncreaseAttackRange(statLevel * attackRangeMultiplier);
     }
 
     void UpdateFireballDamage()
     {
-    // TODO: Implement Fireball first  
+        // TODO: Implement Fireball first  
     }
 
     void UpdateFireballRange()
     {
-    // TODO: Implement Fireball first   
+        // TODO: Implement Fireball first   
     }
 
 }
