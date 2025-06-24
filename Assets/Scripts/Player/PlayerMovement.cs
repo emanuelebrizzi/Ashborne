@@ -6,12 +6,13 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody2D body;
     [SerializeField] float speed = 5f;
     [SerializeField] float jumpForce = 500f;
-    Collider2D groundCheck;
+    [SerializeField] Collider2D groundCheck;
+    [SerializeField] float coyoteTime = 0.05f;
+    float coyoteTimeCounter;
 
     void Start()
     {
         body = GetComponent<Rigidbody2D>();
-        groundCheck = GetComponent<Collider2D>();
 
         if (player == null)
         {
@@ -19,9 +20,17 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-
     void Update()
     {
+        if (IsGrounded())
+        {
+            coyoteTimeCounter = coyoteTime;
+        }
+        else
+        {
+            coyoteTimeCounter -= Time.deltaTime;
+        }
+
         if (Input.GetKeyDown(KeyCode.W))
         {
             Jump();
@@ -35,7 +44,6 @@ public class PlayerMovement : MonoBehaviour
         {
             player.PlayAnimation(PlayerState.IDLE, 0);
         }
-
     }
 
     private void Direction()
@@ -55,9 +63,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump()
     {
-        if (IsGrounded())
+        if (coyoteTimeCounter > 0f)
         {
             body.AddForce(new Vector2(0, jumpForce));
+            coyoteTimeCounter = 0f; 
         }
     }
 
