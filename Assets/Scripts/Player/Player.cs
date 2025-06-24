@@ -14,7 +14,6 @@ public class Player : MonoBehaviour, IDamageable
     public Attack RangedAttack => rangedAttack;
 
     public static Player Instance { get; private set; }
-
     public event Action<float> OnHealthChanged;
     public event Action<int> OnEchoesChanged;
 
@@ -30,7 +29,6 @@ public class Player : MonoBehaviour, IDamageable
             Destroy(gameObject);
             return;
         }
-
         health = GetComponent<Health>();
         ashEchoes = GetComponent<AshEchoes>();
 

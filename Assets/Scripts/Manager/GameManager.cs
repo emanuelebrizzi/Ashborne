@@ -22,7 +22,8 @@ public class GameManager : MonoBehaviour
         MainMenu,
         Playing,
         Paused,
-        Campfire
+        Campfire,
+        SkillTree
     }
 
     public GameState CurrentGameState { get; private set; }

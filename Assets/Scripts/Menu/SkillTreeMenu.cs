@@ -15,7 +15,7 @@ public class SkillTreeMenu : Panel
     [SerializeField] Button attackRangeButton;
     [SerializeField] Button fireballDamageButton;
     [SerializeField] Button fireballRangeButton;
-    [SerializeField] Button closeButton;
+    [SerializeField] Button backButton;
 
     [Header("UI Text Elements")]
     [SerializeField] TMPro.TextMeshProUGUI healthText;
@@ -33,8 +33,8 @@ public class SkillTreeMenu : Panel
     }
     protected override void SetupListeners()
     {
-        if (closeButton != null)
-            closeButton.onClick.AddListener(() => GameManager.Instance.ResumeGame());
+        if (backButton != null)
+            backButton.onClick.AddListener(() => GameManager.Instance.OpenCampfire());
         if (healthButton != null)
             healthButton.onClick.AddListener(() => skillTree.AquireStat(StatType.Health));
         if (speedButton != null)
@@ -82,4 +82,5 @@ public class SkillTreeMenu : Panel
                 break;
         }
     }
+    
 }

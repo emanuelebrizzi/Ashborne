@@ -7,6 +7,11 @@ public class PlayerAttack : MonoBehaviour
     [Header("Attack Settings")]
     [SerializeField] float attackDelay = 0.2f;
 
+    // TODO: Change after the merge
+    [SerializeField] int attackDamage = 10;
+    [SerializeField] float attackRange = 10;
+
+
     float nextAttackTime = 0f;
     bool isAttacking = false;
 
@@ -51,4 +56,14 @@ public class PlayerAttack : MonoBehaviour
 
         isAttacking = false;
     }
+
+    public void IncreaseFlatDamage(int value)
+    {
+        attackDamage += value;
+    }
+    public void IncreaseFlatRange(float value)
+    {
+        attackRange += value;
+    }
+
 }

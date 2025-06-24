@@ -52,6 +52,7 @@ public class CharacterLevelStats : MonoBehaviour
             {
                 stats[statType] = stat;
                 OnStatChanged?.Invoke(statType);
+                Debug.Log($"Payler {statType} {stat.value}");
                 return true;
             }
         }

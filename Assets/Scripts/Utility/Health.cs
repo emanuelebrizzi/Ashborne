@@ -40,4 +40,13 @@ public class Health : MonoBehaviour
         currentHealth += healthIncrease;
         maxHealth = newMaxHealth;
     }
+
+    public void IncreaseFlatMaxHealth(int health)
+    {
+        int newMaxHealth = maxHealth + health;
+        // Increase current health by the same proportion
+        int healthIncrease = newMaxHealth - maxHealth;
+        currentHealth += healthIncrease;
+        maxHealth = newMaxHealth;
+    }
 }
