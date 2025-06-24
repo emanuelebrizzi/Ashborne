@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
-using System.Collections.Generic;
 
 public class SkillTreeMenu : Panel
 {
@@ -82,5 +81,5 @@ public class SkillTreeMenu : Panel
                 break;
         }
     }
-    
+
 }
