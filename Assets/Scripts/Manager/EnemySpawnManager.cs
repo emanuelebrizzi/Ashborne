@@ -69,6 +69,8 @@ public class EnemySpawnManager : MonoBehaviour
 
         if (GameManager.Instance != null)
             GameManager.Instance.RegisterEnemySpawnManager(this);
+
+
     }
 
     void SetupEnemyObjectPool(EnemyWave wave)
@@ -128,6 +130,7 @@ public class EnemySpawnManager : MonoBehaviour
         if (Player.Instance != null)
         {
             Player.Instance.OnEchoesChanged += CheckEchoesThreshold;
+            Player.Instance.OnDeath += SpawnAllWaves;
         }
     }
 
