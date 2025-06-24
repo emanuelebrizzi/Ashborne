@@ -4,6 +4,7 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     [SerializeField] float speed = 3f;
+    [SerializeField] float lifetime = 5f;
     bool isFacingLeft = true;
     public Vector2 direction;
     public event Action<Collider2D> OnHit;
@@ -11,6 +12,8 @@ public class Projectile : MonoBehaviour
     void Start()
     {
         EntityUtility.FlipSpriteHorizontally(transform, direction.x, ref isFacingLeft);
+
+        Destroy(gameObject, lifetime);
     }
 
     void FixedUpdate()
@@ -20,12 +23,8 @@ public class Projectile : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
-        {
-            OnHit?.Invoke(collision);
-            OnHit = null; // Force unsubscription
-        }
-
+        OnHit?.Invoke(collision);
+        OnHit = null; // Force unsubscription
         Destroy(gameObject);
     }
 

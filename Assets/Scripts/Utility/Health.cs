@@ -16,14 +16,6 @@ public class Health : MonoBehaviour
         currentHealth = maxHealth;
     }
 
-    //TODO: Remove this function after the integration
-    public void TakeDamage(int damage)
-    {
-        currentHealth -= damage;
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-
-    }
-
     public void ApplyDamaage(int damage)
     {
         currentHealth -= damage;

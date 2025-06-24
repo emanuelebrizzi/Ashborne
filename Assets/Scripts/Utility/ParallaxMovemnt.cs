@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class ParallaxMovement : MonoBehaviour
 {
@@ -8,11 +9,6 @@ public class ParallaxMovement : MonoBehaviour
     [SerializeField] float parallaxEffectX = 0.5f;
     [SerializeField] float parallaxEffectY = 0f;
 
-    // TODO: After the tilemap of the main level is completed, we can assign these bounds
-    [Header("Optional: Bounds Limiting")]
-    public bool limitBounds = false;
-    public Vector2 minBounds = Vector2.zero;
-    public Vector2 maxBounds = Vector2.zero;
 
     Vector3 lastCameraPosition;
 
@@ -23,6 +19,8 @@ public class ParallaxMovement : MonoBehaviour
 
         if (cameraTransform != null)
             lastCameraPosition = cameraTransform.position;
+
+
     }
 
     void LateUpdate()
@@ -42,12 +40,6 @@ public class ParallaxMovement : MonoBehaviour
         );
 
         Vector3 newPosition = transform.position + parallaxMovement;
-
-        if (limitBounds)
-        {
-            newPosition.x = Mathf.Clamp(newPosition.x, minBounds.x, maxBounds.x);
-            newPosition.y = Mathf.Clamp(newPosition.y, minBounds.y, maxBounds.y);
-        }
 
         return newPosition;
     }

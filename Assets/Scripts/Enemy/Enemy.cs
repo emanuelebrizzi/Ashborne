@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(EnemyStateController))]
 [RequireComponent(typeof(EnemyAnimator))]
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IDamageable
 {
     [SerializeField] float speed = 3.0f;
     [SerializeField] int ashEchoesReward = 100;

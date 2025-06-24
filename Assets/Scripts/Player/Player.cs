@@ -1,13 +1,18 @@
 using System;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDamageable
 {
-    // This class follow the Singleton Pattern
     [SerializeField] SPUM_Prefabs spumPrefabs;
     Health health;
+    Attack meleeAttack;
+    Attack rangedAttack;
     AshEchoes ashEchoes;
     [SerializeField] PlayerDeathHandler playerDeathHandler;
+
+    public Attack MeleeAttack => meleeAttack;
+    public Attack RangedAttack => rangedAttack;
+
     public static Player Instance { get; private set; }
     public event Action<float> OnHealthChanged;
     public event Action<int> OnEchoesChanged;
@@ -26,7 +31,10 @@ public class Player : MonoBehaviour
         }
         health = GetComponent<Health>();
         ashEchoes = GetComponent<AshEchoes>();
+
+        health.OnDeath += Die;
     }
+
     void Start()
     {
         spumPrefabs = GetComponent<SPUM_Prefabs>();
@@ -40,6 +48,8 @@ public class Player : MonoBehaviour
             spumPrefabs.OverrideControllerInit();
         }
 
+        meleeAttack = GetComponent<MeleeAttack>();
+        rangedAttack = GetComponent<RangedAttack>();
     }
 
     public void PlayAnimation(PlayerState state, int index = 0)
@@ -52,34 +62,21 @@ public class Player : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        PlayAnimation(PlayerState.DAMAGED, 0);
-        health.TakeDamage(damage);
-        if (health.CurrentHealth <= 0)
-        {
-            OnHealthChanged?.Invoke(0);
-            Die();
-            OnEchoesChanged?.Invoke(ashEchoes.Current);
-        }
+        health.ApplyDamaage(damage);
         var newValue = (float)health.CurrentHealth / health.MaxHealth;
         OnHealthChanged?.Invoke(newValue);
-
+        PlayAnimation(PlayerState.DAMAGED, 0);
     }
 
     void Die()
     {
         PlayAnimation(PlayerState.DEATH, 0);
-
         if (playerDeathHandler != null)
         {
-
             playerDeathHandler.Die();
-            PlayAnimation(PlayerState.MOVE, 0); // Reset to move state after death animation
-        }
-        else
-        {
-            Debug.LogError("PlayerDeathHandler is not assigned to the player.");
         }
 
+        OnEchoesChanged?.Invoke(ashEchoes.Current);
     }
 
     public void AddAshEchoes(int amount)
