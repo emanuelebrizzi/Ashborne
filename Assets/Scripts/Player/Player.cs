@@ -33,7 +33,10 @@ public class Player : MonoBehaviour
 
         health = GetComponent<Health>();
         ashEchoes = GetComponent<AshEchoes>();
+
+        health.OnDeath += Die;
     }
+
     void Start()
     {
         spumPrefabs = GetComponent<SPUM_Prefabs>();
@@ -59,34 +62,21 @@ public class Player : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        PlayAnimation(PlayerState.DAMAGED, 0);
-        health.TakeDamage(damage);
-        if (health.CurrentHealth <= 0)
-        {
-            OnHealthChanged?.Invoke(0);
-            Die();
-            OnEchoesChanged?.Invoke(ashEchoes.Current);
-        }
+        health.ApplyDamaage(damage);
         var newValue = (float)health.CurrentHealth / health.MaxHealth;
         OnHealthChanged?.Invoke(newValue);
-
+        PlayAnimation(PlayerState.DAMAGED, 0);
     }
 
     void Die()
     {
         PlayAnimation(PlayerState.DEATH, 0);
-
         if (playerDeathHandler != null)
         {
-
             playerDeathHandler.Die();
-            PlayAnimation(PlayerState.MOVE, 0); // Reset to move state after death animation
-        }
-        else
-        {
-            Debug.LogError("PlayerDeathHandler is not assigned to the player.");
         }
 
+        OnEchoesChanged?.Invoke(ashEchoes.Current);
     }
 
     public void AddAshEchoes(int amount)

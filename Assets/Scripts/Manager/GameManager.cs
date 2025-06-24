@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] EnemySpawnManager enemySpawnManager;
     [SerializeField] AudioManager audioManager;
 
-    // TODO: move it in a SceneManager componenet
     [Header("Scene settings")]
     [SerializeField] string mainMenuSceneName = "MainMenu";
     [SerializeField] string mainSceneName = "LevelOne";
@@ -28,7 +27,6 @@ public class GameManager : MonoBehaviour
 
     public GameState CurrentGameState { get; private set; }
 
-
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -41,28 +39,6 @@ public class GameManager : MonoBehaviour
 
         SceneManager.sceneLoaded += OnSceneLoaded; // This is a built-in Unity event
         DontDestroyOnLoad(gameObject);
-    }
-
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (scene.name == mainMenuSceneName)
-        {
-            ChangeGameState(GameState.MainMenu);
-            if (audioManager != null) audioManager.PlayMenuMusic();
-        }
-        else if (scene.name == mainSceneName)
-        {
-            ChangeGameState(GameState.Playing);
-            if (audioManager != null) audioManager.PlayGameMusic();
-            if (enemySpawnManager != null)
-            {
-                enemySpawnManager.SpawnAllWaves();
-            }
-            else
-            {
-                Debug.LogWarning("EnemySpawnManager not initialized when trying to spawn enemies.");
-            }
-        }
     }
 
     void Update()
@@ -83,35 +59,35 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Probably we can extract methods from this method or use switch case statements
     public void ChangeGameState(GameState newState)
     {
         if (CurrentGameState == newState) return;
 
-        if (newState == GameState.Paused)
+        switch (newState)
         {
-            PauseGame();
-            UIManager.ShowPauseMenu();
+            case GameState.Paused:
+                PauseGame();
+                UIManager.ShowPauseMenu();
+                break;
+
+            case GameState.Campfire:
+                PauseGame();
+                UIManager.ShowCampfireMenu();
+                break;
+
+            case GameState.Playing:
+                UnpauseGame();
+                UIManager.ShowGameplayUI();
+                break;
+
+            default:
+                Debug.LogWarning($"Unhandled game state: {newState}");
+                break;
         }
-        else if (newState == GameState.Campfire)
-        {
-            PauseGame();
-            UIManager.ShowCampfireMenu();
-            Debug.Log("ShowCampfireMenu called");
-        }
-        else if (newState == GameState.Playing)
-        {
-            Debug.Log("UnpauseGame called");
-            UnpauseGame();
-            Debug.Log("ShowGameplayUI called");
-            UIManager.ShowGameplayUI();
-            if (enemySpawnManager != null)
-                enemySpawnManager.SpawnAllWaves();
-            else
-                Debug.LogWarning("enemySpawnManager is null!");
-        }
+
         CurrentGameState = newState;
     }
+
     void PauseGame()
     {
         Time.timeScale = 0f;
@@ -156,9 +132,7 @@ public class GameManager : MonoBehaviour
 
     public void ResumeGame()
     {
-        Debug.Log($"Before calling changegameste Im in {CurrentGameState}");
         ChangeGameState(GameState.Playing);
-        Debug.Log($"After calling changegameste Im in {CurrentGameState}");
         Debug.Log("Game Resumed");
     }
 
@@ -171,6 +145,22 @@ public class GameManager : MonoBehaviour
 #else
         Application.Quit();
 #endif
+    }
+
+    public void OpenCampfire()
+    {
+        ChangeGameState(GameState.Campfire);
+    }
+
+    public void OpenSkillTree()
+    {
+        UIManager.ShowSkillTreeMenu();
+    }
+
+    public void Rest()
+    {
+        // TODO: Reset Spwan and full Hero's health
+        enemySpawnManager.SpawnAllWaves();
     }
 
     public void RegisterEnemySpawnManager(EnemySpawnManager manager)
@@ -193,19 +183,26 @@ public class GameManager : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    public void OpenCampfire()
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        ChangeGameState(GameState.Campfire);
-    }
-
-    public void OpenSkillTree()
-    {
-        UIManager.ShowSkillTreeMenu();
-    }
-
-    public void Rest()
-    {
-        // TODO: Reset Spwan and full Hero's health
+        if (scene.name == mainMenuSceneName)
+        {
+            ChangeGameState(GameState.MainMenu);
+            if (audioManager != null) audioManager.PlayMenuMusic();
+        }
+        else if (scene.name == mainSceneName)
+        {
+            ChangeGameState(GameState.Playing);
+            if (audioManager != null) audioManager.PlayGameMusic();
+            if (enemySpawnManager != null)
+            {
+                enemySpawnManager.SpawnAllWaves();
+            }
+            else
+            {
+                Debug.LogWarning("EnemySpawnManager not initialized when trying to spawn enemies.");
+            }
+        }
     }
 
 }
