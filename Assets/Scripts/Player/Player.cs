@@ -101,6 +101,12 @@ public class Player : MonoBehaviour, IDamageable
         return ashEchoes.Current;
     }
 
+    public void Heal()
+    {
+        health.ResetHealth();
+        OnHealthChanged?.Invoke(health.CurrentHealth);
+    }
+
     public AshEchoes AshEchoes { get { return ashEchoes; } }
     public Health Health { get { return health; } }
 

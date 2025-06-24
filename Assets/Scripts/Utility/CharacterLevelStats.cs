@@ -25,7 +25,7 @@ public class CharacterLevelStats : MonoBehaviour
             return false;
         }
 
-        public bool IsMaxed() => value >= maxValue;
+        public readonly bool IsMaxed() => value >= maxValue;
     }
 
     private Dictionary<StatType, LevelStat> stats;

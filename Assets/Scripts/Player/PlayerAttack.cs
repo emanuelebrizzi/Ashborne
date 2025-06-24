@@ -7,11 +7,6 @@ public class PlayerAttack : MonoBehaviour
     [Header("Attack Settings")]
     [SerializeField] float attackDelay = 0.2f;
 
-    // TODO: Change after the merge
-    [SerializeField] int attackDamage = 10;
-    [SerializeField] float attackRange = 10;
-
-
     float nextAttackTime = 0f;
     bool isAttacking = false;
 
@@ -31,7 +26,7 @@ public class PlayerAttack : MonoBehaviour
         }
     }
 
-    private void StartAttack()
+    void StartAttack()
     {
         isAttacking = true;
         nextAttackTime = Time.time + Player.Instance.MeleeAttack.AttackCooldown;
@@ -41,7 +36,7 @@ public class PlayerAttack : MonoBehaviour
     }
 
 
-    private void RangedAttack()
+    void RangedAttack()
     {
         isAttacking = true;
         nextAttackTime = Time.time + Player.Instance.RangedAttack.AttackCooldown;
@@ -50,20 +45,10 @@ public class PlayerAttack : MonoBehaviour
         StartCoroutine(PerformAttackAfterDelay());
     }
 
-    private IEnumerator PerformAttackAfterDelay()
+    IEnumerator PerformAttackAfterDelay()
     {
         yield return new WaitForSeconds(attackDelay);
 
         isAttacking = false;
     }
-
-    public void IncreaseFlatDamage(int value)
-    {
-        attackDamage += value;
-    }
-    public void IncreaseFlatRange(float value)
-    {
-        attackRange += value;
-    }
-
 }

@@ -160,7 +160,7 @@ public class GameManager : MonoBehaviour
 
     public void Rest()
     {
-        // TODO: Reset Spwan and full Hero's health
+        Player.Instance.Heal();
         enemySpawnManager.SpawnAllWaves();
     }
 

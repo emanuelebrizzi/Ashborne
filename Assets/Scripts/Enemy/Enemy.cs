@@ -101,8 +101,8 @@ public class Enemy : MonoBehaviour, IDamageable
     {
         ashEchoesReward += 500;
         speed *= speedMultiplier;
-        Attack.IncreaseDamage(damageMultiplier);
-        health.IncreaseMaxHealth(healthMultiplier);
+        Attack.IncreaseAttackDamage(Mathf.RoundToInt(Attack.AttackDamage * damageMultiplier));
+        health.IncreaseMaxHealth(Mathf.RoundToInt(health.CurrentHealth * healthMultiplier));
         ChangeVisualAspect();
 
         Debug.Log($"Enemy {Id} empowered!");
