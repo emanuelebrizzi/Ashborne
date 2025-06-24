@@ -14,6 +14,7 @@ public class SkillTreeMenu : Panel
     [SerializeField] Button attackRangeButton;
     [SerializeField] Button fireballDamageButton;
     [SerializeField] Button fireballRangeButton;
+    [SerializeField] Button fireballAcquireButton;
     [SerializeField] Button backButton;
 
     [Header("UI Text Elements")]
@@ -23,12 +24,15 @@ public class SkillTreeMenu : Panel
     [SerializeField] TMPro.TextMeshProUGUI attackRangeText;
     [SerializeField] TMPro.TextMeshProUGUI fireballDamageText;
     [SerializeField] TMPro.TextMeshProUGUI fireballRangeText;
+    [SerializeField] TMPro.TextMeshProUGUI fireballAcquireText;
+
 
     private void Start()
     {
         SetupListeners();
         UpdateAllText();
         characterStats.OnStatChanged += UpdateText;
+        fireballAcquireText.text = $"Aquire Fireball\nCost: {skillTree.GetFireballCost()} Echoes";
     }
     protected override void SetupListeners()
     {
@@ -46,14 +50,15 @@ public class SkillTreeMenu : Panel
             fireballDamageButton.onClick.AddListener(() => skillTree.AquireStat(StatType.FireballDamage));
         if (fireballRangeButton != null)
             fireballRangeButton.onClick.AddListener(() => skillTree.AquireStat(StatType.FireballRange));
+        if (fireballRangeButton != null)
+            fireballAcquireButton.onClick.AddListener(() => skillTree.AquireFireball());
     }
 
     void UpdateAllText()
     {
         foreach (StatType statType in Enum.GetValues(typeof(StatType)))
-        {
-            UpdateText(statType);
-        }
+            if (statType != StatType.Fireball)
+                UpdateText(statType);
     }
 
     void UpdateText(StatType statType)
@@ -79,7 +84,19 @@ public class SkillTreeMenu : Panel
             case StatType.FireballRange:
                 fireballRangeText.text = text;
                 break;
+            case StatType.Fireball:
+                FireballAcquired();
+                break;
         }
+    }
+    void FireballAcquired()
+    {
+        fireballAcquireButton.gameObject.SetActive(false);
+        fireballAcquireText.gameObject.SetActive(false);
+        fireballDamageText.gameObject.SetActive(true);
+        fireballDamageButton.gameObject.SetActive(true);
+        fireballRangeButton.gameObject.SetActive(true);
+        fireballRangeText.gameObject.SetActive(true);
     }
 
 }
