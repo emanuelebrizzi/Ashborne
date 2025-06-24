@@ -16,12 +16,6 @@ public class SkillTree : MonoBehaviour
         }
     }
 
-    public void AquireStat(string statType)
-    {
-        Enum.TryParse(statType, out StatType parsedStatType);
-        AquireStat(parsedStatType);
-    }
-
     public int GetSkillCost(StatType statType)
     {
         return (characterStats.GetStat(statType) + 1) * 100;
