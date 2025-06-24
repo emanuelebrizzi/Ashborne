@@ -8,29 +8,34 @@ public class PlayerDeathHandler : MonoBehaviour
 
     public void Die()
     {
-        DropAshEchoes();
+        DropAshEchoes(heroObject.transform);
         Respawn();
     }
-    private void Respawn()
+
+    public void FallDeath(Transform fallDeathEchoDropPoint)
+    {
+        DropAshEchoes(fallDeathEchoDropPoint);
+        Respawn();
+    }
+
+    void Respawn()
     {
         heroSpawnManager.SpawnHero();
         hero.Health.ResetHealth();
     }
-
-    private void DropAshEchoes()
-    {
+    void DropAshEchoes(Transform dropPosition)
+        {
         AshEchoes ashEchoes = hero.AshEchoes;
 
         if (ashEchoes != null)
         {
-            ashEchoes.DropEchoes(heroObject.transform);
+            ashEchoes.DropEchoes(dropPosition);
         }
         else
         {
             Debug.LogWarning("AshEchoes component not found on hero. No echoes dropped.");
         }
     }
-
 
 }
 
