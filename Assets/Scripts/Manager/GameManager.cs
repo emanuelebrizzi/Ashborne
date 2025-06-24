@@ -23,7 +23,8 @@ public class GameManager : MonoBehaviour
         MainMenu,
         Playing,
         Paused,
-        Campfire
+        Campfire,
+        SkillTree
     }
 
     public GameState CurrentGameState { get; private set; }
@@ -98,8 +99,12 @@ public class GameManager : MonoBehaviour
             PauseGame();
             UIManager.ShowCampfireMenu();
             Debug.Log("ShowCampfireMenu called");
-        }
-        else if (newState == GameState.Playing)
+        }else if (newState == GameState.SkillTree)
+        {
+            PauseGame();
+            UIManager.ShowSkillTreeMenu();
+            Debug.Log("ShowSkillTreeMenu called");
+        }else if (newState == GameState.Playing)
         {
             Debug.Log("UnpauseGame called");
             UnpauseGame();
@@ -200,7 +205,7 @@ public class GameManager : MonoBehaviour
 
     public void OpenSkillTree()
     {
-        UIManager.ShowSkillTreeMenu();
+        ChangeGameState(GameState.SkillTree);
     }
 
     public void Rest()
