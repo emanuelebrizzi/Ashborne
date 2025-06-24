@@ -81,6 +81,11 @@ public class GameManager : MonoBehaviour
                 UIManager.ShowGameplayUI();
                 break;
 
+            case GameState.SkillTree:
+                PauseGame();
+                UIManager.ShowSkillTreeMenu();
+                break;
+
             default:
                 Debug.LogWarning($"Unhandled game state: {newState}");
                 break;
@@ -155,7 +160,7 @@ public class GameManager : MonoBehaviour
 
     public void OpenSkillTree()
     {
-        UIManager.ShowSkillTreeMenu();
+        ChangeGameState(GameState.SkillTree);
     }
 
     public void Rest()
