@@ -1,13 +1,17 @@
 using System;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDamageable
 {
-    // This class follow the Singleton Pattern
     [SerializeField] SPUM_Prefabs spumPrefabs;
     Health health;
+    Attack meleeAttack;
+    Attack rangedAttack;
     AshEchoes ashEchoes;
     [SerializeField] PlayerDeathHandler playerDeathHandler;
+
+    public Attack MeleeAttack => meleeAttack;
+    public Attack RangedAttack => rangedAttack;
 
     public static Player Instance { get; private set; }
 
@@ -20,10 +24,6 @@ public class Player : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-
-            // Optional: uncomment if you want the player to persist between scenes
-            // Maybe it's usefull later 
-            // DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -50,6 +50,8 @@ public class Player : MonoBehaviour
             spumPrefabs.OverrideControllerInit();
         }
 
+        meleeAttack = GetComponent<MeleeAttack>();
+        rangedAttack = GetComponent<RangedAttack>();
     }
 
     public void PlayAnimation(PlayerState state, int index = 0)

@@ -12,10 +12,10 @@ public abstract class Attack : MonoBehaviour
 
     protected void OnHit(Collider2D target)
     {
-        if (target.gameObject.layer == LayerMask.NameToLayer("Player"))
+        if (target.TryGetComponent<IDamageable>(out var damageable))
         {
-            Player.Instance.TakeDamage(damageAmount);
-            Debug.Log($"RangedAttack: Dealt {damageAmount} damage to player.");
+            damageable.TakeDamage(damageAmount);
+            Debug.Log($"Attack: Dealt {damageAmount} damage to {target.name}.");
         }
     }
 

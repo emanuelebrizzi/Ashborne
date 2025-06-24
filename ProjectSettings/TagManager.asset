@@ -17,8 +17,8 @@ TagManager:
   - Enemy
   - Campfire
   - Ash
-  - Projectile
-  - 
+  - PlayerAttack
+  - EnemyAttack
   - 
   - 
   - 

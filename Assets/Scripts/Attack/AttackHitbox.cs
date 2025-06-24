@@ -24,10 +24,8 @@ public class AttackHitbox : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other)
     {
         if (!canDealDamage) return;
-        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
-        {
-            OnHit?.Invoke(other);
-            canDealDamage = false;
-        }
+
+        OnHit?.Invoke(other);
+        canDealDamage = false;
     }
 }
