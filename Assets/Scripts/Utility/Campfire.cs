@@ -25,8 +25,7 @@ public class Campfire : MonoBehaviour, IInteractable
 
         if (IsInRange && Input.GetKeyDown(KeyCode.E))
         {
-            SetSpawnPoint();
-            GameManager.Instance.OpenCampfire();
+            Interact();
         }
 
     }
@@ -69,7 +68,8 @@ public class Campfire : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-
+        SetSpawnPoint();
+        GameManager.Instance.OpenCampfire();
     }
 
     public bool IsInteractable()

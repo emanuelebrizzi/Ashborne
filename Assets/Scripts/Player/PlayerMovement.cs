@@ -4,8 +4,8 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] Player player;
     Rigidbody2D body;
-    readonly float speed = 5f;
-    readonly float jumpForce = 500f;
+    [SerializeField] float speed = 5f;
+    [SerializeField] float jumpForce = 500f;
     Collider2D groundCheck;
 
     void Start()
@@ -64,6 +64,11 @@ public class PlayerMovement : MonoBehaviour
     private bool IsGrounded()
     {
         return groundCheck.IsTouchingLayers(LayerMask.GetMask("Ground"));
+    }
+
+    public void IncreaseFlatSpeed(float value)
+    {
+        speed += value;
     }
 
 }

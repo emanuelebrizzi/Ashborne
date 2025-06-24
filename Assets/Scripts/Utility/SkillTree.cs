@@ -9,9 +9,10 @@ public class SkillTree : MonoBehaviour
     {
         if (IsBuyable(statType))
         {
+            int cost = GetSkillCost(statType);
             if (characterStats.IncreaseStat(statType, 1))
             {
-                player.RemoveEchoes(GetSkillCost(statType));
+                player.RemoveEchoes(cost);
             }
         }
     }
@@ -21,5 +22,4 @@ public class SkillTree : MonoBehaviour
         return (characterStats.GetStat(statType) + 1) * 100;
     }
     public bool IsBuyable(StatType statType) => (GetSkillCost(statType) <= player.GetEchoes() && !characterStats.IsMaxed(statType));
-
 }

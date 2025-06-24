@@ -4,26 +4,27 @@ public class StatsManager : MonoBehaviour
 {
     public static StatsManager Instance { get; private set; }
 
-    [Header("Character Level Stats")]
-    [SerializeField] private CharacterLevelStats characterStats;
+    [Header("Player ")]
+    [SerializeField] Health health;
+    [SerializeField] PlayerMovement movement;
+    [SerializeField] PlayerAttack attack;
 
-    [Header("Player Base Stats")]
-    static readonly int HEALTH_BASE = 100;
-    static readonly float SPEED_BASE = 5f;
-    static readonly int STRENGTH_BASE = 3;
-    static readonly float ATTACK_RANGE_BASE = 1f;
-    static readonly int FIREBALL_DAMAGE_BASE = 3;
-    static readonly float FIREBALL_RANGE_BASE = 5f;
+    [Header("Character Level Stats")]
+    [SerializeField] CharacterLevelStats characterStats;
 
     [Header("Player Multiplicator Stats per Stat Level")]
-    static readonly int HEALTH_MULT = 100;
-    static readonly float SPEED_MULT = 0.5f;
-    static readonly int STRENGTH_MULT = 2;
-    static readonly float ATTACK_RANGE_MULT = 0.2f;
-    static readonly int FIREBALL_DAMAGE_MULT = 1;
-    static readonly float FIREBALL_RANGE_MULT = 0.5f;
+    [SerializeField] int healthMultiplier = 50;
+    [SerializeField] float speedMultiplier = 0.5f;
+    [SerializeField] int strengthMultiplier = 2;
+    [SerializeField] float attackRangeMultiplier = 0.2f;
+    [SerializeField] int fireballDamageMultiplier = 1;
+    [SerializeField] float fireballRangeMultiplier = 0.5f;
 
-    private void Awake()
+    void Start()
+    {
+        characterStats.OnStatChanged += UpdateStat;
+    }
+    void Awake()
     {
         if (Instance == null)
         {
@@ -36,10 +37,64 @@ public class StatsManager : MonoBehaviour
         }
     }
 
-    public int GetHealth() => HEALTH_BASE + characterStats.GetStat(StatType.Health) * HEALTH_MULT;
-    public float GetSpeed() => SPEED_BASE + characterStats.GetStat(StatType.Speed) * SPEED_MULT;
-    public int GetAttackDamage() => STRENGTH_BASE + characterStats.GetStat(StatType.Strength) * STRENGTH_MULT;
-    public float GetAttackRange() => ATTACK_RANGE_BASE + characterStats.GetStat(StatType.AttackRange) * ATTACK_RANGE_MULT;
-    public int GetFireballDamage() => FIREBALL_DAMAGE_BASE + characterStats.GetStat(StatType.FireballDamage) * FIREBALL_DAMAGE_MULT;
-    public float GetFireballRange() => FIREBALL_RANGE_BASE + characterStats.GetStat(StatType.FireballRange) * FIREBALL_RANGE_MULT;
+ void UpdateStat(StatType statType)
+    {
+        switch (statType)
+        {
+            case StatType.Health:
+                UpdateHealth();
+                break;
+            case StatType.Speed:
+                UpdateSpeed();
+                break;
+            case StatType.Strength:
+                UpdateStrength();
+                break;
+            case StatType.AttackRange:
+                UpdateAttackRange();
+                break;
+            case StatType.FireballDamage:
+                UpdateFireballDamage();
+                break;
+            case StatType.FireballRange:
+                UpdateFireballRange();
+                break;  
+        }
+    }
+
+    void UpdateHealth()
+    {
+        int statLevel = characterStats.GetStat(StatType.Health);
+        health.IncreaseFlatMaxHealth(Mathf.RoundToInt(statLevel * healthMultiplier));
+    }
+
+    void UpdateSpeed()
+    {
+        int statLevel = characterStats.GetStat(StatType.Speed);
+        movement.IncreaseFlatSpeed(statLevel * speedMultiplier);
+    }
+
+    void UpdateStrength()
+    {
+        int statLevel = characterStats.GetStat(StatType.Strength);
+        attack.IncreaseFlatDamage(Mathf.RoundToInt(statLevel * strengthMultiplier));
+    }
+
+    void UpdateAttackRange()
+    {
+        int statLevel = characterStats.GetStat(StatType.AttackRange);
+        attack.IncreaseFlatRange(statLevel * attackRangeMultiplier);
+    }
+
+    void UpdateFireballDamage()
+    {
+    // TODO: Implement Fireball first  
+    }
+
+    void UpdateFireballRange()
+    {
+    // TODO: Implement Fireball first   
+    }
+
 }
+

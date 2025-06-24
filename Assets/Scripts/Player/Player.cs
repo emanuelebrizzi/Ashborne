@@ -8,9 +8,7 @@ public class Player : MonoBehaviour
     Health health;
     AshEchoes ashEchoes;
     [SerializeField] PlayerDeathHandler playerDeathHandler;
-
     public static Player Instance { get; private set; }
-
     public event Action<float> OnHealthChanged;
     public event Action<int> OnEchoesChanged;
 
@@ -20,17 +18,12 @@ public class Player : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-
-            // Optional: uncomment if you want the player to persist between scenes
-            // Maybe it's usefull later 
-            // DontDestroyOnLoad(gameObject);
         }
         else
         {
             Destroy(gameObject);
             return;
         }
-
         health = GetComponent<Health>();
         ashEchoes = GetComponent<AshEchoes>();
     }

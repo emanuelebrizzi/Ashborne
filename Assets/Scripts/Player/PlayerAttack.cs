@@ -62,4 +62,13 @@ public class PlayerAttack : MonoBehaviour
         isAttacking = false;
     }
 
+    public void IncreaseFlatDamage(int value)
+    {
+        attackDamage += value;
+    }
+    public void IncreaseFlatRange(float value)
+    {
+        attackRange += value;
+    }
+
 }
