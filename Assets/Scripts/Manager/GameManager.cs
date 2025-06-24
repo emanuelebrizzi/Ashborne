@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour
 
     void TogglePauseMenu()
     {
-        if (CurrentGameState != GameState.Paused && Input.GetKeyDown(KeyCode.Escape))
+        if (CurrentGameState == GameState.Playing && Input.GetKeyDown(KeyCode.Escape))
         {
             ChangeGameState(GameState.Paused);
         }
@@ -96,12 +96,19 @@ public class GameManager : MonoBehaviour
         else if (newState == GameState.Campfire)
         {
             PauseGame();
+            UIManager.ShowCampfireMenu();
+            Debug.Log("ShowCampfireMenu called");
         }
         else if (newState == GameState.Playing)
         {
+            Debug.Log("UnpauseGame called");
             UnpauseGame();
+            Debug.Log("ShowGameplayUI called");
             UIManager.ShowGameplayUI();
-            enemySpawnManager.SpawnAllWaves();
+            if (enemySpawnManager != null)
+                enemySpawnManager.SpawnAllWaves();
+            else
+                Debug.LogWarning("enemySpawnManager is null!");
         }
         CurrentGameState = newState;
     }
@@ -149,7 +156,9 @@ public class GameManager : MonoBehaviour
 
     public void ResumeGame()
     {
+        Debug.Log($"Before calling changegameste Im in {CurrentGameState}");
         ChangeGameState(GameState.Playing);
+        Debug.Log($"After calling changegameste Im in {CurrentGameState}");
         Debug.Log("Game Resumed");
     }
 
@@ -187,8 +196,6 @@ public class GameManager : MonoBehaviour
     public void OpenCampfire()
     {
         ChangeGameState(GameState.Campfire);
-        UIManager.ShowCampfireMenu();
-
     }
 
     public void OpenSkillTree()
@@ -197,7 +204,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void Rest()
-    { 
+    {
         // TODO: Reset Spwan and full Hero's health
     }
 

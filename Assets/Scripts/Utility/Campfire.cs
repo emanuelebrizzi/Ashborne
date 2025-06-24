@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class Campfire : MonoBehaviour, IInteractable
 {
-    [SerializeField] GameManager gameManager; // Reference to the GameManager
     [SerializeField] HeroSpawnManager heroSpawnManager; // Reference to the SpawnPointManager
     [SerializeField] Transform spawnPoint;
     [SerializeField] GameObject campfirePrefab;
@@ -27,7 +26,7 @@ public class Campfire : MonoBehaviour, IInteractable
         if (IsInRange && Input.GetKeyDown(KeyCode.E))
         {
             SetSpawnPoint();
-            gameManager.OpenCampfire();
+            GameManager.Instance.OpenCampfire();
         }
 
     }
