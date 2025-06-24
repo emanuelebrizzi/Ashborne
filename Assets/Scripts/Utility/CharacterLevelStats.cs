@@ -35,11 +35,11 @@ public class CharacterLevelStats : MonoBehaviour
     {
         stats = new Dictionary<StatType, LevelStat>
         {
-            { StatType.Health,         new LevelStat(0, 3) },
+            { StatType.Health,         new LevelStat(0, 5) },
             { StatType.Speed,          new LevelStat(0, 3) },
-            { StatType.Strength,       new LevelStat(0, 3) },
+            { StatType.Strength,       new LevelStat(0, 5) },
             { StatType.AttackRange,    new LevelStat(0, 2) },
-            { StatType.FireballDamage, new LevelStat(0, 3) },
+            { StatType.FireballDamage, new LevelStat(0, 5) },
             { StatType.FireballRange,  new LevelStat(0, 2) }
         };
     }

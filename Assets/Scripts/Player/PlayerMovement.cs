@@ -31,42 +31,35 @@ public class PlayerMovement : MonoBehaviour
             coyoteTimeCounter -= Time.deltaTime;
         }
 
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            Jump();
-        }
-
-        if (Input.GetAxis("Horizontal") != 0)
-        {
-            Direction();
-        }
-        else
-        {
-            player.PlayAnimation(PlayerState.IDLE, 0);
-        }
     }
 
-    private void Direction()
+    public void Move(float direction)
     {
-        body.linearVelocity = new Vector2(Input.GetAxis("Horizontal") * speed, body.linearVelocity.y);
+        body.linearVelocity = new Vector2(direction * speed, body.linearVelocity.y);
         player.PlayAnimation(PlayerState.MOVE, 0);
-        if (Input.GetAxis("Horizontal") > 0)
+        if (direction  > 0)
         {
             transform.localScale = new Vector3(-2, 2, 1);
         }
-        else if (Input.GetAxis("Horizontal") < 0)
+        else if (direction  < 0)
         {
             transform.localScale = new Vector3(2, 2, 1);
         }
 
     }
+    
+    public void Stop()
+        {
+            body.linearVelocity = new Vector2(0, body.linearVelocity.y);
+            player.PlayAnimation(PlayerState.IDLE, 0);
+        }
 
-    private void Jump()
+    public void Jump()
     {
         if (coyoteTimeCounter > 0f)
         {
             body.AddForce(new Vector2(0, jumpForce));
-            coyoteTimeCounter = 0f; 
+            coyoteTimeCounter = 0f;
         }
     }
 
