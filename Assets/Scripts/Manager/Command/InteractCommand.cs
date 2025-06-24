@@ -1,19 +1,28 @@
 using UnityEngine;
+
 public class InteractCommand : ICommand
 {
     public CommandType Type => CommandType.Instant;
-    private IInteractable interactable;
+    Transform playerTransform;
 
-    public InteractCommand(IInteractable target)
+    public InteractCommand(Transform playerTransform)
     {
-        interactable = target;
+        this.playerTransform = playerTransform;
     }
 
     public void Execute()
     {
-        if (interactable.IsInteractable())
-        {
-            interactable.Interact();
-        }
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(playerTransform.position,1);
+
+            foreach (var collider in colliders)
+            {
+                IInteractable interactable = collider.GetComponent<IInteractable>();
+                if (interactable != null && interactable.IsInteractable())
+                {
+                    interactable.Interact();
+                    break;
+                }
+            }
+        
     }
 }
