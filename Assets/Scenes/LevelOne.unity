@@ -10070,6 +10070,14 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0.033
       objectReference: {fileID: 0}
+    - target: {fileID: 4001902950969396155, guid: 7667ac64e3837e14aa2553d1d737d885, type: 3}
+      propertyPath: cameraTransform
+      value: 
+      objectReference: {fileID: 1776099897}
+    - target: {fileID: 4001902950969396155, guid: 7667ac64e3837e14aa2553d1d737d885, type: 3}
+      propertyPath: referenceTilemap
+      value: 
+      objectReference: {fileID: 2041307926}
     - target: {fileID: 6102319340095025863, guid: 7667ac64e3837e14aa2553d1d737d885, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.9348
@@ -10094,6 +10102,14 @@ PrefabInstance:
       propertyPath: m_SpriteTileMode
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8911510921350410289, guid: 7667ac64e3837e14aa2553d1d737d885, type: 3}
+      propertyPath: cameraTransform
+      value: 
+      objectReference: {fileID: 1776099897}
+    - target: {fileID: 8911510921350410289, guid: 7667ac64e3837e14aa2553d1d737d885, type: 3}
+      propertyPath: referenceTilemap
+      value: 
+      objectReference: {fileID: 2041307926}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
