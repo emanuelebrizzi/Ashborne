@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] Player player;
     Rigidbody2D body;
     [SerializeField] float speed = 5f;
     [SerializeField] float jumpForce = 500f;
@@ -14,11 +13,6 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         body = GetComponent<Rigidbody2D>();
-
-        if (player == null)
-        {
-            player = GetComponent<Player>();
-        }
     }
 
     void Update()
@@ -37,7 +31,7 @@ public class PlayerMovement : MonoBehaviour
     public void Move(float direction)
     {
         body.linearVelocity = new Vector2(direction * speed, body.linearVelocity.y);
-        player.PlayAnimation(PlayerState.MOVE, 0);
+        Player.Instance.PlayAnimation(PlayerState.MOVE, 0);
         if (direction  > 0)
         {
             transform.localScale = new Vector3(-2, 2, 1);
@@ -52,7 +46,7 @@ public class PlayerMovement : MonoBehaviour
     public void Stop()
         {
             body.linearVelocity = new Vector2(0, body.linearVelocity.y);
-            player.PlayAnimation(PlayerState.IDLE, 0);
+            Player.Instance.PlayAnimation(PlayerState.IDLE, 0);
         }
 
     public void Jump()

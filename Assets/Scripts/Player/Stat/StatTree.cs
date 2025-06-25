@@ -4,7 +4,6 @@ using System;
 public class StatTree : MonoBehaviour
 {
     [SerializeField] CharacterLevelStats characterStats;
-    [SerializeField] Player player;
     [SerializeField] int energyBallCost = 200;
 
     public void AquireStat(StatType statType)
@@ -14,18 +13,18 @@ public class StatTree : MonoBehaviour
             int cost = GetStatCost(statType);
             if (characterStats.IncreaseStat(statType, 1))
             {
-                player.RemoveEchoes(cost);
+                Player.Instance.RemoveEchoes(cost);
             }
         }
     }
 
     public void AquireEnergyBall()
     {
-        if (energyBallCost <= player.GetEchoes() && !characterStats.IsMaxed(StatType.EnergyBall))
+        if (energyBallCost <= Player.Instance.GetEchoes() && !characterStats.IsMaxed(StatType.EnergyBall))
         {
             if (characterStats.IncreaseStat(StatType.EnergyBall, 1))
             {
-                player.RemoveEchoes(energyBallCost);
+                Player.Instance.RemoveEchoes(energyBallCost);
             }
         }
     }
@@ -40,5 +39,5 @@ public class StatTree : MonoBehaviour
         return energyBallCost;
     }
 
-    public bool IsBuyable(StatType statType) => GetStatCost(statType) <= player.GetEchoes() && !characterStats.IsMaxed(statType);
+    public bool IsBuyable(StatType statType) => GetStatCost(statType) <= Player.Instance.GetEchoes() && !characterStats.IsMaxed(statType);
 }

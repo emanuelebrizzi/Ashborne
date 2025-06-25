@@ -3,7 +3,6 @@ using UnityEngine;
 public class PlayerDeathHandler : MonoBehaviour
 {
     [SerializeField] HeroSpawnManager heroSpawnManager;
-    [SerializeField] Player hero;
     [SerializeField] GameObject heroObject;
 
     public void Die()
@@ -21,11 +20,11 @@ public class PlayerDeathHandler : MonoBehaviour
     void Respawn()
     {
         heroSpawnManager.SpawnHero();
-        hero.Health.ResetHealth();
+        Player.Instance.Health.ResetHealth();
     }
     void DropAshEchoes(Transform dropPosition)
         {
-        AshEchoes ashEchoes = hero.AshEchoes;
+        AshEchoes ashEchoes = Player.Instance.AshEchoes;
 
         if (ashEchoes != null)
         {

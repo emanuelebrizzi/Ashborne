@@ -3,8 +3,6 @@ using UnityEngine;
 public class StatsManager : MonoBehaviour
 {
     [Header("Player ")]
-    [SerializeField] Health health;
-    [SerializeField] Attack attack;
     [SerializeField] PlayerMovement movement;
 
     [Header("Character Level Stats")]
@@ -66,7 +64,7 @@ public class StatsManager : MonoBehaviour
     void UpdateHealth()
     {
         int statLevel = characterStats.GetStat(StatType.Health);
-        health.IncreaseMaxHealth(Mathf.RoundToInt(statLevel * healthMultiplier));
+        Player.Instance.Health.IncreaseMaxHealth(Mathf.RoundToInt(statLevel * healthMultiplier));
     }
 
     void UpdateSpeed()
@@ -78,7 +76,7 @@ public class StatsManager : MonoBehaviour
     void UpdateStrength()
     {
         int statLevel = characterStats.GetStat(StatType.Strength);
-        attack.IncreaseAttackDamage(Mathf.RoundToInt(statLevel * strengthMultiplier));
+        Player.Instance.MeleeAttack.IncreaseAttackDamage(Mathf.RoundToInt(statLevel * strengthMultiplier));
     }
 
     void UnlockEnergyBall()

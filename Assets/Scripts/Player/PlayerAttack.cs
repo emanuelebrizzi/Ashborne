@@ -33,7 +33,6 @@ public class PlayerAttack : MonoBehaviour
         {
             isAttacking = true;
             nextAttackTime = Time.time + Player.Instance.RangedAttack.AttackCooldown;
-            Player.Instance.PlayAnimation(PlayerState.ATTACK, 1);
             StartCoroutine(PerformAttackAfterDelay());
             Player.Instance.RangedAttack.PerformAttack();
         }
