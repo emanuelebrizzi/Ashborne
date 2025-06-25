@@ -21,7 +21,7 @@ public abstract class Attack : MonoBehaviour
         }
     }
 
-    public virtual void PerformAttack() { }
+    public abstract void PerformAttack();
 
     public void IncreaseAttackDamage(int value)
     {

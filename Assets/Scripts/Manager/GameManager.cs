@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
 
-        SceneManager.sceneLoaded += OnSceneLoaded; // This is a built-in Unity event
+        SceneManager.sceneLoaded += OnSceneLoaded;
         DontDestroyOnLoad(gameObject);
     }
 
