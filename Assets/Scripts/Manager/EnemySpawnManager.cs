@@ -197,11 +197,11 @@ public class EnemySpawnManager : MonoBehaviour
 
     void CheckPlayerStatistics(StatType statType)
     {
-        if (!mageWaveSpawned && statType == StatType.EnergyBallDamage)
+        if (!mageWaveSpawned && statType == StatType.EnergyBall)
         {
             mageWaveSpawned = true;
             Spawn(enemyWaves[1]);
-            Debug.Log($"Player got the fireball! Spawning mage wave to counter it!");
+            Debug.Log($"Player got the energy ball! Spawning mage wave to counter it!");
         }
 
         appliedPowerUp++;
