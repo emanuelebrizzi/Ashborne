@@ -1,10 +1,10 @@
 using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PlayerCommandManager : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] CommandManager commandManager;
     [SerializeField] PlayerMovement playerMovement;
     [SerializeField] PlayerAttack playerAttack;
     [SerializeField] Transform playerTransform;
@@ -16,14 +16,47 @@ public class PlayerCommandManager : MonoBehaviour
     [SerializeField] KeyCode meleeAttackKey = KeyCode.Q;
     [SerializeField] KeyCode rangedAttackKey = KeyCode.F;
     [SerializeField] KeyCode interactKey = KeyCode.E;
+    Dictionary<KeyCode, ICommand> commandBindings = new Dictionary<KeyCode, ICommand>();
 
     void Start()
     {
-        commandManager.BindKey(moveLeftKey, new MoveLeftCommand(playerMovement));
-        commandManager.BindKey(moveRightKey, new MoveRightCommand(playerMovement));
-        commandManager.BindKey(jumpKey, new JumpCommand(playerMovement));
-        commandManager.BindKey(meleeAttackKey, new MeleeAttackCommand(playerAttack));
-        commandManager.BindKey(rangedAttackKey, new RangedAttackCommand(playerAttack));
-        commandManager.BindKey(interactKey, new InteractCommand(playerTransform));
+        BindKey(moveLeftKey, new MoveLeftCommand(playerMovement));
+        BindKey(moveRightKey, new MoveRightCommand(playerMovement));
+        BindKey(jumpKey, new JumpCommand(playerMovement));
+        BindKey(meleeAttackKey, new MeleeAttackCommand(playerAttack));
+        BindKey(rangedAttackKey, new RangedAttackCommand(playerAttack));
+        BindKey(interactKey, new InteractCommand(playerTransform));
+    }
+        void Update()
+    {
+        bool isMoving = false;
+
+        foreach (var pair in commandBindings)
+        {
+            var command = pair.Value;
+
+            if (command.Type == CommandType.ContinuousMovement)
+            {
+                if (Input.GetKey(pair.Key))
+                {
+                    command.Execute();
+                    isMoving = true;
+                }
+            }
+            else if (Input.GetKeyDown(pair.Key))
+            {
+                command.Execute();
+            }
+        }
+
+        if (!isMoving)
+            playerMovement.Stop();
+
+    }
+    
+
+    public void BindKey(KeyCode key, ICommand command)
+    {
+        commandBindings[key] = command;
     }
 }
