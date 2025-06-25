@@ -3,9 +3,9 @@ using UnityEngine;
 
 public abstract class Attack : MonoBehaviour
 {
+    [SerializeField] protected int attackDamage = 10;
     [SerializeField] protected float attackRange = 2.0f;
     [SerializeField] protected float attackCooldown = 1.0f;
-    [SerializeField] protected int attackDamage = 10;
 
 
     public int AttackDamage => attackDamage;
@@ -22,11 +22,6 @@ public abstract class Attack : MonoBehaviour
     }
 
     public virtual void PerformAttack() { }
-
-    // public void IncreaseDamage(float damageMultiplier)
-    // {
-    //     damageAmount = Mathf.RoundToInt(damageAmount * damageMultiplier);
-    // }
 
     public void IncreaseAttackDamage(int value)
     {

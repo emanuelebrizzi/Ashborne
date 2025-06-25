@@ -51,6 +51,7 @@ public class Player : MonoBehaviour, IDamageable
 
         meleeAttack = GetComponent<MeleeAttack>();
         rangedAttack = GetComponent<RangedAttack>();
+        rangedAttack.enabled = false;
     }
 
     public void PlayAnimation(PlayerState state, int index = 0)

@@ -12752,8 +12752,8 @@ MonoBehaviour:
   speedMultiplier: 0.5
   strengthMultiplier: 2
   attackRangeMultiplier: 0.2
-  fireballDamageMultiplier: 1
-  fireballRangeMultiplier: 0.5
+  energyBallDamageMultiplier: 1
+  energyBallRangeMultiplier: 0.5
 --- !u!4 &1565174116
 Transform:
   m_ObjectHideFlags: 0
@@ -16984,9 +16984,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25dcc6a044f7b5c408283b78f43c415f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackDamage: 10
   attackRange: 2
   attackCooldown: 0.1
-  attackDamage: 10
   hitbox: {fileID: 505627883}
 --- !u!114 &1982723278
 MonoBehaviour:
@@ -17000,10 +17000,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5dde24f103aa2844bef9927134b7250, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackDamage: 10
   attackRange: 2
   attackCooldown: 1
-  attackDamage: 10
-  projectile: {fileID: 1567719318964900893, guid: 5da17963afec1d14890e1fdd6bcb61a8, type: 3}
+  projectilePrefab: {fileID: 1567719318964900893, guid: 5da17963afec1d14890e1fdd6bcb61a8, type: 3}
   firePoint: {fileID: 505627881}
   target: {fileID: 1618718863}
 --- !u!1001 &1987984571

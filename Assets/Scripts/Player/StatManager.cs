@@ -15,16 +15,12 @@ public class StatsManager : MonoBehaviour
     [SerializeField] float speedMultiplier = 0.5f;
     [SerializeField] int strengthMultiplier = 2;
     [SerializeField] float attackRangeMultiplier = 0.2f;
-    [SerializeField] int fireballDamageMultiplier = 1;
-    [SerializeField] float fireballRangeMultiplier = 0.5f;
+    [SerializeField] int energyBallDamageMultiplier = 1;
+    [SerializeField] float energyBallRangeMultiplier = 0.5f;
 
     public static StatsManager Instance { get; private set; }
 
 
-    void Start()
-    {
-        characterStats.OnStatChanged += UpdateStat;
-    }
     void Awake()
     {
         if (Instance == null)
@@ -36,6 +32,11 @@ public class StatsManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+    }
+
+    void Start()
+    {
+        characterStats.OnStatChanged += UpdateStat;
     }
 
     void UpdateStat(StatType statType)
@@ -54,11 +55,14 @@ public class StatsManager : MonoBehaviour
             case StatType.AttackRange:
                 UpdateAttackRange();
                 break;
-            case StatType.FireballDamage:
-                UpdateFireballDamage();
+            case StatType.EnergyBall:
+                UnlockEnergyBall();
                 break;
-            case StatType.FireballRange:
-                UpdateFireballRange();
+            case StatType.EnergyBallDamage:
+                UpdateEnergyBallDamage();
+                break;
+            case StatType.EnergyBallRange:
+                UpdateEnergyBallRange();
                 break;
         }
     }
@@ -87,15 +91,22 @@ public class StatsManager : MonoBehaviour
         attack.IncreaseAttackRange(statLevel * attackRangeMultiplier);
     }
 
-    void UpdateFireballDamage()
+
+    void UnlockEnergyBall()
     {
-        // TODO: Implement Fireball first  
+        Player.Instance.RangedAttack.enabled = true;
     }
 
-    void UpdateFireballRange()
+    void UpdateEnergyBallDamage()
     {
-        // TODO: Implement Fireball first   
+        int statLevel = characterStats.GetStat(StatType.EnergyBallDamage);
+        Player.Instance.RangedAttack.IncreaseAttackDamage(Mathf.RoundToInt(statLevel * energyBallDamageMultiplier));
     }
 
+    void UpdateEnergyBallRange()
+    {
+        int statLevel = characterStats.GetStat(StatType.EnergyBallRange);
+        Player.Instance.RangedAttack.IncreaseAttackRange(statLevel * energyBallRangeMultiplier);
+    }
 }
 

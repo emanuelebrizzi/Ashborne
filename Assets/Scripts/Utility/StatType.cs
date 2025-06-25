@@ -4,7 +4,7 @@ public enum StatType
     Speed,
     Strength,
     AttackRange,
-    Fireball,
-    FireballDamage,
-    FireballRange
+    EnergyBall,
+    EnergyBallDamage,
+    EnergyBallRange
 }

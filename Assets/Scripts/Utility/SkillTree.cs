@@ -5,7 +5,7 @@ public class SkillTree : MonoBehaviour
 {
     [SerializeField] CharacterLevelStats characterStats;
     [SerializeField] Player player;
-    [SerializeField] int fireballCost = 200;
+    [SerializeField] int energyBallCost = 200;
 
     public void AquireStat(StatType statType)
     {
@@ -18,13 +18,14 @@ public class SkillTree : MonoBehaviour
             }
         }
     }
-    public void AquireFireball()
+
+    public void AquireEnergyBall()
     {
-        if (fireballCost <= player.GetEchoes() && !characterStats.IsMaxed(StatType.Fireball))
+        if (energyBallCost <= player.GetEchoes() && !characterStats.IsMaxed(StatType.EnergyBall))
         {
-            if (characterStats.IncreaseStat(StatType.Fireball, 1))
+            if (characterStats.IncreaseStat(StatType.EnergyBall, 1))
             {
-                player.RemoveEchoes(fireballCost);
+                player.RemoveEchoes(energyBallCost);
             }
         }
     }
@@ -33,9 +34,11 @@ public class SkillTree : MonoBehaviour
     {
         return (characterStats.GetStat(statType) + 1) * 100;
     }
-    public int GetFireballCost()
+
+    public int GetEnergyBallCost()
     {
-        return fireballCost;
+        return energyBallCost;
     }
-    public bool IsBuyable(StatType statType) => (GetSkillCost(statType) <= player.GetEchoes() && !characterStats.IsMaxed(statType));
+
+    public bool IsBuyable(StatType statType) => GetSkillCost(statType) <= player.GetEchoes() && !characterStats.IsMaxed(statType);
 }
