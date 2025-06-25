@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 
-public class SkillTree : MonoBehaviour
+public class StatTree : MonoBehaviour
 {
     [SerializeField] CharacterLevelStats characterStats;
     [SerializeField] Player player;
@@ -11,7 +11,7 @@ public class SkillTree : MonoBehaviour
     {
         if (IsBuyable(statType))
         {
-            int cost = GetSkillCost(statType);
+            int cost = GetStatCost(statType);
             if (characterStats.IncreaseStat(statType, 1))
             {
                 player.RemoveEchoes(cost);
@@ -30,7 +30,7 @@ public class SkillTree : MonoBehaviour
         }
     }
 
-    public int GetSkillCost(StatType statType)
+    public int GetStatCost(StatType statType)
     {
         return (characterStats.GetStat(statType) + 1) * 100;
     }
@@ -40,5 +40,5 @@ public class SkillTree : MonoBehaviour
         return energyBallCost;
     }
 
-    public bool IsBuyable(StatType statType) => GetSkillCost(statType) <= player.GetEchoes() && !characterStats.IsMaxed(statType);
+    public bool IsBuyable(StatType statType) => GetStatCost(statType) <= player.GetEchoes() && !characterStats.IsMaxed(statType);
 }

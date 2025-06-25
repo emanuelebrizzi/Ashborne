@@ -2,9 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
-public class SkillTreeMenu : Panel
+public class StatTreeMenu : Panel
 {
-    [SerializeField] SkillTree skillTree;
+    [SerializeField] StatTree statTree;
     [SerializeField] CharacterLevelStats characterStats;
 
     [Header("Buttons")]
@@ -30,24 +30,24 @@ public class SkillTreeMenu : Panel
         SetupListeners();
         UpdateAllText();
         characterStats.OnStatChanged += UpdateText;
-        energyBallAcquireText.text = $"Aquire EnergyBall\nCost: {skillTree.GetEnergyBallCost()} Echoes";
+        energyBallAcquireText.text = $"Aquire EnergyBall\nCost: {statTree.GetEnergyBallCost()} Echoes";
     }
     protected override void SetupListeners()
     {
         if (backButton != null)
             backButton.onClick.AddListener(() => GameManager.Instance.OpenCampfire());
         if (healthButton != null)
-            healthButton.onClick.AddListener(() => skillTree.AquireStat(StatType.Health));
+            healthButton.onClick.AddListener(() => statTree.AquireStat(StatType.Health));
         if (speedButton != null)
-            speedButton.onClick.AddListener(() => skillTree.AquireStat(StatType.Speed));
+            speedButton.onClick.AddListener(() => statTree.AquireStat(StatType.Speed));
         if (strengthButton != null)
-            strengthButton.onClick.AddListener(() => skillTree.AquireStat(StatType.Strength));
+            strengthButton.onClick.AddListener(() => statTree.AquireStat(StatType.Strength));
         if (energyBallDamageButton != null)
-            energyBallDamageButton.onClick.AddListener(() => skillTree.AquireStat(StatType.EnergyBallDamage));
+            energyBallDamageButton.onClick.AddListener(() => statTree.AquireStat(StatType.EnergyBallDamage));
         if (energyBallRangeButton != null)
-            energyBallRangeButton.onClick.AddListener(() => skillTree.AquireStat(StatType.EnergyBallRange));
+            energyBallRangeButton.onClick.AddListener(() => statTree.AquireStat(StatType.EnergyBallRange));
         if (energyBallAcquireButton != null)
-            energyBallAcquireButton.onClick.AddListener(() => skillTree.AquireEnergyBall());
+            energyBallAcquireButton.onClick.AddListener(() => statTree.AquireEnergyBall());
     }
 
     void UpdateAllText()
@@ -59,7 +59,7 @@ public class SkillTreeMenu : Panel
 
     void UpdateText(StatType statType)
     {
-        string text = $"{statType}: {characterStats.GetStat(statType)}/{characterStats.GetMaxStat(statType)}\nCost: {skillTree.GetSkillCost(statType)} Echoes";
+        string text = $"{statType}: {characterStats.GetStat(statType)}/{characterStats.GetMaxStat(statType)}\nCost: {statTree.GetStatCost(statType)} Echoes";
         switch (statType)
         {
             case StatType.Health:

@@ -7,7 +7,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] PauseMenu pauseMenu;
     [SerializeField] GameplayHUD gameplayHUD;
     [SerializeField] CampfireMenu campfireMenu;
-    [SerializeField] SkillTreeMenu skillTreeMenu;
+    [SerializeField] StatTreeMenu statTreeMenu;
 
     void Awake()
     {
@@ -21,7 +21,7 @@ public class UIManager : MonoBehaviour
         if (pauseMenu) pauseMenu.Hide();
         if (gameplayHUD) gameplayHUD.Hide();
         if (campfireMenu) campfireMenu.Hide();
-        if (skillTreeMenu) skillTreeMenu.Hide();
+        if (statTreeMenu) statTreeMenu.Hide();
     }
 
     public void ShowPauseMenu()
@@ -30,7 +30,7 @@ public class UIManager : MonoBehaviour
         if (pauseMenu) pauseMenu.Show();
         if (gameplayHUD) gameplayHUD.Show();
         if (campfireMenu) campfireMenu.Hide();
-        if (skillTreeMenu) skillTreeMenu.Hide();
+        if (statTreeMenu) statTreeMenu.Hide();
     }
 
     public void ShowGameplayUI()
@@ -39,7 +39,7 @@ public class UIManager : MonoBehaviour
         if (pauseMenu) pauseMenu.Hide();
         if (gameplayHUD) gameplayHUD.Show();
         if (campfireMenu) campfireMenu.Hide();
-        if (skillTreeMenu) skillTreeMenu.Hide();
+        if (statTreeMenu) statTreeMenu.Hide();
     }
 
     public void ShowCampfireMenu()
@@ -48,15 +48,15 @@ public class UIManager : MonoBehaviour
         if (pauseMenu) pauseMenu.Hide();
         if (gameplayHUD) gameplayHUD.Show();
         if (campfireMenu) campfireMenu.Show();
-        if (skillTreeMenu) skillTreeMenu.Hide();
+        if (statTreeMenu) statTreeMenu.Hide();
 
     }
-    public void ShowSkillTreeMenu()
+    public void ShowStatTreeMenu()
     {
         if (mainMenu) mainMenu.Hide();
         if (pauseMenu) pauseMenu.Hide();
         if (gameplayHUD) gameplayHUD.Show();
         if (campfireMenu) campfireMenu.Hide();
-        if (skillTreeMenu) skillTreeMenu.Show();
+        if (statTreeMenu) statTreeMenu.Show();
     }
 }
