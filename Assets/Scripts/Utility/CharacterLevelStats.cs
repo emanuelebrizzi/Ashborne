@@ -38,9 +38,9 @@ public class CharacterLevelStats : MonoBehaviour
             { StatType.Health,         new LevelStat(0, 5) },
             { StatType.Speed,          new LevelStat(0, 3) },
             { StatType.Strength,       new LevelStat(0, 5) },
-            { StatType.AttackRange,    new LevelStat(0, 2) },
-            { StatType.FireballDamage, new LevelStat(0, 5) },
-            { StatType.FireballRange,  new LevelStat(0, 2) }
+            { StatType.EnergyBall,       new LevelStat(0, 1) },
+            { StatType.EnergyBallDamage, new LevelStat(0, 5) },
+            { StatType.EnergyBallRange,  new LevelStat(0, 2) }
         };
     }
 

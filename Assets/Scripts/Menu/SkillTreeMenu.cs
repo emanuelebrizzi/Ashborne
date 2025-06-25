@@ -11,24 +11,26 @@ public class SkillTreeMenu : Panel
     [SerializeField] Button healthButton;
     [SerializeField] Button speedButton;
     [SerializeField] Button strengthButton;
-    [SerializeField] Button attackRangeButton;
-    [SerializeField] Button fireballDamageButton;
-    [SerializeField] Button fireballRangeButton;
+    [SerializeField] Button energyBallDamageButton;
+    [SerializeField] Button energyBallRangeButton;
+    [SerializeField] Button energyBallAcquireButton;
     [SerializeField] Button backButton;
 
     [Header("UI Text Elements")]
     [SerializeField] TMPro.TextMeshProUGUI healthText;
     [SerializeField] TMPro.TextMeshProUGUI speedText;
     [SerializeField] TMPro.TextMeshProUGUI strengthText;
-    [SerializeField] TMPro.TextMeshProUGUI attackRangeText;
-    [SerializeField] TMPro.TextMeshProUGUI fireballDamageText;
-    [SerializeField] TMPro.TextMeshProUGUI fireballRangeText;
+    [SerializeField] TMPro.TextMeshProUGUI energyBallDamageText;
+    [SerializeField] TMPro.TextMeshProUGUI energyBallRangeText;
+    [SerializeField] TMPro.TextMeshProUGUI energyBallAcquireText;
 
-    private void Start()
+
+    void Start()
     {
         SetupListeners();
         UpdateAllText();
         characterStats.OnStatChanged += UpdateText;
+        energyBallAcquireText.text = $"Aquire EnergyBall\nCost: {skillTree.GetEnergyBallCost()} Echoes";
     }
     protected override void SetupListeners()
     {
@@ -40,20 +42,19 @@ public class SkillTreeMenu : Panel
             speedButton.onClick.AddListener(() => skillTree.AquireStat(StatType.Speed));
         if (strengthButton != null)
             strengthButton.onClick.AddListener(() => skillTree.AquireStat(StatType.Strength));
-        if (attackRangeButton != null)
-            attackRangeButton.onClick.AddListener(() => skillTree.AquireStat(StatType.AttackRange));
-        if (fireballDamageButton != null)
-            fireballDamageButton.onClick.AddListener(() => skillTree.AquireStat(StatType.FireballDamage));
-        if (fireballRangeButton != null)
-            fireballRangeButton.onClick.AddListener(() => skillTree.AquireStat(StatType.FireballRange));
+        if (energyBallDamageButton != null)
+            energyBallDamageButton.onClick.AddListener(() => skillTree.AquireStat(StatType.EnergyBallDamage));
+        if (energyBallRangeButton != null)
+            energyBallRangeButton.onClick.AddListener(() => skillTree.AquireStat(StatType.EnergyBallRange));
+        if (energyBallAcquireButton != null)
+            energyBallAcquireButton.onClick.AddListener(() => skillTree.AquireEnergyBall());
     }
 
     void UpdateAllText()
     {
         foreach (StatType statType in Enum.GetValues(typeof(StatType)))
-        {
-            UpdateText(statType);
-        }
+            if (statType != StatType.EnergyBall)
+                UpdateText(statType);
     }
 
     void UpdateText(StatType statType)
@@ -70,16 +71,25 @@ public class SkillTreeMenu : Panel
             case StatType.Strength:
                 strengthText.text = text;
                 break;
-            case StatType.AttackRange:
-                attackRangeText.text = text;
+            case StatType.EnergyBallDamage:
+                energyBallDamageText.text = text;
                 break;
-            case StatType.FireballDamage:
-                fireballDamageText.text = text;
+            case StatType.EnergyBallRange:
+                energyBallRangeText.text = text;
                 break;
-            case StatType.FireballRange:
-                fireballRangeText.text = text;
+            case StatType.EnergyBall:
+                ShowEnergyBallUpgrades();
                 break;
         }
+    }
+    void ShowEnergyBallUpgrades()
+    {
+        energyBallAcquireButton.gameObject.SetActive(false);
+        energyBallAcquireText.gameObject.SetActive(false);
+        energyBallDamageText.gameObject.SetActive(true);
+        energyBallDamageButton.gameObject.SetActive(true);
+        energyBallRangeButton.gameObject.SetActive(true);
+        energyBallRangeText.gameObject.SetActive(true);
     }
 
 }

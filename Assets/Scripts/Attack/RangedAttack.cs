@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class RangedAttack : Attack
 {
-    [SerializeField] Projectile projectile;
+    [SerializeField] Projectile projectilePrefab;
     [SerializeField] Transform firePoint;
     [SerializeField] Transform target;
 
@@ -19,8 +19,11 @@ public class RangedAttack : Attack
             targetPos = target.position;
 
         Vector2 direction = (targetPos - (Vector2)firePoint.position).normalized;
-        Projectile proj = Instantiate(projectile, firePoint.position, Quaternion.identity);
-        proj.direction = direction;
-        proj.OnHit += OnHit;
+
+        Projectile projectile = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
+
+        projectile.SetLifetime(attackRange);
+        projectile.direction = direction;
+        projectile.OnHit += OnHit;
     }
 }

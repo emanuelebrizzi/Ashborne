@@ -531,7 +531,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 100
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 1
@@ -637,7 +637,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4033ce3ed0d58b1429380ea32ab9d5f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 5
+  maxHealth: 30
 --- !u!114 &1074229318712270977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -650,11 +650,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5dde24f103aa2844bef9927134b7250, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackDamage: 10
   attackRange: 4
-  attackCooldown: 2
-  damageAmount: 20
-  projectile: {fileID: 1567719318964900893, guid: bf0b182b4d01ff04ba0999e757e5afba, type: 3}
+  attackCooldown: 4
+  projectilePrefab: {fileID: 1567719318964900893, guid: bf0b182b4d01ff04ba0999e757e5afba, type: 3}
   firePoint: {fileID: 908822232101313340}
+  target: {fileID: 0}
 --- !u!114 &1991175659566027179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -667,7 +668,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e6fcdd0ef551034687c252409744893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectionRange: 4
+  detectionRange: 5
 --- !u!114 &6536659331668968125
 MonoBehaviour:
   m_ObjectHideFlags: 0
