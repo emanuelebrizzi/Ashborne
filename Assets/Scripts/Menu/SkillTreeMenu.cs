@@ -11,7 +11,6 @@ public class SkillTreeMenu : Panel
     [SerializeField] Button healthButton;
     [SerializeField] Button speedButton;
     [SerializeField] Button strengthButton;
-    [SerializeField] Button attackRangeButton;
     [SerializeField] Button energyBallDamageButton;
     [SerializeField] Button energyBallRangeButton;
     [SerializeField] Button energyBallAcquireButton;
@@ -21,8 +20,7 @@ public class SkillTreeMenu : Panel
     [SerializeField] TMPro.TextMeshProUGUI healthText;
     [SerializeField] TMPro.TextMeshProUGUI speedText;
     [SerializeField] TMPro.TextMeshProUGUI strengthText;
-    [SerializeField] TMPro.TextMeshProUGUI attackRangeText;
-    [SerializeField] TMPro.TextMeshProUGUI enrgyBallDamageText;
+    [SerializeField] TMPro.TextMeshProUGUI energyBallDamageText;
     [SerializeField] TMPro.TextMeshProUGUI energyBallRangeText;
     [SerializeField] TMPro.TextMeshProUGUI energyBallAcquireText;
 
@@ -44,13 +42,11 @@ public class SkillTreeMenu : Panel
             speedButton.onClick.AddListener(() => skillTree.AquireStat(StatType.Speed));
         if (strengthButton != null)
             strengthButton.onClick.AddListener(() => skillTree.AquireStat(StatType.Strength));
-        if (attackRangeButton != null)
-            attackRangeButton.onClick.AddListener(() => skillTree.AquireStat(StatType.AttackRange));
         if (energyBallDamageButton != null)
             energyBallDamageButton.onClick.AddListener(() => skillTree.AquireStat(StatType.EnergyBallDamage));
         if (energyBallRangeButton != null)
             energyBallRangeButton.onClick.AddListener(() => skillTree.AquireStat(StatType.EnergyBallRange));
-        if (energyBallRangeButton != null)
+        if (energyBallAcquireButton != null)
             energyBallAcquireButton.onClick.AddListener(() => skillTree.AquireEnergyBall());
     }
 
@@ -75,11 +71,8 @@ public class SkillTreeMenu : Panel
             case StatType.Strength:
                 strengthText.text = text;
                 break;
-            case StatType.AttackRange:
-                attackRangeText.text = text;
-                break;
             case StatType.EnergyBallDamage:
-                enrgyBallDamageText.text = text;
+                energyBallDamageText.text = text;
                 break;
             case StatType.EnergyBallRange:
                 energyBallRangeText.text = text;
@@ -93,7 +86,7 @@ public class SkillTreeMenu : Panel
     {
         energyBallAcquireButton.gameObject.SetActive(false);
         energyBallAcquireText.gameObject.SetActive(false);
-        enrgyBallDamageText.gameObject.SetActive(true);
+        energyBallDamageText.gameObject.SetActive(true);
         energyBallDamageButton.gameObject.SetActive(true);
         energyBallRangeButton.gameObject.SetActive(true);
         energyBallRangeText.gameObject.SetActive(true);

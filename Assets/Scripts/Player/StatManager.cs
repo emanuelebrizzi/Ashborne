@@ -14,7 +14,6 @@ public class StatsManager : MonoBehaviour
     [SerializeField] int healthMultiplier = 50;
     [SerializeField] float speedMultiplier = 0.5f;
     [SerializeField] int strengthMultiplier = 2;
-    [SerializeField] float attackRangeMultiplier = 0.2f;
     [SerializeField] int energyBallDamageMultiplier = 1;
     [SerializeField] float energyBallRangeMultiplier = 0.5f;
 
@@ -52,9 +51,6 @@ public class StatsManager : MonoBehaviour
             case StatType.Strength:
                 UpdateStrength();
                 break;
-            case StatType.AttackRange:
-                UpdateAttackRange();
-                break;
             case StatType.EnergyBall:
                 UnlockEnergyBall();
                 break;
@@ -84,13 +80,6 @@ public class StatsManager : MonoBehaviour
         int statLevel = characterStats.GetStat(StatType.Strength);
         attack.IncreaseAttackDamage(Mathf.RoundToInt(statLevel * strengthMultiplier));
     }
-
-    void UpdateAttackRange()
-    {
-        int statLevel = characterStats.GetStat(StatType.AttackRange);
-        attack.IncreaseAttackRange(statLevel * attackRangeMultiplier);
-    }
-
 
     void UnlockEnergyBall()
     {
