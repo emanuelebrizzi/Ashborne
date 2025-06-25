@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class CampfireMenu : Panel
 {
-    [SerializeField] Button skillTreeButton;
+    [SerializeField] Button statTreeButton;
     [SerializeField] Button restButton;
     [SerializeField] Button exitButton;
 
@@ -17,8 +17,8 @@ public class CampfireMenu : Panel
 
     protected override void SetupListeners()
     {
-        if (skillTreeButton != null)
-            skillTreeButton.onClick.AddListener(() => GameManager.Instance.OpenSkillTree());
+        if (statTreeButton != null)
+            statTreeButton.onClick.AddListener(() => GameManager.Instance.OpenStatTree());
 
         if (restButton != null)
             restButton.onClick.AddListener(() => GameManager.Instance.Rest());

@@ -218,7 +218,7 @@ MonoBehaviour:
   pauseMenu: {fileID: 428661669}
   gameplayHUD: {fileID: 634663537}
   campfireMenu: {fileID: 363202041}
-  skillTreeMenu: {fileID: 2065652862}
+  statTreeMenu: {fileID: 2065652862}
 --- !u!4 &15325715
 Transform:
   m_ObjectHideFlags: 0
@@ -2620,7 +2620,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panel: {fileID: 363202036}
-  skillTreeButton: {fileID: 1979718570}
+  statTreeButton: {fileID: 0}
   restButton: {fileID: 1103331253}
   exitButton: {fileID: 580999374}
 --- !u!222 &363202042
@@ -7671,7 +7671,7 @@ GameObject:
   - component: {fileID: 1018435819}
   - component: {fileID: 1018435821}
   m_Layer: 5
-  m_Name: Skill tree
+  m_Name: Stat Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32220,12 +32220,12 @@ GameObject:
   - component: {fileID: 2065652862}
   - component: {fileID: 2065652863}
   m_Layer: 5
-  m_Name: SkillTreePanel
+  m_Name: StatTreePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2065652858
 RectTransform:
   m_ObjectHideFlags: 0
@@ -32260,7 +32260,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panel: {fileID: 2065652857}
-  skillTree: {fileID: 1018435821}
+  statTree: {fileID: 1018435821}
   characterStats: {fileID: 1982723275}
   healthButton: {fileID: 32709889}
   speedButton: {fileID: 925744050}
@@ -33154,6 +33154,10 @@ PrefabInstance:
     - target: {fileID: 2136053233582625304, guid: 3809c52c52e77f648bd48b60c09a82e2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3236691739496290986, guid: 3809c52c52e77f648bd48b60c09a82e2, type: 3}
+      propertyPath: attackCooldown
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3870326222217051293, guid: 3809c52c52e77f648bd48b60c09a82e2, type: 3}
       propertyPath: m_Layer

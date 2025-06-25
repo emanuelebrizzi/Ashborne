@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
         Playing,
         Paused,
         Campfire,
-        SkillTree
+        StatTree
     }
 
     public GameState CurrentGameState { get; private set; }
@@ -76,9 +76,9 @@ public class GameManager : MonoBehaviour
                 UIManager.ShowGameplayUI();
                 break;
 
-            case GameState.SkillTree:
+            case GameState.StatTree:
                 PauseGame();
-                UIManager.ShowSkillTreeMenu();
+                UIManager.ShowStatTreeMenu();
                 break;
 
             default:
@@ -153,9 +153,9 @@ public class GameManager : MonoBehaviour
         ChangeGameState(GameState.Campfire);
     }
 
-    public void OpenSkillTree()
+    public void OpenStatTree()
     {
-        ChangeGameState(GameState.SkillTree);
+        ChangeGameState(GameState.StatTree);
     }
 
     public void Rest()
