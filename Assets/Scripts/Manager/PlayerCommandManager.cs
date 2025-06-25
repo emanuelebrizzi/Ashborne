@@ -16,6 +16,7 @@ public class PlayerCommandManager : MonoBehaviour
     [SerializeField] KeyCode meleeAttackKey = KeyCode.Q;
     [SerializeField] KeyCode rangedAttackKey = KeyCode.F;
     [SerializeField] KeyCode interactKey = KeyCode.E;
+    [SerializeField] KeyCode pauseKey = KeyCode.Escape;
     Dictionary<KeyCode, ICommand> commandBindings = new Dictionary<KeyCode, ICommand>();
 
     void Start()
@@ -26,6 +27,7 @@ public class PlayerCommandManager : MonoBehaviour
         BindKey(meleeAttackKey, new MeleeAttackCommand(playerAttack));
         BindKey(rangedAttackKey, new RangedAttackCommand(playerAttack));
         BindKey(interactKey, new InteractCommand(playerTransform));
+        BindKey(pauseKey, new PauseCommand(GameManager.Instance));
     }
         void Update()
     {

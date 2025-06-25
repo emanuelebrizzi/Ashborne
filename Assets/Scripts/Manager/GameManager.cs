@@ -43,19 +43,13 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    void Update()
+    public void TogglePauseMenu()
     {
-        // TODO: Move this function in another class
-        TogglePauseMenu();
-    }
-
-    void TogglePauseMenu()
-    {
-        if (CurrentGameState == GameState.Playing && Input.GetKeyDown(KeyCode.Escape))
+        if (CurrentGameState == GameState.Playing)
         {
             ChangeGameState(GameState.Paused);
         }
-        else if (CurrentGameState == GameState.Paused && Input.GetKeyDown(KeyCode.Escape))
+        else if (CurrentGameState == GameState.Paused)
         {
             ChangeGameState(GameState.Playing);
         }

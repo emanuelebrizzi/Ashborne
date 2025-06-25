@@ -12449,6 +12449,7 @@ MonoBehaviour:
   meleeAttackKey: 113
   rangedAttackKey: 102
   interactKey: 101
+  pauseKey: 27
 --- !u!4 &1668627882
 Transform:
   m_ObjectHideFlags: 0
