@@ -1078,7 +1078,7 @@ MonoBehaviour:
   pauseMenu: {fileID: 0}
   gameplayHUD: {fileID: 0}
   campfireMenu: {fileID: 0}
-  skillTreeMenu: {fileID: 0}
+  statTreeMenu: {fileID: 0}
 --- !u!4 &1388431178
 Transform:
   m_ObjectHideFlags: 0
@@ -1233,6 +1233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55a0d8ef94d0d724dba28c62c40cff44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerCommandManager: {fileID: 0}
   UIManager: {fileID: 1388431177}
   enemySpawnManager: {fileID: 0}
   audioManager: {fileID: 1527122001}
@@ -1422,7 +1423,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -3}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1984834872
