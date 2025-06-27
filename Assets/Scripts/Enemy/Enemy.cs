@@ -4,19 +4,18 @@ using UnityEngine;
 
 [RequireComponent(typeof(EnemyStateController))]
 [RequireComponent(typeof(EnemyAnimator))]
-public class Enemy : MonoBehaviour, IDamageable
+public class Enemy : EnemyAnimator, IDamageable
 {
     [SerializeField] float speed = 3.0f;
     [SerializeField] int ashEchoesReward = 100;
 
     Rigidbody2D rigidBody;
-    EnemyAnimator enemyAnimator;
     EnemyStateController stateController;
     Health health;
     bool isFacingLeft = true;
 
+
     public Attack Attack { get; private set; }
-    public EnemyAnimator Animator => enemyAnimator;
     public EnemyStateController Controller => stateController;
     public string Id { get; private set; }
     public int Reward => ashEchoesReward;
@@ -27,7 +26,6 @@ public class Enemy : MonoBehaviour, IDamageable
     void Awake()
     {
         rigidBody = GetComponent<Rigidbody2D>();
-        enemyAnimator = GetComponent<EnemyAnimator>();
         stateController = GetComponent<EnemyStateController>();
         Id = Guid.NewGuid().ToString();
     }
@@ -39,7 +37,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
         health.OnDeath += Die;
 
-        enemyAnimator.InitializeAnimationStates();
+
         stateController.InitializeState();
     }
 
@@ -47,6 +45,7 @@ public class Enemy : MonoBehaviour, IDamageable
     {
         stateController.UpdateState();
     }
+
 
     void Die()
     {
@@ -57,30 +56,21 @@ public class Enemy : MonoBehaviour, IDamageable
     {
         rigidBody.linearVelocityX = direction * speed;
         EntityUtility.FlipSpriteHorizontally(transform, direction, ref isFacingLeft);
-        enemyAnimator.PlayAnimation(EnemyAnimator.AnimationState.MOVE);
     }
 
     public void TakeDamage(int damage)
     {
+        if (stateController.CurrentState is AttackState attackState)
+        {
+            attackState.InterruptAttack();
+        }
+
+        Play(Animations.DAMAGED, true, true);
         health.ApplyDamaage(damage);
-        enemyAnimator.PlayAnimation(EnemyAnimator.AnimationState.DAMAGED);
-        StartCoroutine(AfterDamageRoutine());
 
         Debug.Log($"Got {damage} damage, remaining {health.CurrentHealth} HP.");
     }
 
-    private IEnumerator AfterDamageRoutine()
-    {
-        rigidBody.linearVelocity = Vector2.zero;
-        float damageAnimationTime = enemyAnimator.GetAnimationLength(EnemyAnimator.AnimationState.DAMAGED);
-
-        yield return new WaitForSeconds(damageAnimationTime);
-
-        if (stateController.IsInAttackState())
-        {
-            stateController.AttackState.CancelAttack();
-        }
-    }
 
     public void ResetFroomPool()
     {
@@ -88,7 +78,7 @@ public class Enemy : MonoBehaviour, IDamageable
             health.ResetHealth();
 
         EntityUtility.SetPhysicsEnabled(gameObject, true);
-        enemyAnimator.InitializeAnimationStates();
+        Initiliaze(Animations.IDLE, GetComponentInChildren<Animator>(), DefaultAnimation);
         stateController.InitializeState();
     }
 
@@ -118,5 +108,22 @@ public class Enemy : MonoBehaviour, IDamageable
         }
 
         transform.localScale *= 1.15f;
+    }
+
+    public void CheckMovementAnimation()
+    {
+        if (rigidBody.linearVelocityX != 0)
+        {
+            Play(Animations.MOVE, false, false);
+        }
+        else
+        {
+            Play(Animations.IDLE, false, false);
+        }
+    }
+
+    public void DefaultAnimation()
+    {
+        CheckMovementAnimation();
     }
 }

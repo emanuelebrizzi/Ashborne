@@ -18,6 +18,8 @@ public class PatrolState : EnemyState
 
     public override void Tick()
     {
+
+
         if (DetectPlayer())
         {
             Debug.Log("Player detected, exiting patrol state");
@@ -27,6 +29,7 @@ public class PatrolState : EnemyState
 
         Vector2 direction = (target - (Vector2)transform.position).normalized;
         enemy.MoveInDirection(direction.x);
+        enemy.CheckMovementAnimation();
 
         float distanceToTarget = Vector2.Distance(new Vector2(transform.position.x, 0), new Vector2(target.x, 0));
         if (distanceToTarget < MinimumDistance)

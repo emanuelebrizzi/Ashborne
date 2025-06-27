@@ -1,73 +1,69 @@
+using System;
 using UnityEngine;
 
 public class EnemyAnimator : MonoBehaviour
 {
     [SerializeField] Animator animator;
 
-    public enum AnimationState
+    readonly static int[] animations = {
+        Animator.StringToHash("IDLE"),
+        Animator.StringToHash("MOVE"),
+        Animator.StringToHash("ATTACK"),
+        Animator.StringToHash("DAMAGED"),
+        Animator.StringToHash("DEATH")
+    };
+
+    Animations currentAnimation;
+    bool layerLocked;
+    Action DefaultAnimation;
+
+    protected void Initiliaze(Animations startingAnimation, Animator animator, Action DefaultAnimation)
     {
-        IDLE,
-        MOVE,
-        ATTACK,
-        DAMAGED,
-        DEATH,
+        layerLocked = false;
+        currentAnimation = startingAnimation;
+        this.animator = animator;
+        this.DefaultAnimation = DefaultAnimation;
     }
 
-    void Start()
+    public Animations CurrentAnimation => currentAnimation;
+
+    public void SetLocked(bool lockLayer) => layerLocked = lockLayer;
+
+    public virtual void Play(Animations animation, bool lockLayer, bool bypassLock, float crossFade = 0.2f)
     {
-        if (animator == null)
+        if (animation == Animations.NONE)
         {
-            animator = GetComponentInChildren<Animator>();
+            DefaultAnimation();
+            return;
         }
-    }
 
-    public void PlayAnimation(AnimationState state)
-    {
-        if (animator == null) return;
+        if (lockLayer && !bypassLock) return;
 
-        switch (state)
+        layerLocked = lockLayer;
+
+
+        if (bypassLock)
         {
-            case AnimationState.IDLE:
-                animator.SetBool("isMoving", false);
-                break;
-
-            case AnimationState.MOVE:
-                animator.SetBool("isMoving", true);
-                break;
-
-            case AnimationState.ATTACK:
-                animator.SetTrigger("isAttacking");
-                break;
-
-            case AnimationState.DAMAGED:
-                animator.SetTrigger("isDamaged");
-                break;
-
-            case AnimationState.DEATH:
-                animator.SetBool("isMoving", false);
-                animator.ResetTrigger("isAttacking");
-                animator.ResetTrigger("isDamaged");
-                animator.SetBool("isDead", true);
-                break;
+            foreach (var item in animator.GetBehaviours<OnExit>())
+            {
+                item.cancel = true;
+            }
         }
+
+
+        if (currentAnimation == animation) return;
+
+        currentAnimation = animation;
+        animator.CrossFade(animations[(int)currentAnimation], crossFade, 0);
     }
+}
 
-    public void InitializeAnimationStates()
-    {
-        animator.SetBool("isDead", false);
-        animator.SetBool("isMoving", false);
-        animator.ResetTrigger("isAttacking");
-        animator.ResetTrigger("isDamaged");
-    }
-
-    public float GetAnimationLength(AnimationState animation)
-    {
-        float defaultLength = 0.5f;
-
-        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        if (stateInfo.IsName(animation.ToString()))
-            return stateInfo.length;
-
-        return defaultLength;
-    }
+public enum Animations
+{
+    IDLE,
+    MOVE,
+    ATTACK,
+    DAMAGED,
+    DEATH,
+    NONE
 }

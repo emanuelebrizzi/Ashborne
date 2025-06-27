@@ -4,63 +4,51 @@ using UnityEngine;
 public class AttackState : EnemyState
 {
     bool isAttacking = false;
-    Coroutine currentAttackRoutine;
 
     public override void Tick()
     {
-        if (!enemy.CanAttackPlayer())
+        if (!enemy.CanAttackPlayer() && !isAttacking)
         {
             enemy.Controller.ChangeState(enemy.Controller.ChasingState);
             return;
         }
 
-        // Vector2 directionToPlayer = (Player.Instance.transform.position - enemy.transform.position).normalized;
-        if (!isAttacking)
+        if (!isAttacking && enemy.CurrentAnimation != Animations.DAMAGED)
         {
-            // enemy.UpdateSpriteDirection(directionToPlayer.x);
-            currentAttackRoutine = StartCoroutine(AttackRoutine());
+            StartCoroutine(AttackRoutine());
         }
     }
 
     IEnumerator AttackRoutine()
     {
         isAttacking = true;
-
-        enemy.Animator.PlayAnimation(EnemyAnimator.AnimationState.ATTACK);
+        enemy.Play(Animations.ATTACK, false, false);
         enemy.Attack.PerformAttack();
 
-        yield return null;
-
-        float animationLength = enemy.Animator.GetAnimationLength(EnemyAnimator.AnimationState.ATTACK);
-        float waitTime = Mathf.Max(animationLength, enemy.Attack.AttackCooldown);
-
-        yield return new WaitForSeconds(waitTime);
-
+        yield return new WaitForSeconds(enemy.Attack.AttackCooldown);
         isAttacking = false;
-        currentAttackRoutine = null;
-    }
-
-    public void CancelAttack()
-    {
-        if (isAttacking && currentAttackRoutine != null)
-        {
-            StopCoroutine(currentAttackRoutine);
-            currentAttackRoutine = null;
-            isAttacking = false;
-            enemy.Animator.PlayAnimation(EnemyAnimator.AnimationState.IDLE);
-        }
     }
 
     public override void Exit()
     {
-        base.Exit();
 
-        if (currentAttackRoutine != null)
+        if (isAttacking)
         {
-            StopCoroutine(currentAttackRoutine);
-            currentAttackRoutine = null;
+            StopAllCoroutines();
+            isAttacking = false;
         }
-
-        isAttacking = false;
+        base.Exit();
     }
+
+    public void InterruptAttack()
+    {
+        if (isAttacking)
+        {
+            StopAllCoroutines();
+            isAttacking = false;
+            var test = (MeleeAttack)enemy.Attack;
+            test.CancelAttack();
+        }
+    }
+
 }

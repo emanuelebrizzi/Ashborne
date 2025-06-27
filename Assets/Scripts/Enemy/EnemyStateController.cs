@@ -42,9 +42,4 @@ public class EnemyStateController : MonoBehaviour
         if (currentState != null)
             currentState.Enter();
     }
-
-    public bool IsInAttackState()
-    {
-        return currentState == AttackState;
-    }
 }

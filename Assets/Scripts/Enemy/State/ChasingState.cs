@@ -25,12 +25,13 @@ public class ChasingState : EnemyState
 
         if (enemy.CanAttackPlayer())
         {
-            // enemy.UpdateSpriteDirection(directionToPlayer.x);
+            enemy.MoveInDirection(directionToPlayer.x);
             enemy.Controller.ChangeState(enemy.Controller.AttackState);
             return;
         }
 
         enemy.MoveInDirection(directionToPlayer.x);
+        enemy.CheckMovementAnimation();
     }
 
     bool IsPlayerTooFar()
