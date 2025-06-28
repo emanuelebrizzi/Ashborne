@@ -982,7 +982,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 92581340}
-  m_Layer: 12
+  m_Layer: 13
   m_Name: GravelSpawnPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5675,7 +5675,7 @@ GameObject:
   - component: {fileID: 706383208}
   - component: {fileID: 706383210}
   - component: {fileID: 706383209}
-  m_Layer: 12
+  m_Layer: 13
   m_Name: Hole
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5710,7 +5710,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e61094e8bd573f54a992d4f68a63f7e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerDeathHandler: {fileID: 1982723274}
   gravelSpawnPoint: {fileID: 92581340}
 --- !u!61 &706383210
 BoxCollider2D:
@@ -9110,11 +9109,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2777954644255780405, guid: 7667ac64e3837e14aa2553d1d737d885, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.91
+      value: 0.27
       objectReference: {fileID: 0}
     - target: {fileID: 2777954644255780405, guid: 7667ac64e3837e14aa2553d1d737d885, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.033
+      value: 0.0344
       objectReference: {fileID: 0}
     - target: {fileID: 4001902950969396155, guid: 7667ac64e3837e14aa2553d1d737d885, type: 3}
       propertyPath: cameraTransform
@@ -15608,17 +15607,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7763954107f56434aaf22731a001173e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1982723274 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4856394854094792943, guid: 3809c52c52e77f648bd48b60c09a82e2, type: 3}
-  m_PrefabInstance: {fileID: 3029821545286134993}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1382782347780395332}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71f68f39a0db8cc43b04bd10fcafa8c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1982723275 stripped
