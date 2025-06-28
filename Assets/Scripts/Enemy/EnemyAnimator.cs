@@ -3,6 +3,12 @@ using UnityEngine;
 
 public class EnemyAnimator : MonoBehaviour
 {
+    /*  This class helps to manage animations programmatically. 
+        The classes that want to control the animations of the sprite, need to extend this class and 
+        to implement the Unity Action for the default animation. 
+        It uses an array to remeber the animations to play.
+    */
+
     [SerializeField] Animator animator;
 
     readonly static int[] animations = {
@@ -29,7 +35,7 @@ public class EnemyAnimator : MonoBehaviour
 
     public void SetLocked(bool lockLayer) => layerLocked = lockLayer;
 
-    public virtual void Play(Animations animation, bool lockLayer, bool bypassLock, float crossFade = 0.2f)
+    public void Play(Animations animation, bool lockLayer, bool bypassLock, float crossFade = 0.2f)
     {
         if (animation == Animations.NONE)
         {
@@ -37,7 +43,7 @@ public class EnemyAnimator : MonoBehaviour
             return;
         }
 
-        if (lockLayer && !bypassLock) return;
+        if (layerLocked && !bypassLock) return;
 
         layerLocked = lockLayer;
 
@@ -49,7 +55,6 @@ public class EnemyAnimator : MonoBehaviour
                 item.cancel = true;
             }
         }
-
 
         if (currentAnimation == animation) return;
 
@@ -65,5 +70,5 @@ public enum Animations
     ATTACK,
     DAMAGED,
     DEATH,
-    NONE
+    NONE    // This is used when we want to return to the default animaton
 }

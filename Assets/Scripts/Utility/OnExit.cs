@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class OnExit : StateMachineBehaviour
 {
+    /*  This class is used to control the exit behaviour of an animation.
+        Keep in mind that for now we use it only for the enemy's animations.
+    */
+
     [SerializeField] Animations animation;
     [SerializeField] bool lockLayer;
     [SerializeField] float crossFade = 0.2f;

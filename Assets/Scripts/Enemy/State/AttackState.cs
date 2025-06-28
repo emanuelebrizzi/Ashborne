@@ -3,13 +3,19 @@ using UnityEngine;
 
 public class AttackState : EnemyState
 {
-    bool isAttacking = false;
+    bool isAttacking;
 
-    public override void Tick()
+    public override void Enter()
+    {
+        base.Enter();
+        isAttacking = false;
+    }
+
+    public override void Update()
     {
         if (!enemy.CanAttackPlayer() && !isAttacking)
         {
-            enemy.Controller.ChangeState(enemy.Controller.ChasingState);
+            enemy.StateController.TransitionTo(enemy.StateController.ChasingState);
             return;
         }
 
@@ -46,8 +52,7 @@ public class AttackState : EnemyState
         {
             StopAllCoroutines();
             isAttacking = false;
-            var test = (MeleeAttack)enemy.Attack;
-            test.CancelAttack();
+            enemy.Attack.CancelAttack();
         }
     }
 

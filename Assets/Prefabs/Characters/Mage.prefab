@@ -595,8 +595,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7a2c0c666b5a744ab086bd615f67808, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 7461029990841192748}
   speed: 3
   ashEchoesReward: 200
+  detectionRange: 6
+  maxChaseDistance: 6
+  initialState: {fileID: 1991175659566027179}
   PointA: {fileID: 0}
   PointB: {fileID: 0}
 --- !u!114 &7189622623963755389
@@ -624,7 +628,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6890526f96105f84194d530d0df4ec1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialState: {fileID: 1991175659566027179}
 --- !u!114 &622743470455108142
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -651,8 +654,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackDamage: 10
-  attackRange: 4
-  attackCooldown: 4
+  attackRange: 6
+  attackCooldown: 2
   projectilePrefab: {fileID: 1567719318964900893, guid: bf0b182b4d01ff04ba0999e757e5afba, type: 3}
   firePoint: {fileID: 908822232101313340}
   target: {fileID: 0}
@@ -663,12 +666,11 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 877561424279928533}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3e6fcdd0ef551034687c252409744893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectionRange: 5
 --- !u!114 &6536659331668968125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -676,12 +678,11 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 877561424279928533}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 63db14f3a361e2940b76c4843798876f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxChaseDistance: 5
 --- !u!114 &210419670223932780
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -689,7 +690,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 877561424279928533}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de6bf8ecb891d8a49bc13f76f6064654, type: 3}
   m_Name: 
@@ -701,7 +702,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 877561424279928533}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 598fa92e50fbe5a44be4b1b1ca76bb9e, type: 3}
   m_Name: 

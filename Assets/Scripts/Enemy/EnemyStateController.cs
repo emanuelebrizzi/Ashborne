@@ -1,16 +1,16 @@
+using System;
 using UnityEngine;
+
 
 public class EnemyStateController : MonoBehaviour
 {
-    [SerializeField] EnemyState initialState;
-
-    EnemyState currentState;
-
-    public EnemyState CurrentState => currentState;
+    public EnemyState CurrentState { get; private set; }
     public PatrolState PatrolState { get; private set; }
     public ChasingState ChasingState { get; private set; }
     public AttackState AttackState { get; private set; }
     public DeathState DeathState { get; private set; }
+
+    public event Action<EnemyState> StateChanged;
 
     void Awake()
     {
@@ -20,26 +20,20 @@ public class EnemyStateController : MonoBehaviour
         DeathState = GetComponent<DeathState>();
     }
 
-    public void InitializeState()
+    public void Initialize(EnemyState state)
     {
-        if (initialState != null)
-            ChangeState(initialState);
+        CurrentState = state;
+        state.Enter();
+
+        StateChanged?.Invoke(state);
     }
 
-    public void UpdateState()
+    public void TransitionTo(EnemyState nextState)
     {
-        if (currentState != null)
-            currentState.Tick();
-    }
+        CurrentState.Exit();
+        CurrentState = nextState;
+        nextState.Enter();
 
-    public void ChangeState(EnemyState newState)
-    {
-        if (currentState != null)
-            currentState.Exit();
-
-        currentState = newState;
-
-        if (currentState != null)
-            currentState.Enter();
+        StateChanged?.Invoke(nextState);
     }
 }

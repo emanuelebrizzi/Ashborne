@@ -2,65 +2,33 @@ using UnityEngine;
 
 public class ChasingState : EnemyState
 {
-    [SerializeField] float maxChaseDistance = 3.0f;
-    Vector2 enemyStartingPoint;
-    float distanceFromStart;
+    const float minimumDistance = 0.1f;
+
+
+    Transform enemyStartingPoint;
 
     public override void Enter()
     {
         base.Enter();
-        enemyStartingPoint = enemy.transform.position;
+        enemyStartingPoint = enemy.transform;
         Debug.Log("Enemy entered ChasingState");
     }
 
-    public override void Tick()
+    public override void Update()
     {
-        if (IsPlayerTooFar() || IsEnemyNearBounds())
+        if (enemy.IsOutOfRange(enemyStartingPoint) || enemy.IsNearPointA(minimumDistance) || enemy.IsNearPointB(minimumDistance))
         {
-            enemy.Controller.ChangeState(enemy.Controller.PatrolState);
+            enemy.StateController.TransitionTo(enemy.StateController.PatrolState);
             return;
         }
 
-        Vector2 directionToPlayer = (Player.Instance.transform.position - enemy.transform.position).normalized;
+        enemy.MoveToward(Player.Instance.transform);
+        enemy.CheckMovementAnimation();
 
         if (enemy.CanAttackPlayer())
         {
-            enemy.MoveInDirection(directionToPlayer.x);
-            enemy.Controller.ChangeState(enemy.Controller.AttackState);
+            enemy.StateController.TransitionTo(enemy.StateController.AttackState);
             return;
         }
-
-        enemy.MoveInDirection(directionToPlayer.x);
-        enemy.CheckMovementAnimation();
-    }
-
-    bool IsPlayerTooFar()
-    {
-        distanceFromStart = Vector2.Distance(enemyStartingPoint, enemy.transform.position);
-        return distanceFromStart > maxChaseDistance;
-    }
-
-    bool IsEnemyNearBounds()
-    {
-        const float minimumDistance = 0.1f;
-
-        if (IsNearPointA(minimumDistance) || IsNearPointB(minimumDistance))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    bool IsNearPointA(float minimumDistance)
-    {
-        return Vector2.Distance(transform.position, enemy.PointA.position) < minimumDistance;
-    }
-
-    bool IsNearPointB(float minimumDistance)
-    {
-        return Vector2.Distance(transform.position, enemy.PointB.position) < minimumDistance;
     }
 }
