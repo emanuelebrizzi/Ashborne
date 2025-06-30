@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameplayHUD : Panel
+public class HUD : MonoBehaviour
 {
     const float InitialHealthBarValue = 1f;
     const int InitialEchoesValue = 0;

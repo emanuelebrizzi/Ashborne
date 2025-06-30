@@ -214,11 +214,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75684157300c3b847a9fac60147d082a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainMenu: {fileID: 0}
-  pauseMenu: {fileID: 428661669}
   gameplayHUD: {fileID: 634663537}
-  campfireMenu: {fileID: 363202041}
-  statTreeMenu: {fileID: 2065652862}
+  menus:
+  - {fileID: 428661669}
+  - {fileID: 363202041}
+  - {fileID: 2065652862}
 --- !u!4 &15325715
 Transform:
   m_ObjectHideFlags: 0
@@ -5347,7 +5347,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28110aaa32376c149a809705c1cd6eda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panel: {fileID: 634663533}
   healthBar: {fileID: 15362050}
   ashEchoesText: {fileID: 1619431804}
 --- !u!1001 &635496798
@@ -14656,7 +14655,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55a0d8ef94d0d724dba28c62c40cff44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerCommandManager: {fileID: 0}
   UIManager: {fileID: 15325714}
   enemySpawnManager: {fileID: 1208672623}
   audioManager: {fileID: 0}

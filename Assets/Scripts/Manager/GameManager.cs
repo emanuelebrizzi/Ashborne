@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [Header("Managers")]
-    [SerializeField] PlayerCommandManager playerCommandManager;
     [SerializeField] UIManager UIManager;
     [SerializeField] EnemySpawnManager enemySpawnManager;
     [SerializeField] AudioManager audioManager;
@@ -16,8 +15,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] string loadingSceneName = "LoadingScene";
     [SerializeField] float minimumLoadingTime = 0.5f;
 
+    GameState currentState;
+
     public static GameManager Instance { get; private set; }
 
+    /*  We use these game states to handle differnet scenarios of our game. For example, during  
+        StatTree we want to give the player the ability to acquire power ups meanwhile the game is
+        paused.
+    */
     public enum GameState
     {
         MainMenu,
@@ -26,8 +31,6 @@ public class GameManager : MonoBehaviour
         Campfire,
         StatTree
     }
-
-    public GameState CurrentGameState { get; private set; }
 
     void Awake()
     {
@@ -45,11 +48,11 @@ public class GameManager : MonoBehaviour
 
     public void TogglePauseMenu()
     {
-        if (CurrentGameState == GameState.Playing)
+        if (currentState == GameState.Playing)
         {
             ChangeGameState(GameState.Paused);
         }
-        else if (CurrentGameState == GameState.Paused)
+        else if (currentState == GameState.Paused)
         {
             ChangeGameState(GameState.Playing);
         }
@@ -57,28 +60,29 @@ public class GameManager : MonoBehaviour
 
     public void ChangeGameState(GameState newState)
     {
-        if (CurrentGameState == newState) return;
+        if (currentState == newState) return;
 
         switch (newState)
         {
             case GameState.Paused:
                 PauseGame();
-                UIManager.ShowPauseMenu();
+                UIManager.ShowMenu<PauseMenu>();
                 break;
 
             case GameState.Campfire:
                 PauseGame();
-                UIManager.ShowCampfireMenu();
+                UIManager.ShowMenu<CampfireMenu>();
                 break;
 
             case GameState.Playing:
                 UnpauseGame();
-                UIManager.ShowGameplayUI();
+                UIManager.HideAllMenus();
+                UIManager.EnableHUD();
                 break;
 
             case GameState.StatTree:
                 PauseGame();
-                UIManager.ShowStatTreeMenu();
+                UIManager.ShowMenu<StatTreeMenu>();
                 break;
 
             default:
@@ -86,7 +90,7 @@ public class GameManager : MonoBehaviour
                 break;
         }
 
-        CurrentGameState = newState;
+        currentState = newState;
     }
 
     void PauseGame()
@@ -186,6 +190,7 @@ public class GameManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        // We are loading the scene with the default SINGLE mode.
         if (scene.name == mainMenuSceneName)
         {
             ChangeGameState(GameState.MainMenu);
@@ -198,10 +203,6 @@ public class GameManager : MonoBehaviour
             if (enemySpawnManager != null)
             {
                 enemySpawnManager.SpawnAllWaves();
-            }
-            else
-            {
-                Debug.LogWarning("EnemySpawnManager not initialized when trying to spawn enemies.");
             }
         }
     }

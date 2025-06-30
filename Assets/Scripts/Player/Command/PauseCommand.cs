@@ -1,4 +1,3 @@
-using UnityEngine;
 public class PauseCommand : ICommand
 {
     public CommandType Type => CommandType.Instant;
