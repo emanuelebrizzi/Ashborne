@@ -10,29 +10,14 @@ public class DeathState : EnemyState
     public override void Enter()
     {
         base.Enter();
-        ProcessDeath();
+        enemy.AwardAshEchoes();
     }
 
-    void ProcessDeath()
+    public override void Update()
     {
+        enemy.Play(Animations.DEATH, true, true);
         EntityUtility.SetPhysicsEnabled(gameObject, false);
-        enemy.Animator.PlayAnimation(EnemyAnimator.AnimationState.DEATH);
-        AwardAshEchoes();
         StartCoroutine(WaitForCorpseDisappears());
-    }
-
-    void AwardAshEchoes()
-    {
-        if (Player.Instance != null)
-        {
-            Player.Instance.AddAshEchoes(enemy.Reward);
-            Debug.Log($"Awarded {enemy.Reward} Ash Echoes to player");
-        }
-        else
-        {
-            Debug.LogWarning("Player singleton not available. Cannot award Ash Echoes.");
-
-        }
     }
 
     IEnumerator WaitForCorpseDisappears()

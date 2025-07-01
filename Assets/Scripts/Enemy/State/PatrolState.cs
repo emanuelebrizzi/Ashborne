@@ -3,65 +3,37 @@ using UnityEngine;
 public class PatrolState : EnemyState
 {
     const float MinimumDistance = 0.1f;
-    [SerializeField] float detectionRange = 3f;
-    LayerMask playerMask;
-    Vector2 target;
+    Transform target;
     bool goingToB = true;
 
     public override void Enter()
     {
         base.Enter();
         Debug.Log("Enemy entered in the PatrolState");
-        playerMask = LayerMask.GetMask("Player");
-        target = enemy.PointB.position;
+        target = enemy.PointB;
     }
 
-    public override void Tick()
+    public override void Update()
     {
-        if (DetectPlayer())
+        if (enemy.HasDetectedPlayer())
         {
             Debug.Log("Player detected, exiting patrol state");
-            enemy.Controller.ChangeState(enemy.Controller.ChasingState);
+            enemy.StateController.TransitionTo(enemy.StateController.ChasingState);
             return;
         }
 
-        Vector2 direction = (target - (Vector2)transform.position).normalized;
-        enemy.MoveInDirection(direction.x);
+        enemy.MoveToward(target);
+        enemy.CheckMovementAnimation();
 
-        float distanceToTarget = Vector2.Distance(new Vector2(transform.position.x, 0), new Vector2(target.x, 0));
-        if (distanceToTarget < MinimumDistance)
+        if (enemy.DistanceTo(target) < MinimumDistance)
         {
             SwitchPatrolDirection();
         }
     }
 
-    bool DetectPlayer()
-    {
-        if (Player.Instance == null) return false;
-
-        float distanceToPlayer = Vector2.Distance(transform.position, Player.Instance.transform.position);
-        if (distanceToPlayer > detectionRange) return false;
-
-        Vector2 raycastOrigin = (Vector2)transform.position + Vector2.up * 0.5f;
-        Vector2 directionToPlayer = (Player.Instance.transform.position - transform.position).normalized;
-        RaycastHit2D hit = Physics2D.Raycast(
-            raycastOrigin,
-            directionToPlayer,
-            detectionRange,
-            playerMask
-        );
-
-        if (hit.collider != null)
-        {
-            return hit.transform == Player.Instance.transform;
-        }
-
-        return false;
-    }
-
     void SwitchPatrolDirection()
     {
         goingToB = !goingToB;
-        target = goingToB ? enemy.PointB.position : enemy.PointA.position;
+        target = goingToB ? enemy.PointB : enemy.PointA;
     }
 }

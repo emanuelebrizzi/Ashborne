@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class AttackHitbox : MonoBehaviour
 {
-    [SerializeField] float hitboxActiveTime = 1.0f;
+    [SerializeField] float hitboxActiveTime = 2f;
 
     bool canDealDamage = false;
 
@@ -26,6 +26,7 @@ public class AttackHitbox : MonoBehaviour
         if (!canDealDamage) return;
 
         OnHit?.Invoke(other);
+        CancelInvoke();
         canDealDamage = false;
     }
 }

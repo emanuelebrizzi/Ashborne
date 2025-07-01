@@ -103,6 +103,7 @@ public class EnemySpawnManager : MonoBehaviour
     void OnRelease(GameObject enemyObj)
     {
         enemyObj.SetActive(false);
+        enemyObj.GetComponent<Enemy>().ResetFromPool();
     }
 
     void OnObjectDestroy(GameObject enemyObj, EnemyWave configuration)
@@ -166,7 +167,6 @@ public class EnemySpawnManager : MonoBehaviour
         Enemy enemy = enemyObj.GetComponent<Enemy>();
         enemy.PointA = spawnPoint.patrolPointA;
         enemy.PointB = spawnPoint.patrolPointB;
-        enemy.ResetFroomPool();
 
         activeEnemies[type][spawnPoint] = enemy;
         Debug.Log($"Enemy {enemy.Id} spawned!");

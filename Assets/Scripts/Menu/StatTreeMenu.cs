@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
-public class StatTreeMenu : Panel
+public class StatTreeMenu : Menu
 {
     [SerializeField] StatTree statTree;
     [SerializeField] CharacterLevelStats characterStats;

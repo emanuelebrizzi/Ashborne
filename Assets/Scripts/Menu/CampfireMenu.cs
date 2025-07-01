@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CampfireMenu : Panel
+public class CampfireMenu : Menu
 {
     [SerializeField] Button statTreeButton;
     [SerializeField] Button restButton;

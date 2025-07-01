@@ -33,7 +33,7 @@ public class Player : MonoBehaviour, IDamageable
         health = GetComponent<Health>();
         ashEchoes = GetComponent<AshEchoes>();
 
-        health.OnDeath += Die;
+        health.OnDeath += () => Die(transform);
     }
 
     void Start()
@@ -70,12 +70,12 @@ public class Player : MonoBehaviour, IDamageable
         PlayAnimation(PlayerState.DAMAGED, 0);
     }
 
-    void Die()
+    public void Die(Transform deathLocation)
     {
         PlayAnimation(PlayerState.DEATH, 0);
         if (playerDeathHandler != null)
         {
-            playerDeathHandler.Die();
+            playerDeathHandler.HandleDeath(deathLocation);
         }
 
         OnEchoesChanged?.Invoke(ashEchoes.Current);

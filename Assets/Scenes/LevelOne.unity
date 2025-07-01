@@ -214,11 +214,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75684157300c3b847a9fac60147d082a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainMenu: {fileID: 0}
-  pauseMenu: {fileID: 428661669}
   gameplayHUD: {fileID: 634663537}
-  campfireMenu: {fileID: 363202041}
-  statTreeMenu: {fileID: 2065652862}
+  menus:
+  - {fileID: 428661669}
+  - {fileID: 363202041}
+  - {fileID: 2065652862}
 --- !u!4 &15325715
 Transform:
   m_ObjectHideFlags: 0
@@ -982,7 +982,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 92581340}
-  m_Layer: 12
+  m_Layer: 13
   m_Name: GravelSpawnPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5294,7 +5294,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -1.4837646, y: 0}
+  m_AnchoredPosition: {x: -1.4838867, y: 0}
   m_SizeDelta: {x: -2.9678, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &634663535
@@ -5347,7 +5347,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28110aaa32376c149a809705c1cd6eda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panel: {fileID: 634663533}
   healthBar: {fileID: 15362050}
   ashEchoesText: {fileID: 1619431804}
 --- !u!1001 &635496798
@@ -5675,7 +5674,7 @@ GameObject:
   - component: {fileID: 706383208}
   - component: {fileID: 706383210}
   - component: {fileID: 706383209}
-  m_Layer: 12
+  m_Layer: 13
   m_Name: Hole
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5710,7 +5709,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e61094e8bd573f54a992d4f68a63f7e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerDeathHandler: {fileID: 1982723274}
   gravelSpawnPoint: {fileID: 92581340}
 --- !u!61 &706383210
 BoxCollider2D:
@@ -9110,11 +9108,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2777954644255780405, guid: 7667ac64e3837e14aa2553d1d737d885, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.91
+      value: 0.27
       objectReference: {fileID: 0}
     - target: {fileID: 2777954644255780405, guid: 7667ac64e3837e14aa2553d1d737d885, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.033
+      value: 0.0344
       objectReference: {fileID: 0}
     - target: {fileID: 4001902950969396155, guid: 7667ac64e3837e14aa2553d1d737d885, type: 3}
       propertyPath: cameraTransform
@@ -14657,7 +14655,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55a0d8ef94d0d724dba28c62c40cff44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerCommandManager: {fileID: 0}
   UIManager: {fileID: 15325714}
   enemySpawnManager: {fileID: 1208672623}
   audioManager: {fileID: 0}
@@ -15608,17 +15605,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7763954107f56434aaf22731a001173e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1982723274 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4856394854094792943, guid: 3809c52c52e77f648bd48b60c09a82e2, type: 3}
-  m_PrefabInstance: {fileID: 3029821545286134993}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1382782347780395332}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71f68f39a0db8cc43b04bd10fcafa8c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1982723275 stripped
@@ -33066,17 +33052,21 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0.234
       objectReference: {fileID: 0}
-    - target: {fileID: 842692655444482513, guid: 3809c52c52e77f648bd48b60c09a82e2, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -2.0311
+    - target: {fileID: 1294006730923516674, guid: 3809c52c52e77f648bd48b60c09a82e2, type: 3}
+      propertyPath: m_Size.x
+      value: 0.3837871
       objectReference: {fileID: 0}
-    - target: {fileID: 842692655444482513, guid: 3809c52c52e77f648bd48b60c09a82e2, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -0.2749
+    - target: {fileID: 1294006730923516674, guid: 3809c52c52e77f648bd48b60c09a82e2, type: 3}
+      propertyPath: m_Size.y
+      value: 0.6860342
       objectReference: {fileID: 0}
-    - target: {fileID: 842692655444482513, guid: 3809c52c52e77f648bd48b60c09a82e2, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0.282
+    - target: {fileID: 1294006730923516674, guid: 3809c52c52e77f648bd48b60c09a82e2, type: 3}
+      propertyPath: m_Offset.x
+      value: -0.016449573
+      objectReference: {fileID: 0}
+    - target: {fileID: 1294006730923516674, guid: 3809c52c52e77f648bd48b60c09a82e2, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.3779559
       objectReference: {fileID: 0}
     - target: {fileID: 2136053233582625304, guid: 3809c52c52e77f648bd48b60c09a82e2, type: 3}
       propertyPath: m_Pivot.x

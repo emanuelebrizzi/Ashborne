@@ -1,13 +1,13 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PauseMenu : Panel
+public class PauseMenu : Menu
 {
     [SerializeField] Button resumeButton;
     [SerializeField] Button menuButton;
     [SerializeField] Button exitButton;
 
-    private void Start()
+    void Start()
     {
         SetupListeners();
     }

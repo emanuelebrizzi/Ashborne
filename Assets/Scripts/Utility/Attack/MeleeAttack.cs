@@ -13,4 +13,9 @@ public class MeleeAttack : Attack
     {
         hitbox.Activate();
     }
+
+    public override void CancelAttack()
+    {
+        hitbox.Deactivate();
+    }
 }

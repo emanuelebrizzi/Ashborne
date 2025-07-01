@@ -2,12 +2,8 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-
-    [SerializeField] MainMenu mainMenu;
-    [SerializeField] PauseMenu pauseMenu;
-    [SerializeField] GameplayHUD gameplayHUD;
-    [SerializeField] CampfireMenu campfireMenu;
-    [SerializeField] StatTreeMenu statTreeMenu;
+    [SerializeField] HUD gameplayHUD;
+    [SerializeField] Menu[] menus;
 
     void Awake()
     {
@@ -15,48 +11,31 @@ public class UIManager : MonoBehaviour
             GameManager.Instance.RegisterUIManager(this);
     }
 
-    public void ShowMainMenu()
+    public void EnableHUD()
     {
-        if (mainMenu) mainMenu.Show();
-        if (pauseMenu) pauseMenu.Hide();
-        if (gameplayHUD) gameplayHUD.Hide();
-        if (campfireMenu) campfireMenu.Hide();
-        if (statTreeMenu) statTreeMenu.Hide();
+        if (gameplayHUD) gameplayHUD.gameObject.SetActive(true);
     }
 
-    public void ShowPauseMenu()
+    public void ShowMenu<T>() where T : Menu
     {
-        if (mainMenu) mainMenu.Hide();
-        if (pauseMenu) pauseMenu.Show();
-        if (gameplayHUD) gameplayHUD.Show();
-        if (campfireMenu) campfireMenu.Hide();
-        if (statTreeMenu) statTreeMenu.Hide();
+        foreach (var menu in menus)
+        {
+            if (menu is T)
+                menu.Show();
+            else
+                menu.Hide();
+        }
     }
 
-    public void ShowGameplayUI()
+    public void HideAllMenus()
     {
-        if (mainMenu) mainMenu.Hide();
-        if (pauseMenu) pauseMenu.Hide();
-        if (gameplayHUD) gameplayHUD.Show();
-        if (campfireMenu) campfireMenu.Hide();
-        if (statTreeMenu) statTreeMenu.Hide();
-    }
+        /*  The assumption is that the HUD should always be enabled during the gameplay, so we need
+            this helper method for the Game Manager.
+        */
 
-    public void ShowCampfireMenu()
-    {
-        if (mainMenu) mainMenu.Hide();
-        if (pauseMenu) pauseMenu.Hide();
-        if (gameplayHUD) gameplayHUD.Show();
-        if (campfireMenu) campfireMenu.Show();
-        if (statTreeMenu) statTreeMenu.Hide();
-
-    }
-    public void ShowStatTreeMenu()
-    {
-        if (mainMenu) mainMenu.Hide();
-        if (pauseMenu) pauseMenu.Hide();
-        if (gameplayHUD) gameplayHUD.Show();
-        if (campfireMenu) campfireMenu.Hide();
-        if (statTreeMenu) statTreeMenu.Show();
+        foreach (var menu in menus)
+        {
+            menu.Hide();
+        }
     }
 }

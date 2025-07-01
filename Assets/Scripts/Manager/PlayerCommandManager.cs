@@ -29,7 +29,8 @@ public class PlayerCommandManager : MonoBehaviour
         BindKey(interactKey, new InteractCommand(playerTransform));
         BindKey(pauseKey, new PauseCommand(GameManager.Instance));
     }
-        void Update()
+
+    void Update()
     {
         bool isMoving = false;
 
@@ -55,7 +56,7 @@ public class PlayerCommandManager : MonoBehaviour
             playerMovement.Stop();
 
     }
-    
+
 
     public void BindKey(KeyCode key, ICommand command)
     {

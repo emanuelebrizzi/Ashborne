@@ -1,12 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MainMenu : Panel
+public class MainMenu : Menu
 {
     [SerializeField] Button newGameButton;
     [SerializeField] Button exitButton;
 
-    private void Start()
+    void Start()
     {
         SetupListeners();
     }

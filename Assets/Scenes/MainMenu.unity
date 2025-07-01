@@ -1074,11 +1074,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75684157300c3b847a9fac60147d082a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainMenu: {fileID: 1728768844}
-  pauseMenu: {fileID: 0}
   gameplayHUD: {fileID: 0}
-  campfireMenu: {fileID: 0}
-  statTreeMenu: {fileID: 0}
+  menus:
+  - {fileID: 1728768844}
 --- !u!4 &1388431178
 Transform:
   m_ObjectHideFlags: 0
@@ -1233,7 +1231,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55a0d8ef94d0d724dba28c62c40cff44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerCommandManager: {fileID: 0}
   UIManager: {fileID: 1388431177}
   enemySpawnManager: {fileID: 0}
   audioManager: {fileID: 1527122001}

@@ -19,5 +19,5 @@ public abstract class EnemyState : MonoBehaviour
         enabled = false;
     }
 
-    public virtual void Tick() { }
+    public abstract void Update();
 }
