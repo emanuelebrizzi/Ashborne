@@ -7,7 +7,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float jumpForce = 500f;
     [SerializeField] Collider2D groundCheck;
     [SerializeField] float coyoteTime = 0.05f;
-
+    float jumpCooldown = 0.23f;
+    float lastJumpTime = -1f;
     float coyoteTimeCounter;
 
     void Start()
@@ -51,10 +52,11 @@ public class PlayerMovement : MonoBehaviour
 
     public void Jump()
     {
-        if (coyoteTimeCounter > 0f)
+        if (coyoteTimeCounter > 0f && Time.time - lastJumpTime > jumpCooldown)
         {
             body.AddForce(new Vector2(0, jumpForce));
             coyoteTimeCounter = 0f;
+            lastJumpTime = Time.time;
         }
     }
 
